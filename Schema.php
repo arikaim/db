@@ -270,6 +270,7 @@ abstract class Schema
             } catch(\Exception $e) {
             }
         }
+        
         return false;
     }
 
