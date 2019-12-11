@@ -24,7 +24,7 @@ trait Slug
     public static function bootSlug()
     {
         static::saving(function($model) {   
-            $model = Self::createSlug($model);
+            $model = Self::saveSlug($model);
         });        
     }
 
@@ -59,25 +59,22 @@ trait Slug
     }
 
     /**
-     * Create slug
+     * Save slug
      *
      * @param string $text
      * @param string $options
      * @return string
      */
-    public static function createSlug($model)
+    public static function saveSlug($model)
     {
         $slugColumn = $model->getSlugColumn();
-    
-        if (empty($model->attributes[$slugColumn]) == true) {
-            $slugSourceColumn = $model->getSlugSourceColumn();
-            $separator = $model->getSlugSeparator(); 
+        $slugSourceColumn = $model->getSlugSourceColumn();
+        $separator = $model->getSlugSeparator(); 
 
-            if (is_null($model->$slugSourceColumn) == false) {                   
-                $model->attributes[$slugColumn] = Utils::slug($model->$slugSourceColumn,$separator);
-            }              
-        }
-        
+        if (is_null($model->$slugSourceColumn) == false) {                   
+            $model->attributes[$slugColumn] = Utils::slug($model->$slugSourceColumn,$separator);
+        }              
+       
         return $model;
     }
 

@@ -79,7 +79,7 @@ trait PackageRegistry
     {
         $model = $this->findByColumn($name,'name'); 
         if (is_object($model) == true) {
-            $result = $model->udpate($data);
+            $result = $model->update($data);
             return ($result !== false);
         }
         $model = $this->create($data);

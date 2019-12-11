@@ -27,6 +27,11 @@ trait SoftDelete
         return ! is_null($this->{$this->getDeletedColumn()});
     }
 
+    /**
+     * Get delete models count.
+     *
+     * @return integer
+     */
     public function getDeletedCount()
     {
         $query = $this->softDeletedQuery();
@@ -42,7 +47,7 @@ trait SoftDelete
     public function softDelete($id = null)
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
-        $model->{$this->getDeletedColumn()} = DateTime::getTimestamp();
+        $model->{$model->getDeletedColumn()} = DateTime::getTimestamp();
         
         return $model->save();
     }
@@ -56,7 +61,7 @@ trait SoftDelete
     public function restore($id = null)
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
-        $model->{$this->getDeletedColumn()} = null;
+        $model->{$model->getDeletedColumn()} = null;
         
         return $model->save();
     }
@@ -84,6 +89,16 @@ trait SoftDelete
     public function softDeletedQuery()
     {
         return $this->whereNotNull($this->getDeletedColumn());
+    }
+
+    /**
+     * Permanently delete all soft deleted models
+     *
+     * @return boolean
+     */
+    public function clearDeleted()
+    {
+        return $this->softDeletedQuery()->delete();
     }
 
     /**
