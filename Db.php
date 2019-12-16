@@ -156,7 +156,7 @@ class Db
     {
         $config = ($config == null) ? $this->config : $config;
         $dsn = $config['driver'] . ":dbname=" .  $config['database'] . ";host=" . $config['host'];
-        
+    
         try {
             $pdo = new PDO($dsn,$config['username'],$config['password'],[
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION

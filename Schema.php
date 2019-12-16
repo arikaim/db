@@ -262,11 +262,15 @@ abstract class Schema
         $instance = Factory::createSchema($class,$extension);
         if (is_object($instance) == true) {
             try {
-                $instance->createTable();
+                if ($instance->tableExists() == false) {
+                    $instance->createTable();
+                }
+              
                 $instance->updateTable();
                 $instance->runSeeds();
 
                 return $instance->tableExists();
+                
             } catch(\Exception $e) {
             }
         }
