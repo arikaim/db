@@ -12,9 +12,9 @@ namespace Arikaim\Core\Db\Prototypes\Column;
 use Arikaim\Core\Db\BlueprintPrototypeInterface;
 
 /**
- * Default column prototype class
+ * Parent id relation column prototype class
 */
-class DefaultColumn implements BlueprintPrototypeInterface
+class ParentId implements BlueprintPrototypeInterface
 {
     /**
      * Build column
@@ -24,10 +24,12 @@ class DefaultColumn implements BlueprintPrototypeInterface
      * @return void
      */
     public function build($table,...$options)
-    {
-        $name = (isset($options[0]) == true) ? $options[0] : 'default';
-        
-        $table->integer($name)->nullable(true)->default(null); 
-        $table->unique($name);   
+    {       
+        $columnName = (isset($options[0]) == false) ? 'parent_id' : $options[0];
+
+        $table->bigInteger($columnName)->unsigned()->nullable(true);
+        $table->foreign($columnName)->references('id')->on($table->getTable())->onDelete('cascade');     
+
+        $table->index($columnName);
     }
 }
