@@ -62,12 +62,13 @@ class Seed
     {
         $errors = 0;     
         foreach ($items as $item) {
-            $search = $this->createSearchValues($searchKeys,$item);
 
+            $search = $this->createSearchValues($searchKeys,$item);
+          
             if (is_callable($callback) == true) {
                 $item = $callback($item);              
             }
-
+    
             $result = $this->create($search,$item);
             $errors = ($result != true) ? $errors++ : $errors;
         }

@@ -47,9 +47,10 @@ trait SoftDelete
     public function softDelete($id = null)
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
-        $model->{$model->getDeletedColumn()} = DateTime::getTimestamp();
-        
-        return $model->save();
+
+        return $model->update([
+            $model->getDeletedColumn() => DateTime::getTimestamp()
+        ]);
     }
 
     /**

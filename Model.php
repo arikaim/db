@@ -62,6 +62,7 @@ class Model
     public static function getSql($builder)
     {
         $sql = str_replace(array('?'), array('\'%s\''),$builder->toSql());
+        
         return vsprintf($sql,$builder->getBindings());     
     }
 

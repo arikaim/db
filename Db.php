@@ -201,7 +201,7 @@ class Db
     public static function checkConnection($connection)
     {
         try {
-            $result = $connection->statement('SELECT 1');
+            $connection->statement('SELECT 1');
         } catch(PDOException $e) {
             return false;
         }

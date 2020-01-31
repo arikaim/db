@@ -56,7 +56,9 @@ trait OptionType
      */
     public static function getOptionTypeId($type)
     {
-        return array_search($type,Self::$TYPES_LIST);
+        $result = array_search($type,Self::$TYPES_LIST);
+
+        return ($result == false) ? 0 : $result;
     }
 
     /**

@@ -201,7 +201,7 @@ abstract class Schema
     {      
         $tableName = (is_object($model) == true) ? $model->getTable() : $model;
 
-        try {
+        try {          
             return Manager::schema()->hasTable($tableName);    
         } catch(PDOException $e) {
             return false;
