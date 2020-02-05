@@ -16,6 +16,16 @@ namespace Arikaim\Core\Db\Traits;
 trait PackageRegistry
 {    
     /**
+     * Get package name column(attribute)
+     *
+     * @return string
+     */
+    public function getPackageNameColumn()
+    {
+        return (isset($this->pckageColumnName) == true) ? $this->pckageColumnName : 'name';
+    }
+
+    /**
      * Get package
      * 
      * @param string $name
@@ -23,7 +33,7 @@ trait PackageRegistry
      */
     public function getPackage($name)
     {
-        $model = $this->findByColumn($name,'name');  
+        $model = $this->findByColumn($name,$this->getPackageNameColumn());  
         
         return (is_object($model) == true) ? $model->toArray() : false;
     }
@@ -36,7 +46,7 @@ trait PackageRegistry
      */
     public function hasPackage($name)
     {
-        $model = $this->where('name','=',$name)->first();     
+        $model = $this->where($this->getPackageNameColumn(),'=',$name)->first();     
           
         return is_object($model);
     }
@@ -50,7 +60,7 @@ trait PackageRegistry
     */
     public function setPackageStatus($name, $status)
     {
-        $model = $this->findByColumn($name,'name');  
+        $model = $this->findByColumn($name,$this->getPackageNameColumn());  
 
         return (is_object($model) == true) ? $model->setStatus($status) : false;     
     }
@@ -63,7 +73,7 @@ trait PackageRegistry
     */
     public function getPackageStatus($name)
     {
-        $model = $this->where('name','=',$name)->first();       
+        $model = $this->where($this->getPackageNameColumn(),'=',$name)->first();       
 
         return (is_object($model) == false) ? 0 : $model->status;            
     }
@@ -77,7 +87,7 @@ trait PackageRegistry
      */
     public function addPackage($name, array $data)
     {
-        $model = $this->findByColumn($name,'name'); 
+        $model = $this->findByColumn($name,$this->getPackageNameColumn()); 
         if (is_object($model) == true) {
             $result = $model->update($data);
             return ($result !== false);
@@ -96,7 +106,7 @@ trait PackageRegistry
     public function removePackage($name)
     {
         if ($this->hasPackage($name) == true) {
-            return $this->where('name','=',$name)->delete();
+            return $this->where($this->getPackageNameColumn(),'=',$name)->delete();
         }
 
         return true;
@@ -116,7 +126,7 @@ trait PackageRegistry
         }
         $model = $model->orderBy('position')->orderBy('id');
 
-        return $model->get()->keyBy('name');
+        return $model->get()->keyBy($this->getPackageNameColumn());
     }
 
     /**
@@ -127,7 +137,7 @@ trait PackageRegistry
     */
     public function setPrimary($name)
     {
-        $model = $this->findByColumn($name,'name');
+        $model = $this->findByColumn($name,$this->getPackageNameColumn());
         if (is_object($model) == false) {          
             return false;
         }
@@ -143,7 +153,7 @@ trait PackageRegistry
     */
     public function isPrimary($name)
     {
-        $model = $this->findByColumn($name,'name');
+        $model = $this->findByColumn($name,$this->getPackageNameColumn());
         if (is_object($model) == false) {          
             return null;
         }
