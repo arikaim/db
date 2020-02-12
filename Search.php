@@ -165,14 +165,25 @@ class Search
         $search = Self::getSearch($namespace);
         $condition = SearchCondition::parse($condition,$search);
 
-        if (empty($condition['search_value']) == false) {      
+        if (empty($condition['search_value']) == false) {
+            
             if ($condition['query_operator'] == 'or') {
-                $builder = $builder->orWhere($condition['field'],$condition['operator'],$condition['search_value']);
+                if ($condition['operator'] == 'ilike') {
+                    echo "ilike";
+                    $builder = $builder->orWhereRaw("UPPER(" . $condition['field'] . ") LIKE ?",["%" . strtoupper($condition['search_value']) . "%"]);                   
+                } else {
+                    $builder = $builder->orWhere($condition['field'],$condition['operator'],$condition['search_value']);
+                }
+               
             } else {
-                $builder = $builder->where($condition['field'],$condition['operator'],$condition['search_value']);
+                if ($condition['operator'] == 'ilike') {
+                    $builder = $builder->whereRaw("UPPER(" . $condition['field'] . ") LIKE ?",["%" . strtoupper($condition['search_value']) . "%"]);                   
+                } else {
+                    $builder = $builder->where($condition['field'],$condition['operator'],$condition['search_value']);
+                }                             
             }           
         } 
-
+        
         return $builder;
     }
 }

@@ -113,9 +113,9 @@ trait PolymorphicRelations
      * @param integer|string|null $id
      * @return boolean
      */
-    public function deleteRelation($id)
+    public function deleteRelation($id = null)
     {
-        $model = (empty($id) == true) ? $this->findByid($id) : $this;
+        $model = (empty($id) == true) ? $this : $this->findByid($id);
 
         return (is_object($model) == true) ? $model->delete() : false;
     }
