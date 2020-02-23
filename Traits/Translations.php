@@ -12,10 +12,92 @@ namespace Arikaim\Core\Db\Traits;
 use Arikaim\Core\View\Html\HtmlComponent;
 
 /**
- *  Translations trait      
+ * Translations trait      
 */
 trait Translations 
 {           
+    /**
+     * Current language
+     *
+     * @var string|null
+     */
+    protected $currentLanguage;
+
+    /**
+     * Boot trait.
+     *
+     * @return void
+     */
+    public static function bootTranslations()
+    {
+        static::retrieved(function($model) {           
+            $language = $model->getCurrentLanguage();
+            if (empty($language) == false) {
+                $model->translateAttributes($language);
+            }          
+        });        
+    }
+
+    /**
+     * Return translated value
+     *
+     * @param string $attribute
+     * @param string $language
+     * @return string|null
+     */
+    public function translateAttribute($attribute, $language = null)
+    {
+        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
+
+        $translation = $this->translation($language);
+        if (is_object($translation) == false) {
+            return null;
+        }
+
+        return (empty($translation->$attribute) == false) ? $translation->$attribute : null;
+    }
+
+    /**
+     * Translate attributes
+     *
+     * @param string $language
+     * @return boolean
+     */
+    public function translateAttributes($language)
+    {
+        $translation = $this->translation($language);
+        if (is_object($translation) == false) {
+            return false;
+        }
+
+        $list = $this->getTranslatedAttributes();
+        foreach ($list as $attribute) {         
+            $this->attributes[$attribute] = (empty($translation->$attribute) == false) ? $translation->$attribute : $this->attributes[$attribute];
+        }
+
+        return true;
+    }
+
+    /**
+     * Get translation attributes
+     *
+     * @return array
+     */
+    public function getTranslatedAttributes()
+    {
+        return (isset($this->translatedAttributes) == true) ? $this->translatedAttributes : [];
+    }
+
+    /**
+     * Get current language
+     *
+     * @return string
+     */
+    public function getCurrentLanguage()
+    {
+        return (empty($this->currentLanguage) == true) ? HtmlComponent::getLanguage() : $this->currentLanguage;
+    }
+
     /**
      * Get translation refernce attribute name 
      *
@@ -43,7 +125,7 @@ trait Translations
      */
     public function translations()
     {       
-        return $this->hasMany($this->getTranslationModelClass());
+        return $this->hasMany($this->getTranslationModelClass(),$this->getTranslationReferenceAttributeName());
     }
 
     /**
@@ -56,7 +138,7 @@ trait Translations
     {
         $class = $this->getTranslationModelClass();
         $model = new $class();
-        $language = (empty($language) == true) ? HtmlComponent::getLanguage() : $language;
+        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
         
         return $model->where('language','=',$language);
     }
@@ -69,7 +151,7 @@ trait Translations
      */
     public function translation($language = null, $query = false)
     {
-        $language = (empty($language) == true) ? HtmlComponent::getLanguage() : $language;
+        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
         $model = $this->translations()->getQuery()->where('language','=',$language);
         $model = ($query == false) ? $model->first() : $model;
 
@@ -82,11 +164,12 @@ trait Translations
      * @param string|integer|null $id
      * @param array $data
      * @param string $language
+     * @param string|integer|null $id 
      * @return Model
      */
     public function saveTranslation(array $data, $language = null, $id = null)
     {
-        $language = (empty($language) == true) ? HtmlComponent::getLanguage() : $language;
+        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
         $model = (empty($id) == true) ? $this : $this->findById($id);     
         $reference = $this->getTranslationReferenceAttributeName();
 
@@ -112,7 +195,7 @@ trait Translations
      */
     public function removeTranslation($id = null, $language = null)
     {
-        $language = (empty($language) == true) ? HtmlComponent::getLanguage() : $language;
+        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
         $model = (empty($id) == true) ? $this : $this->findById($id);     
         $model = $model->translation($language);
 
