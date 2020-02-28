@@ -149,19 +149,24 @@ trait PolymorphicRelations
      * @param integer $id
      * @param string  $type
      * @param integer $relationId
-     * @return void
+     * @return Model|boolean
      */
     public function saveRelation($id, $type, $relationId)
     {
         $relationField = $this->getRelationAttributeName();
-        $data = [
-            'uuid'          => Uuid::create(),
+        $data = [           
             $relationField  => $id,
             'relation_id'   => $relationId,
             'relation_type' => $type,
         ];    
+    
+        $model = $this->getRelation($id,$type,$relationId);
+        if ($model === false) {
+            $data['uuid'] = Uuid::create();
+            return $this->create($data);
+        }
 
-        return ($this->hasRelation($id,$type,$relationId) == false) ? $this->create($data) : false;       
+        return $model->update($data);
     }
 
     /**
@@ -181,6 +186,25 @@ trait PolymorphicRelations
             ->where('relation_id','=',$relationId)->first();
         
         return is_object($model);
+    }
+
+    /**
+     * Get relation
+     *
+     * @param integer $id
+     * @param string  $type
+     * @param integer $relationId
+     * @return Model|false
+     */
+    public function getRelation($id, $type, $relationId)
+    {
+        $relationField = $this->getRelationAttributeName();
+        $model = $this
+            ->where($relationField,'=',$id)
+            ->where('relation_type','=',$type)
+            ->where('relation_id','=',$relationId)->first();
+        
+        return (is_object($model) == true) ? $model : false;
     }
 
     /**
