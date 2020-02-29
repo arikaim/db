@@ -29,6 +29,26 @@ trait Slug
     }
 
     /**
+     * Get slug prefix
+     *
+     * @return string
+     */
+    public function getSlugPrefix()
+    {
+        return (isset($this->slugPrefix) == true) ? trim($this->slugPrefix) : '';
+    }
+
+    /**
+     * Get slug suffix
+     *
+     * @return string
+    */
+    public function getSlugSuffix()
+    {
+        return (isset($this->slugSuffix) == true) ? trim($this->slugSuffix) : '';
+    }
+
+    /**
      * Get slug attribute name
      *
      * @return string
@@ -56,6 +76,18 @@ trait Slug
     public function getSlugSeparator()
     {
         return (isset($this->slugSeparator) == true) ? $this->slugSeparator : '-';
+    }
+
+    /**
+     * Get slug value
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        $slugColumn = $this->getSlugColumn();
+
+        return $this->getSlugPrefix() . $this->attributes[$slugColumn] . $this->getSlugSuffix();
     }
 
     /**
