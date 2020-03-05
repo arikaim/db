@@ -76,6 +76,20 @@ trait PolymorphicRelations
     }
 
     /**
+     * Return true if related items > 0 
+     *
+     * @param integer $id
+     * @param string|null $type
+     * @return boolean
+     */
+    public function hasRelatedItems($id, $type = null)
+    {
+        $query = $this->getItemsQuery($id,$type);
+
+        return ($query->count() > 0);
+    }
+
+    /**
      * Get relations items
      *
      * @param integer $relationId
