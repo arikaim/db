@@ -25,7 +25,10 @@ trait Slug
     {
         static::saving(function($model) {   
             $model = Self::saveSlug($model);
-        });        
+        });     
+        static::creating(function($model) { 
+            $model = Self::saveSlug($model);
+        });
     }
 
     /**
