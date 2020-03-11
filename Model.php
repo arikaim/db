@@ -32,9 +32,9 @@ class Model
         $instance = Factory::createInstance($fullClass);
 
         if (is_callable($callback) == true) {
-            return $callback($instance);
+            return (is_object($instance) == true) ? $callback($instance) : null;
         }
-        if (is_object($instance) == false){
+        if (is_object($instance) == false) {
             throw new Exception("Not valid db model class: $fullClass", 1);
         }
         
