@@ -23,10 +23,11 @@ class Model
      * @param string $className Base model class name
      * @param string $extensionName
      * @param Closure|null $callback
+     * @param boolean $showError
      * @throws Exception
      * @return object|null
      */ 
-    public static function create($className, $extensionName = null, $callback = null) 
+    public static function create($className, $extensionName = null, $callback = null, $showError = true) 
     {         
         $fullClass = (class_exists($className) == false) ? Factory::getModelClass($className,$extensionName) : $className; 
         $instance = Factory::createInstance($fullClass);
@@ -34,7 +35,7 @@ class Model
         if (is_callable($callback) == true) {
             return (is_object($instance) == true) ? $callback($instance) : null;
         }
-        if (is_object($instance) == false) {
+        if (is_object($instance) == false && $showError == true) {
             throw new Exception("Not valid db model class: $fullClass", 1);
         }
         
