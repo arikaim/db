@@ -54,7 +54,7 @@ trait UserRelation
     }
 
     /**
-     * Undocumented function
+     * Get user relation
      *
      * @return mixed
      */
