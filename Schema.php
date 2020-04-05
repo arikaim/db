@@ -178,6 +178,18 @@ abstract class Schema
     }
 
     /**
+     * Changes db table row format 
+     *
+     * @param string $table
+     * @param string $format
+     * @return boolean
+     */
+    public static function setRowFormat($table, $format = 'DYNAMIC')
+    {      
+        return Manager::connection()->statement('ALTER TABLE ' . $table . ' ROW_FORMAT=' . $format);
+    }
+
+    /**
      * Execute blueprint.
      *
      * @param  Arikaim\Core\Db\TableBlueprint  $blueprint
