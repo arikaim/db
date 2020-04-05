@@ -34,7 +34,7 @@ abstract class Schema
      *
      * @var string
      */
-    protected $storageEngine = 'InnoDB';
+    protected $storageEngine = 'InnoDB row_format=dynamic';
 
     /**
      * Create table
