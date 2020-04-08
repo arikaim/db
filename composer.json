@@ -15,7 +15,8 @@
         "arikaim/utils": "^1.0.0",
         "arikaim/http": "^1.0.0",
         "illuminate/database": "5.8.*",
-        "illuminate/events": "5.8.*"      
+        "illuminate/events": "5.8.*",
+        "doctrine/dbal": "2.9.*"       
     },
     "autoload": {       
         "psr-4": {

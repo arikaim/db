@@ -93,6 +93,7 @@ abstract class Schema
     public static function getTable($class)
     {
         $instance = Factory::createSchema($class);
+
         return (is_object($instance) == false) ? false : $instance->getTableName();         
     }
 
@@ -135,7 +136,7 @@ abstract class Schema
             };
             $call(); 
             
-            $this->build($blueprint,Manager::schema());           
+            $this->build($blueprint,Manager::schema());               
         }       
     } 
     
@@ -162,7 +163,8 @@ abstract class Schema
      */
     public function isEmpty()
     {
-        $query = Manager::table($this->tableName);     
+        $query = Manager::table($this->tableName); 
+
         return empty($query->count() == true);
     }
 
@@ -200,6 +202,7 @@ abstract class Schema
     {
         $connection = $builder->getConnection();
         $grammar = $connection->getSchemaGrammar();
+
         $blueprint->build($connection,$grammar);
     }
     
@@ -234,6 +237,7 @@ abstract class Schema
         if ($emptyOnly == false) {
             Manager::schema()->dropIfExists($this->tableName);           
         }
+
         return !$this->tableExists();
     } 
 
@@ -289,7 +293,7 @@ abstract class Schema
                 
                 return $instance->tableExists();
                 
-            } catch(\Exception $e) {              
+            } catch(\Exception $e) {                           
             }
         }
         
@@ -313,6 +317,7 @@ abstract class Schema
             } catch(\Exception $e) {
             }
         }
+        
         return false;
     }
 }   
