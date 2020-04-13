@@ -174,7 +174,7 @@ trait PolymorphicRelations
             'relation_type' => $type,
         ];    
     
-        $model = $this->getRelation($id,$type,$relationId);
+        $model = $this->getRelationModel($id,$type,$relationId);
         if ($model === false) {
             $data['uuid'] = Uuid::create();
             return $this->create($data);
@@ -210,7 +210,7 @@ trait PolymorphicRelations
      * @param integer $relationId
      * @return Model|false
      */
-    public function getRelation($id, $type, $relationId)
+    public function getRelationModel($id, $type, $relationId)
     {
         $relationField = $this->getRelationAttributeName();
         $model = $this
