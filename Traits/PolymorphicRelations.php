@@ -38,12 +38,13 @@ trait PolymorphicRelations
 
     /**
      * Morphed model
-     *
+     * 
+     * @param string|null $type
      * @return void
      */
-    public function related()
+    public function related($type = null)
     {
-        return $this->morphTo('relation');
+        return $this->morphTo('relation',$type);      
     }
 
     /**

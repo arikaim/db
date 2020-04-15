@@ -9,6 +9,8 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
+use Arikaim\Core\Collection\Arrays;
+
 /**
  * Permissions
 */
@@ -48,11 +50,16 @@ trait Permissions
     /**
      * Resolve permissions array
      *
-     * @param array $access
+     * @param array|string $access
      * @return array
      */
-    public function resolvePermissions(array $access) 
+    public function resolvePermissions($access) 
     {
+        if (is_string($access) == true) {
+            $access = strtolower($access);
+            $access = ($access == 'full') ? ['read','write','delete','execute'] : Arrays::toArray($access,",");
+        }
+
         return [
             'read'      => in_array('read',$access) ? 1:0,
             'write'     => in_array('write',$access) ? 1:0,
