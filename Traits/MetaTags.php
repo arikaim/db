@@ -45,7 +45,20 @@ trait MetaTags
         $model = (empty($query) == true) ? $this : $query;
         $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
         $model = $model->where('language','=',$language)->first();
-       
+        
+        return $this->getMetaTagsArray($model);        
+    }
+
+    /**
+     * Get meta tags field values
+     *
+     * @param Model|null $model
+     * @return array
+     */
+    public function getMetaTagsArray($model = null)
+    {
+        $model = (empty($model) == true) ? $this : $model;
+
         return [
             'title'       => is_object($model) ? $model->meta_title : null,
             'description' => is_object($model) ? $model->meta_description : null,

@@ -232,4 +232,21 @@ trait Translations
 
         return $model->first();
     }
+
+    /**
+     * Get meta tags values
+     *
+     * @param string|null $language
+     * @return array
+     */
+    public function getMetaTags($language = null)
+    {
+        $translation = $this->translation($language);
+        
+        return [
+            'title'       => is_object($translation) ? $translation->meta_title : null,
+            'description' => is_object($translation) ? $translation->meta_description : null,
+            'keywords'    => is_object($translation) ? $translation->meta_keywords : null,
+        ];  
+    }
 }

@@ -7,7 +7,7 @@
  * @license     http://www.arikaim.com/license
  * 
 */
-namespace Arikaim\Core\Db\Traits;
+namespace Arikaim\Core\Db\Traits\Permissions;
 
 use Arikaim\Core\Collection\Arrays;
 
