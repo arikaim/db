@@ -107,4 +107,18 @@ trait OptionsRelation
 
         return (is_object($items) == true) ? $items->get($key) : null;   
     }
+
+    /**
+     * Get option value
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getOptionValue($key, $default = null)
+    {
+        $option = $this->getOption($key);
+
+        return (empty($option) == false) ? $option['value'] : $default;
+    }
 }
