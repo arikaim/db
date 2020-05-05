@@ -26,6 +26,29 @@ trait Find
     }
     
     /**
+     * Get last row
+     *
+     * @param string $field
+     * @return Model|null
+     */
+    public function getLastRow($field = 'id')
+    {
+        return $this->latest($field)->first();
+    }
+
+    /**
+     * Get last id
+     *
+     * @return integer|null
+     */
+    public function getLastId()
+    {
+        $model = $this->getLastRow();
+
+        return (is_object($model) == true) ? $model->id : null;
+    }
+
+    /**
      * Find model by column name
      *
      * @param mxied $value
