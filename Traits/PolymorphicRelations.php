@@ -168,6 +168,9 @@ trait PolymorphicRelations
      */
     public function saveRelation($id, $type, $relationId)
     {
+        if (empty($relationId) == true || empty($id) == true) {
+            return false;
+        }
         $relationField = $this->getRelationAttributeName();
         $data = [           
             $relationField  => $id,
@@ -233,7 +236,7 @@ trait PolymorphicRelations
     public function saveRelations(array $items, $type, $relationId)
     {
         $added = [];
-        foreach ($items as $item) {
+        foreach ($items as $item) {           
             $result = $this->saveRelation($item,$type,$relationId);
             if ($result !== false) {
                $added[] = $item;
