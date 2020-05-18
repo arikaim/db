@@ -81,4 +81,36 @@ trait EntityPermissionsRelation
     {
         return is_object($this->getPermission($userId,$type));
     }
+
+    /**
+     * Get public entity permission 
+     *
+     * @param integer|null $entityId
+     * @return Model|false
+     */
+    public function getPublicPermission($entityId = null)
+    {
+        $entityId = (empty($entityId) == true) ? $this->id : $entityId;   
+        $model = new $this->entytyPermissionsClass();
+
+        $model = $model
+                ->where('relation_id','=',null)
+                ->where('relation_type','=','user')
+                ->where('entity_id','=',$entityId)->first();
+        
+        return (is_object($model) == true) ? $model : false;
+    } 
+
+    /**
+     * Return true if item is public
+     *
+     * @param integer|null $entityId
+     * @return boolean
+     */
+    public function isPublic($entityId = null)
+    {
+        $entityId = (empty($entityId) == true) ? $this->id : $entityId;
+
+        return ($this->getPublicPermission($entityId) !== false);
+    }
 }

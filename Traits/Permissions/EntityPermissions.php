@@ -97,6 +97,55 @@ trait EntityPermissions
     }
 
     /**
+     * Add public permission
+     *
+     * @param integer $entityId
+     * @param array $permissions
+     * @return Model
+     */
+    public function addPublicPermission($entityId, $permissions)
+    { 
+        $model = $this->getPublicPermission($entityId);
+        if (is_object($model) == true) {
+            return false;
+        }
+        $permissions = $this->resolvePermissions($permissions);
+        $permissions['entity_id'] = $entityId;
+        $permissions['relation_id'] = null;
+        $permissions['relation_type'] = 'user';
+    
+        return $this->create($permissions);          
+    }
+
+    /**
+     * Get public permission
+     *
+     * @param integer $entityId
+     * @return Model
+     */
+    public function getPublicPermission($entityId)
+    {
+        $model = $this
+            ->where('entity_id','=',$entityId)
+            ->whereNull('relation_id')
+            ->where('relation_type','=','user')->first();
+        
+        return $model;
+    }
+    /**
+     * Delete public permissions
+     *
+     * @param integer $entityId
+     * @return boolean
+     */
+    public function deletePublicPermission($entityId)
+    {
+        $model = $this->getPublicPermission($entityId);
+
+        return (is_object($model) == true) ? $model->delete() : true;
+    }
+
+    /**
      * Get permission model
      *
      * @param integer $entityId
@@ -122,6 +171,6 @@ trait EntityPermissions
      */
     public function getPermissionsQuery($entityId)
     {
-        return $this->where('entity_id','=',$entityId);      
+        return $this->where('entity_id','=',$entityId)->whereNotNull('relation_id');      
     }
 }

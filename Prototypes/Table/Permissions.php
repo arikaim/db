@@ -31,7 +31,7 @@ class Permissions implements BlueprintPrototypeInterface
         $table->relation('entity_id',$options[0],false);     
         $table->relation('permission_id','permissions',true);     
         $table->string('relation_type')->nullable(false);         
-        $table->integer('relation_id')->nullable(false);   
+        $table->integer('relation_id')->nullable(true);   
         $table->integer('read')->nullable(false)->default(0);
         $table->integer('write')->nullable(false)->default(0);
         $table->integer('delete')->nullable(false)->default(0);
