@@ -44,18 +44,19 @@ trait EntityPermissionsRelation
     public function hasAccess($userId, $access)
     {
         $permissions = $this->resolvePermissions($access);
+        
         $model = $this->getPermission($userId);
         if (is_object($model) == false) {
             return false;
         }
 
-        foreach ($permissions as $permission) {               
-            if ($model->hasPermission($permission) == false) {              
-                return false;
+        foreach ($permissions as $key => $permission) { 
+            if ($model->hasPermission($key) == true) {           
+                return true;
             }
         }
         
-        return true;
+        return false;
     }
 
     /**
@@ -68,18 +69,6 @@ trait EntityPermissionsRelation
     public function getPermission($userId, $type = 'user')
     {
         return $this->permissions->where('relation_id','=',$userId)->where('relation_type','=',$type)->first();
-    }
-
-    /**
-     * Return true if user have assigned permision 
-     *
-     * @param integer $userId
-     * @param string $type
-     * @return boolean
-     */
-    public function hasPermission($userId, $type = 'user')
-    {
-        return is_object($this->getPermission($userId,$type));
     }
 
     /**
