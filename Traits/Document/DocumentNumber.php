@@ -7,7 +7,7 @@
  * @license     http://www.arikaim.com/license
  * 
 */
-namespace Arikaim\Core\Db\Traits\Price;
+namespace Arikaim\Core\Db\Traits\Document;
 
 /**
  * Document number table trait
@@ -40,6 +40,16 @@ trait DocumentNumber
     } 
 
     /**
+     * Get document number unique index columns
+     *
+     * @return string
+     */
+    public function getDocumentNumberUniqueIndex()
+    {
+        return (isset($this->documentNumberUniqueIndex) == true) ? $this->documentNumberUniqueIndex : null;
+    } 
+
+    /**
      * Get label
      *
      * @return string
@@ -51,18 +61,19 @@ trait DocumentNumber
 
     /**
      * Get next document number
-     *
-     * @param string|integer|null $id
+     *     
      * @return integer
      */
-    public function getNextDocumentNumber($id = null)
+    public function getNextDocumentNumber($filterColumnValue = null)
     {
         $columnName = $this->getDocumentNumberColumn();
+        $indexColumn = $this->getDocumentNumberUniqueIndex();
+        $filterColumnValue = (empty($filterColumnValue) == true) ? $this->{$indexColumn} : $filterColumnValue;
+      
+        $model = (empty($indexColumn) == false) ? $this->where($indexColumn,'=',$filterColumnValue) : $this;     
+        $max = $model->max($columnName);
 
-        $model = (empty($id) == true) ? $this : $this->findById($id);
-        $max = $model->where('id','=',$model->id)->max($columnName);
-
-        return (empty($max) == true ) ? 0 : ($max + 1); 
+        return (empty($max) == true) ? 1 : ($max + 1); 
     }
 
     /**
