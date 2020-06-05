@@ -48,7 +48,7 @@ trait DefaultTrait
         $column = $this->getDefaultColumnName();
         $id = (empty($id) == true) ? $this->id : $id;
 
-        $models = (empty($userId) == false) ? $this->where('user_id','=',$userId) : $this;
+        $models = (empty($userId) == false) ? $this->where('user_id','=',$userId) : $this->where('id','<>',$id);
         $models->update([$column => null]);
               
         $model = $this->findById($id);      
