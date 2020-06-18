@@ -10,6 +10,7 @@
 namespace Arikaim\Core\Db;
 
 use Arikaim\Core\Utils\Factory;
+use Arikaim\Core\Db\Seed;
 use Exception;
 
 /**
@@ -17,6 +18,18 @@ use Exception;
 */
 class Model 
 {   
+
+    public static function seed($className, $extensionName, $callback = null)
+    {
+        $model = Self::create($className, $extensionName);
+        if (is_object($model) == false) {
+            return null;
+        }
+        $seed = new Seed($model->getTable());
+
+        return (is_callable($callback) == true) ? $callback($seed) : $seed;
+    } 
+
     /**
      * Create db model instance
      *

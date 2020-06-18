@@ -41,15 +41,17 @@ trait OptionsRelation
     /**
      * Create options
      *
+     * @param string $typeName
      * @return boolean
      */
-    public function createOptions()
+    public function createOptions($typeName = null)
     {
         $options = Model::create($this->getOptionsClass());
-        $typeName = $this->getOptionsType();
-        
+        $typeName = (empty($typeName) == true) ? $this->getOptionsType() : $typeName;
+        $key = $this->getOptionsPrimarykey();
+
         if (is_object($options) == true && empty($typeName) == false) {
-            return $options->createOptions($this->id,$typeName);
+            return $options->createOptions($this->{$key},$typeName);
         }
 
         return false;
@@ -66,15 +68,23 @@ trait OptionsRelation
     }
 
     /**
+     * Get options primary key
+     *
+     * @return string
+     */
+    public function getOptionsPrimarykey()
+    {
+        return (isset($this->optionsPrimaryKey) == true) ? $this->optionsPrimaryKey : 'id';
+    }
+
+    /**
      * Options relation
      *
      * @return mixed
      */
     public function options()
     {
-        $relation = $this->hasMany($this->getOptionsClass(),'reference_id');
-
-        return $relation;
+        return $this->hasMany($this->getOptionsClass(),'reference_id',$this->getOptionsPrimarykey());       
     }
 
     /**
@@ -95,17 +105,21 @@ trait OptionsRelation
      * Get option
      *
      * @param string $key
-     * @return mixed|null
+     * @return array|null
      */
     public function getOption($key)
     {
         if (is_object($this->options) == false) {
             return null;
-        }
-        
+        }        
         $items = $this->options->keyBy('key');
 
-        return (is_object($items) == true) ? $items->get($key) : null;   
+        if (is_object($items) == true) {
+            $item = $items->get($key);
+            return (is_object($item) == true) ? $item->toArray() : null;
+        }   
+
+        return null;
     }
 
     /**

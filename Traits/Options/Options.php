@@ -149,6 +149,7 @@ trait Options
         if (is_object($optionType) == false) {
             return false;
         }
+      
         $referenceId = (empty($referenceId) == true) ? $this->reference_id : $referenceId;
         $model = $this->where('reference_id','=',$referenceId);
 
@@ -211,7 +212,6 @@ trait Options
         if (is_object($optionType) == false) {
             return false;
         }
-
         $model = $this->where('reference_id','=',$referenceId)->where('type_id','=',$optionType->id);
 
         return $model->update(['value' => $value]);  
