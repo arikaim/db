@@ -77,6 +77,26 @@ trait DocumentNumber
     }
 
     /**
+     * Return true if document number is valid
+     *
+     * @param integer|null $documentNumber
+     * @param string|null $filterColumnValue
+     * @return boolean
+     */
+    public function isValidDocumentNumber($documentNumber = null, $filterColumnValue = null)
+    {
+        $columnName = $this->getDocumentNumberColumn();
+        $columnValue = (isset($this->attributes[$columnName]) == true) ? $this->attributes[$columnName] : $documentNumber;
+
+        $indexColumn = $this->getDocumentNumberUniqueIndex();
+        $filterColumnValue = (empty($filterColumnValue) == true) ? $this->{$indexColumn} : $filterColumnValue;
+
+        $model = $this->where($columnName,'=',$columnValue)->where($indexColumn,'=',$filterColumnValue)->first();
+        
+        return !is_object($model);
+    } 
+
+    /**
      * Get document number
      *
      * @param string $prefix

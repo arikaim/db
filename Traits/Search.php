@@ -9,6 +9,8 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
+use Arikaim\Core\Db\Search as DbSearch;
+
 /**
  * Search trait
 */
@@ -22,6 +24,6 @@ trait Search
      */
     public function applySearch($namespace = null)
     {
-        return Arikaim\Core\Db\Search::apply($this,$namespace);
+        return DbSearch::apply($this,$namespace);
     }
 }
