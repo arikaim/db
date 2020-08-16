@@ -120,5 +120,5 @@ trait SoftDelete
     public function getDeletedColumn()
     {
         return (isset($this->softDeleteColumn) == true) ? $this->softDeleteColumn : 'date_deleted';
-    }
+    } 
 }

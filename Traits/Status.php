@@ -97,6 +97,37 @@ trait Status
     }
 
     /**
+     * Status text
+     *
+     * @var array
+     */
+    protected $statusText = [
+        'disabled',
+        'active',
+        'completed',
+        'published',
+        'pemding',
+        'suspended'
+    ];
+
+    /**
+     * Status scope
+     *
+     * @param Builder $query
+     * @param mixed $items
+     * @return Builder
+     */
+    public function scopeStatus($query, $items)
+    {
+        $column = $this->getStatusColumn();
+        if (is_array($items) == true) {       
+            return $query->whereIn($column,$items);
+        }
+
+        return $query->where($column,'=',$items);
+    }
+
+    /**
      * Get status column name
      *
      * @return string
@@ -107,6 +138,21 @@ trait Status
     }
 
     /**
+     * Resolve status id
+     *
+     * @param string $status
+     * @return integer|false
+     */
+    public function resolveStatusText($status) 
+    {
+        if (\is_numeric($status) == true) {
+            return $status;
+        }
+
+        return array_search($status,$this->statusText);
+    } 
+
+    /**
      * Return active model query builder
      *
      * @return void
@@ -115,7 +161,7 @@ trait Status
     {
         $model = parent::where($this->getStatusColumn(),'=',Self::$ACTIVE);
 
-        if (method_exists($model,'getNotDeletedQuery') == true) {
+        if (\method_exists($model,'getNotDeletedQuery') == true) {
             $model = $model->getNotDeletedQuery();
         }
         

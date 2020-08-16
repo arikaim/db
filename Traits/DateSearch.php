@@ -47,9 +47,9 @@ trait DateSearch
         if (empty($month) == true) {
             return $query;
         }
-        $year = (empty($year) == true) ? DateTime::getyear() : $year;
+        $year = (empty($year) == true) ? DateTime::getYear() : $year;
         $lastDay = DateTime::getLastDay($month);
-
+        
         $start = DateTime::toTimestamp($year . '-' . $month . '-01T00:00:00.0');
         $end = DateTime::toTimestamp($year . '-' . $month . '-' . $lastDay . 'T12:59:59.0');
        

@@ -106,7 +106,7 @@ trait Slug
         $slugSourceColumn = $model->getSlugSourceColumn();
         $separator = $model->getSlugSeparator(); 
 
-        if (is_null($model->$slugSourceColumn) == false) {                   
+        if (\is_null($model->$slugSourceColumn) == false) {                   
             $model->attributes[$slugColumn] = Utils::slug($model->$slugSourceColumn,$separator);
         }              
        
@@ -117,11 +117,14 @@ trait Slug
      * Create slug from text
      *
      * @param string $text
+     * @param string $separator
      * @return string
      */
-    public function slug($text)
+    public function slug($text, $separator = null)
     {
-        return Utils::slug($text,$this->getSlugSeparator());
+        $separator = (empty($separator) == true) ? $this->getSlugSeparator() : $separator;
+
+        return Utils::slug($text,$separator);
     }
 
     /**
@@ -133,8 +136,8 @@ trait Slug
     public function findBySlug($slug)
     {
         $slugColumn = $this->getSlugColumn();
-        $model = $this->where($slugColumn,'=',$slug)->first();
-
-        return (is_object($model) == true) ? $model : false;
+        $model = $this->where($slugColumn,'=',$slug)->orWhere($slugColumn,'=',$this->slug($slug))->first();
+      
+        return (\is_object($model) == true) ? $model : false;
     }
 }

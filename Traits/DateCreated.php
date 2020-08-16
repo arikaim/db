@@ -27,8 +27,10 @@ trait DateCreated
     public static function bootDateCreated()
     {
         static::creating(function($model) {  
-            $name = $model->getDateCreatedAttributeName();   
-            $model->attributes[$name] = DateTime::getTimestamp();                   
+            $columnName = $model->getDateCreatedAttributeName();   
+            $dateCreated = (empty($model->$columnName) == true) ? DateTime::getTimestamp() : $model->$columnName;
+
+            $model->attributes[$columnName] = $dateCreated;               
         });
     }
     
