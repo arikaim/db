@@ -45,7 +45,7 @@ trait Find
     {
         $model = $this->getLastRow();
 
-        return (is_object($model) == true) ? $model->id : null;
+        return (\is_object($model) == true) ? $model->id : null;
     }
 
     /**
@@ -59,7 +59,7 @@ trait Find
     {
         $model = $this->findQuery($value,$column);
         
-        return (is_object($model) == false) ? false : $model->first();
+        return (\is_object($model) == false) ? false : $model->first();
     }
 
     /**
@@ -75,11 +75,11 @@ trait Find
             return $this->findByIdQuery($value);
         }
 
-        if (is_string($column) == true) {
+        if (\is_string($column) == true) {
             return parent::where($column,'=',$value);
         }
 
-        if (is_array($column) == true) {
+        if (\is_array($column) == true) {
             $model = $this;
             foreach ($column as $item) {
                $model = $model->orWhere($item,'=',$value);
@@ -109,8 +109,9 @@ trait Find
      */
     public function getIdAttributeName($id)
     {
-        $uuidAttribute = (method_exists($this,'getUuidAttributeName') == true) ? $this->getUuidAttributeName() : 'uuid';
-        return (is_numeric($id) == true) ? $this->getKeyName() : $uuidAttribute;
+        $uuidAttribute = (\method_exists($this,'getUuidAttributeName') == true) ? $this->getUuidAttributeName() : 'uuid';
+
+        return (\is_numeric($id) == true) ? $this->getKeyName() : $uuidAttribute;
     }
 
     /**

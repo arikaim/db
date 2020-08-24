@@ -60,7 +60,7 @@ class Db
         $this->init($config); 
 
         // init relations morph map
-        if (is_array($relations) == true) {                   
+        if (\is_array($relations) == true) {                   
             Relation::morphMap($relations);                          
         }
     }
@@ -143,7 +143,7 @@ class Db
             return false;
         } 
       
-        return is_object($pdo);
+        return \is_object($pdo);
     }
 
     /**
@@ -165,7 +165,7 @@ class Db
             return false;
         }
        
-        return is_object($pdo);
+        return \is_object($pdo);
     }
 
     /**
@@ -176,7 +176,7 @@ class Db
      */
     public function createDb($databaseName, $charset = null, $collation = null) 
     {    
-        if (Self::has($databaseName) == true) {
+        if ($this->has($databaseName) == true) {
             return true;
         }
 
@@ -222,7 +222,8 @@ class Db
             $result = $this->checkConnection($this->capsule->getConnection('schema'));      
         } catch(PDOException $e) {   
             return false;
-        }      
+        }     
+
         return $result;
     }
 
@@ -272,9 +273,9 @@ class Db
         $pdo = $this->capsule->connection()->getPdo();
 
         return [
-            'driver'      => is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) : "",
-            'server_info' => is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_SERVER_INFO) : "",
-            'version'     => is_object($pdo) ? substr($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION),0,6) : "",
+            'driver'      => \is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) : "",
+            'server_info' => \is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_SERVER_INFO) : "",
+            'version'     => \is_object($pdo) ? substr($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION),0,6) : "",
             'name'        => null
         ];      
     }

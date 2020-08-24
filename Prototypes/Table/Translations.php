@@ -32,7 +32,7 @@ class Translations implements BlueprintPrototypeInterface
         $table->language();       
         $table->relation($options[0],$options[1],false);
     
-        if (is_callable($callback) == true) {         
+        if (\is_callable($callback) == true) {         
             $call = function() use($callback,$table) {
                 $callback($table);                                 
             };

@@ -29,6 +29,8 @@ trait OptionType
     static $MARKDOWN      = 9;
     static $DATE          = 10;
     static $TIME_INTERVAL = 11;
+    static $USER_GROUP    = 12;
+    static $PERMISSION    = 13;
 
     /**
      *  Option type text
@@ -45,7 +47,9 @@ trait OptionType
         'file',
         'markdown',
         'date',
-        'time-interval'
+        'time-interval',
+        'user-group',
+        'permission'
     ];
 
     /**
@@ -56,7 +60,7 @@ trait OptionType
      */
     public static function getOptionTypeId($type)
     {
-        $result = array_search($type,Self::$TYPES_LIST);
+        $result = \array_search($type,Self::$TYPES_LIST);
 
         return ($result == false) ? 0 : $result;
     }
@@ -80,11 +84,11 @@ trait OptionType
         ];
 
         static::retrieved(function($model) use ($fillable) {
-            $model->fillable = array_merge($model->fillable,$fillable);
+            $model->fillable = \array_merge($model->fillable,$fillable);
         });
 
         static::saving(function($model) use ($fillable) {
-            $model->fillable = array_merge($model->fillable,$fillable);
+            $model->fillable = \array_merge($model->fillable,$fillable);
         });
     }
 
@@ -106,6 +110,26 @@ trait OptionType
     public function DATE()
     {
         return Self::$DATE;
+    }
+
+    /**
+     * User group option type
+     *
+     * @return integer
+     */
+    public function USERGROUP()
+    {
+        return Self::$USER_GROUP;
+    }
+
+    /**
+     * Permission option type
+     *
+     * @return integer
+    */
+    public function PERMISSION()
+    {
+        return Self::$PERMISSION;
     }
 
     /**
@@ -186,8 +210,8 @@ trait OptionType
      */
     public function setItemsAttribute($value)
     {
-        $value = (is_array($value) == true) ? $value : [$value];    
-        $this->attributes['items'] = json_encode($value);
+        $value = (\is_array($value) == true) ? $value : [$value];    
+        $this->attributes['items'] = \json_encode($value);
     }
 
     /**
@@ -197,7 +221,7 @@ trait OptionType
      */
     public function getItemsAttribute()
     {
-        return (empty($this->attributes['items']) == true) ? [] : json_decode($this->attributes['items'],true);
+        return (empty($this->attributes['items']) == true) ? [] : \json_decode($this->attributes['items'],true);
     }
 
     /**

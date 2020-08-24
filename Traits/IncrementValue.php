@@ -24,9 +24,9 @@ trait IncrementValue
      */
     public function incrementValue($uuid, $fieldName, $increment = 1)
     {        
-        $model = (is_string($uuid) == true) ? parent::where('uuid','=',$uuid)->first() : parent::where('id','=',$uuid)->first();
+        $model = (\is_string($uuid) == true) ? parent::where('uuid','=',$uuid)->first() : parent::where('id','=',$uuid)->first();
           
-        if (is_object($model) == false) {
+        if (\is_object($model) == false) {
             return false;
         }
         $value = $model->getAttribute($fieldName);

@@ -25,13 +25,13 @@ trait Tree
     public function getModelPath($model)
     {
         $result = [];
-        array_unshift($result,$model->toArray());
+        \array_unshift($result,$model->toArray());
       
         while ($model != false) {
             $parentId = $model->attributes[$this->getParentColumn()];
             $model = parent::where('id','=',$parentId)->first();
-            if (is_object($model) == true) {
-                array_unshift($result,$model->toArray());
+            if (\is_object($model) == true) {
+                \array_unshift($result,$model->toArray());
             }
         }
 
@@ -70,7 +70,7 @@ trait Tree
         $columnName = $this->getParentColumn();
 
         $model = $this->findByColumn($this->id,$columnName);
-        if (is_object($model) == true) {
+        if (\is_object($model) == true) {
             return ($model->count() > 0) ? true : false; 
         }
 

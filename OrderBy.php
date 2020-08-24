@@ -18,7 +18,7 @@ use Arikaim\Core\Http\Session;
 class OrderBy 
 {   
     /**
-     * Undocumented function
+     * Set order by
      *
      * @param string $fieldName
      * @param string $type (asc|desc)
@@ -69,7 +69,7 @@ class OrderBy
     {
         $order = Self::getOrderBy($namespace);
         
-        $field = key($order);
+        $field = \key($order);
         $type = (isset($order[$field]) == true) ? $order[$field] : 'asc';
        
         if (empty($field) == false) {

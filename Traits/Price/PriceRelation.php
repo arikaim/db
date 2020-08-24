@@ -38,7 +38,7 @@ trait PriceRelation
         $priceList = Model::create($this->getPriceListClass());
         $typeName = $this->getOptionsType();
         
-        if (is_object($priceList) == true && empty($typeName) == false) {               
+        if (\is_object($priceList) == true && empty($typeName) == false) {               
             return $priceList->createPiceList($this->id,$typeName);
         }
 
@@ -103,11 +103,24 @@ trait PriceRelation
      */
     public function getPrice($key) 
     {                 
-        if (is_object($this->price) == false) {
+        if (\is_object($this->price) == false) {
             return null;
         }
         $items = $this->price->keyBy('key');
 
-        return (is_object($items) == true) ? $items->get($key) : null;
+        return (\is_object($items) == true) ? $items->get($key) : null;
+    }
+
+    /**
+     * Get price value
+     *
+     * @param string $key
+     * @return float|null
+     */
+    public function getPriceValue($key) 
+    {
+        $model = $this->getPrice($key);
+
+        return (\is_object($model) == true) ? $model->price : null;
     }
 }

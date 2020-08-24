@@ -32,13 +32,12 @@ class SearchCondition
     public static function crate($field, $searchFieldName, $operator = null, $queryOperator = null)
     {
         $operator = (empty($operator) == true) ? '=' : $operator;
-        $tokens = explode(':',$operator);
+        $tokens = \explode(':',$operator);
+        $operatorParams = null;   
         if (isset($tokens[1]) == true) {
             $operatorParams = $tokens[1];
             $operator = $tokens[0];
-        } else {
-            $operatorParams = null;            
-        }
+        } 
 
         $queryOperator = (empty($queryOperator) == true) ? 'and' : $queryOperator;
 
@@ -64,7 +63,7 @@ class SearchCondition
         $searchValue = (isset($search[$searchField]) == true) ? $search[$searchField] : '';
 
         if (empty($condition['operator_params']) == false && $condition['operator'] == 'like') {
-            $searchValue = str_replace('{value}',$searchValue,$condition['operator_params']);
+            $searchValue = \str_replace('{value}',$searchValue,$condition['operator_params']);
         }
 
         $condition['search_value'] = $searchValue;

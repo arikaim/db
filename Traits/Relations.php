@@ -45,7 +45,7 @@ trait Relations
         $targetColumn= $this->getRelationsTargetAttributeName();
         $model = $this->getQuery()->where($targetColumn,'=',$id)->first();  
 
-        return (is_object($model) == false) ? false : $model;
+        return (\is_object($model) == false) ? false : $model;
     }
 
     /**
@@ -59,7 +59,7 @@ trait Relations
     {        
         $model = $this->relation($targetId);
 
-        if (is_object($model) == false) {
+        if (\is_object($model) == false) {
             $targetColumn = $this->getRelationsTargetAttributeName();
             $sourceColumn = $this->getRelationsSourceAttributeName();
 
@@ -93,7 +93,7 @@ trait Relations
      */
     public function hasRelation($targetId)
     {
-        return is_object($this->relation($targetId));
+        return \is_object($this->relation($targetId));
     }
 
     /**
@@ -107,7 +107,7 @@ trait Relations
     {        
         $model = $this->relation($id);
         
-        return (is_object($model) == true) ? $model->delete() : false;
+        return (\is_object($model) == true) ? $model->delete() : false;
     }
 
     /**

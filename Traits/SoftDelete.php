@@ -24,7 +24,7 @@ trait SoftDelete
      */
     public function isDeleted()
     {
-        return ! is_null($this->{$this->getDeletedColumn()});
+        return (\is_null($this->{$this->getDeletedColumn()}) == false);
     }
 
     /**
@@ -35,6 +35,7 @@ trait SoftDelete
     public function getDeletedCount()
     {
         $query = $this->softDeletedQuery();
+        
         return $query->count();
     }
 

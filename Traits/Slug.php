@@ -38,7 +38,7 @@ trait Slug
      */
     public function getSlugPrefix()
     {
-        return (isset($this->slugPrefix) == true) ? trim($this->slugPrefix) : '';
+        return (isset($this->slugPrefix) == true) ? \trim($this->slugPrefix) : '';
     }
 
     /**
@@ -48,7 +48,7 @@ trait Slug
     */
     public function getSlugSuffix()
     {
-        return (isset($this->slugSuffix) == true) ? trim($this->slugSuffix) : '';
+        return (isset($this->slugSuffix) == true) ? \trim($this->slugSuffix) : '';
     }
 
     /**

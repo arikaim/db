@@ -45,7 +45,7 @@ trait EntityPermissions
     {
         $permission = $this->permission();
 
-        return (is_object($permission) == true) ? $permission->name : '';
+        return (\is_object($permission) == true) ? $permission->name : '';
     }
 
     /**
@@ -70,7 +70,7 @@ trait EntityPermissions
     {
         $model = $this->getPermission($entityId,$userId,'user');
 
-        return (is_object($model) == true) ? $model->delete() : true;
+        return (\is_object($model) == true) ? $model->delete() : true;
     }
 
     /**
@@ -85,7 +85,7 @@ trait EntityPermissions
     {
         $permissions = $this->resolvePermissions($permissions);
         $model = $this->getPermission($entityId,$userId,'user');
-        if (is_object($model) == true) {
+        if (\is_object($model) == true) {
             return false;
         }
 
@@ -106,7 +106,7 @@ trait EntityPermissions
     public function addPublicPermission($entityId, $permissions)
     { 
         $model = $this->getPublicPermission($entityId);
-        if (is_object($model) == true) {
+        if (\is_object($model) == true) {
             return false;
         }
         $permissions = $this->resolvePermissions($permissions);
@@ -142,7 +142,7 @@ trait EntityPermissions
     {
         $model = $this->getPublicPermission($entityId);
 
-        return (is_object($model) == true) ? $model->delete() : true;
+        return (\is_object($model) == true) ? $model->delete() : true;
     }
 
     /**

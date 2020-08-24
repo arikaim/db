@@ -50,7 +50,7 @@ trait Translations
         $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
 
         $translation = $this->translation($language);
-        if (is_object($translation) == false) {
+        if (\is_object($translation) == false) {
             return null;
         }
 
@@ -66,7 +66,7 @@ trait Translations
     public function translateAttributes($language)
     {
         $translation = $this->translation($language);
-        if (is_object($translation) == false) {
+        if (\is_object($translation) == false) {
             return false;
         }
 
@@ -155,7 +155,7 @@ trait Translations
         $model = $this->translations()->getQuery()->where('language','=',$language);
         $model = ($query == false) ? $model->first() : $model;
 
-        return (is_object($model) == false) ? false : $model;
+        return (\is_object($model) == false) ? false : $model;
     }
 
     /**
@@ -199,7 +199,7 @@ trait Translations
         $model = (empty($id) == true) ? $this : $this->findById($id);     
         $model = $model->translation($language);
 
-        return (is_object($model) == true) ? $model->delete() : false;
+        return (\is_object($model) == true) ? $model->delete() : false;
     }
 
     /**
@@ -213,7 +213,7 @@ trait Translations
         $model = (empty($id) == true) ? $this : $this->findById($id);
         $model = $model->translations();
 
-        return (is_object($model) == true) ? $model->delete() : false;
+        return (\is_object($model) == true) ? $model->delete() : false;
     }
 
     /**
@@ -244,9 +244,9 @@ trait Translations
         $translation = $this->translation($language);
         
         return [
-            'title'       => is_object($translation) ? $translation->meta_title : null,
-            'description' => is_object($translation) ? $translation->meta_description : null,
-            'keywords'    => is_object($translation) ? $translation->meta_keywords : null,
+            'title'       => \is_object($translation) ? $translation->meta_title : null,
+            'description' => \is_object($translation) ? $translation->meta_description : null,
+            'keywords'    => \is_object($translation) ? $translation->meta_keywords : null,
         ];  
     }
 }

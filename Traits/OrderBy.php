@@ -9,6 +9,8 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
+use Arikaim\Core\Db\OrderBy as OrderByClass;
+
 /**
  * Order by column trait
 */
@@ -22,6 +24,6 @@ trait OrderBy
      */
     public function applyOrderBy($namespace = null)
     {
-        return Arikaim\Core\Db\OrderBy::apply($this,$namespace);
+        return OrderByClass::apply($this,$namespace);
     }
 }

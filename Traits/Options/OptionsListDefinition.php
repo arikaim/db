@@ -41,11 +41,11 @@ trait OptionsListDefinition
         ];
 
         static::retrieved(function($model) use ($fillable) {
-            $model->fillable = array_merge($model->fillable,$fillable);
+            $model->fillable = \array_merge($model->fillable,$fillable);
         });
 
         static::saving(function($model) use ($fillable) {
-            $model->fillable = array_merge($model->fillable,$fillable);
+            $model->fillable = \array_merge($model->fillable,$fillable);
         });
     }
 

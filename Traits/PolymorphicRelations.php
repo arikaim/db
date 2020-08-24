@@ -132,7 +132,7 @@ trait PolymorphicRelations
     {
         $model = (empty($id) == true) ? $this : $this->findByid($id);
 
-        return (is_object($model) == true) ? $model->delete() : false;
+        return (\is_object($model) == true) ? $model->delete() : false;
     }
 
     /**
@@ -203,7 +203,7 @@ trait PolymorphicRelations
             ->where('relation_type','=',$type)
             ->where('relation_id','=',$relationId)->first();
         
-        return is_object($model);
+        return \is_object($model);
     }
 
     /**
@@ -222,7 +222,7 @@ trait PolymorphicRelations
             ->where('relation_type','=',$type)
             ->where('relation_id','=',$relationId)->first();
         
-        return (is_object($model) == true) ? $model : false;
+        return (\is_object($model) == true) ? $model : false;
     }
 
     /**

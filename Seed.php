@@ -44,7 +44,7 @@ class Seed
     {
         $query = Manager::table($this->tableName);     
         if ($query->where($search)->exists() == false) {
-            return $query->insert(array_merge($search, $values));
+            return $query->insert(\array_merge($search, $values));
         }
 
         return true;
@@ -65,7 +65,7 @@ class Seed
 
             $search = $this->createSearchValues($searchKeys,$item);
           
-            if (is_callable($callback) == true) {
+            if (\is_callable($callback) == true) {
                 $item = $callback($item);              
             }
     
@@ -124,7 +124,7 @@ class Seed
         foreach ($items as $item) {
             $search = $this->createSearchValues($searchKeys,$item);
 
-            if (is_callable($callback) == true) {
+            if (\is_callable($callback) == true) {
                 $item = $callback($item);              
             }
             
@@ -163,7 +163,7 @@ class Seed
         foreach ($items as $item) {
             $search = $this->createSearchValues($searchKeys,$item);
 
-            if (is_callable($callback) == true) {
+            if (\is_callable($callback) == true) {
                 $item = $callback($item);              
             }
             

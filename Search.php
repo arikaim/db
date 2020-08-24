@@ -30,6 +30,7 @@ class Search
     public static function getSearchValue($field, $namespace = null, $default = null)
     {
         $search = Self::getSearch($namespace);
+
         return (isset($search[$field]) == true) ? $search[$field] : $default;      
     }
 
@@ -77,6 +78,7 @@ class Search
     public static function getSearchCondition($field, $namespace = null)
     {
         $conditions = Self::getSearchConditions($namespace);
+
         return (isset($conditions[$field]) == true) ? $conditions[$field] : null;
     }
 
@@ -169,16 +171,15 @@ class Search
         if (empty($condition['search_value']) == false) {
             
             if ($condition['query_operator'] == 'or') {
-                if ($condition['operator'] == 'ilike') {
-                    echo "ilike";
-                    $builder = $builder->orWhereRaw("UPPER(" . $condition['field'] . ") LIKE ?",["%" . strtoupper($condition['search_value']) . "%"]);                   
+                if ($condition['operator'] == 'ilike') {                   
+                    $builder = $builder->orWhereRaw("UPPER(" . $condition['field'] . ") LIKE ?",["%" . \strtoupper($condition['search_value']) . "%"]);                   
                 } else {
                     $builder = $builder->orWhere($condition['field'],$condition['operator'],$condition['search_value']);
                 }
                
             } else {
                 if ($condition['operator'] == 'ilike') {
-                    $builder = $builder->whereRaw("UPPER(" . $condition['field'] . ") LIKE ?",["%" . strtoupper($condition['search_value']) . "%"]);                   
+                    $builder = $builder->whereRaw("UPPER(" . $condition['field'] . ") LIKE ?",["%" . \strtoupper($condition['search_value']) . "%"]);                   
                 } else {
                     $builder = $builder->where($condition['field'],$condition['operator'],$condition['search_value']);
                 }                             

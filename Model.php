@@ -18,16 +18,23 @@ use Exception;
 */
 class Model 
 {   
-
+    /**
+     * Db seed
+     *
+     * @param string $className
+     * @param string $extensionName
+     * @param \Closure|null $callback
+     * @return mixed
+     */
     public static function seed($className, $extensionName, $callback = null)
     {
         $model = Self::create($className, $extensionName);
-        if (is_object($model) == false) {
+        if (\is_object($model) == false) {
             return null;
         }
         $seed = new Seed($model->getTable());
 
-        return (is_callable($callback) == true) ? $callback($seed) : $seed;
+        return (\is_callable($callback) == true) ? $callback($seed) : $seed;
     } 
 
     /**
@@ -42,13 +49,13 @@ class Model
      */ 
     public static function create($className, $extensionName = null, $callback = null, $showError = true) 
     {         
-        $fullClass = (class_exists($className) == false) ? Factory::getModelClass($className,$extensionName) : $className; 
+        $fullClass = (\class_exists($className) == false) ? Factory::getModelClass($className,$extensionName) : $className; 
         $instance = Factory::createInstance($fullClass);
 
-        if (is_callable($callback) == true) {
+        if (\is_callable($callback) == true) {
             return (is_object($instance) == true) ? $callback($instance) : null;
         }
-        if (is_object($instance) == false && $showError == true) {
+        if (\is_object($instance) == false && $showError == true) {
             throw new Exception("Not valid db model class: $fullClass", 1);
         }
         
@@ -64,7 +71,7 @@ class Model
      */
     public static function hasAttribute($model, $name)
     {
-        return array_key_exists($name, $model->attributes);
+        return \array_key_exists($name, $model->attributes);
     }
 
     /**
@@ -75,9 +82,9 @@ class Model
      */
     public static function getSql($builder)
     {
-        $sql = str_replace(array('?'), array('\'%s\''),$builder->toSql());
+        $sql = \str_replace(array('?'),array('\'%s\''),$builder->toSql());
         
-        return vsprintf($sql,$builder->getBindings());     
+        return \vsprintf($sql,$builder->getBindings());     
     }
 
     /**
@@ -91,6 +98,7 @@ class Model
     public static function getConstant($className, $constantName, $extensionName = null)
     {
         $className = Self::getFullClassName($className,$extensionName);
+
         return Factory::getConstant($className,$constantName);
     }
 
@@ -117,6 +125,6 @@ class Model
      */
     public static function isValidModel($instance)
     {
-        return is_subclass_of($instance,"Illuminate\\Database\\Eloquent\\Model");
+        return \is_subclass_of($instance,"Illuminate\\Database\\Eloquent\\Model");
     }
 }

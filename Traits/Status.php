@@ -120,7 +120,7 @@ trait Status
     public function scopeStatus($query, $items)
     {
         $column = $this->getStatusColumn();
-        if (is_array($items) == true) {       
+        if (\is_array($items) == true) {       
             return $query->whereIn($column,$items);
         }
 

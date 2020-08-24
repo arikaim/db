@@ -50,7 +50,7 @@ trait OptionsRelation
         $typeName = (empty($typeName) == true) ? $this->getOptionsType() : $typeName;
         $key = $this->getOptionsPrimarykey();
 
-        if (is_object($options) == true && empty($typeName) == false) {
+        if (\is_object($options) == true && empty($typeName) == false) {
             return $options->createOptions($this->{$key},$typeName);
         }
 
@@ -109,14 +109,14 @@ trait OptionsRelation
      */
     public function getOption($key)
     {
-        if (is_object($this->options) == false) {
+        if (\is_object($this->options) == false) {
             return null;
         }        
         $items = $this->options->keyBy('key');
 
-        if (is_object($items) == true) {
+        if (\is_object($items) == true) {
             $item = $items->get($key);
-            return (is_object($item) == true) ? $item->toArray() : null;
+            return (\is_object($item) == true) ? $item->toArray() : null;
         }   
 
         return null;

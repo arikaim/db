@@ -60,9 +60,9 @@ trait MetaTags
         $model = (empty($model) == true) ? $this : $model;
 
         return [
-            'title'       => is_object($model) ? $model->meta_title : null,
-            'description' => is_object($model) ? $model->meta_description : null,
-            'keywords'    => is_object($model) ? $model->meta_keywords : null,
+            'title'       => \is_object($model) ? $model->meta_title : null,
+            'description' => \is_object($model) ? $model->meta_description : null,
+            'keywords'    => \is_object($model) ? $model->meta_keywords : null,
         ];
     }
 }

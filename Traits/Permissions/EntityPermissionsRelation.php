@@ -46,7 +46,7 @@ trait EntityPermissionsRelation
         $permissions = $this->resolvePermissions($access);
         
         $model = $this->getPermission($userId);
-        if (is_object($model) == false) {
+        if (\is_object($model) == false) {
             return false;
         }
 
@@ -87,7 +87,7 @@ trait EntityPermissionsRelation
                 ->where('relation_type','=','user')
                 ->where('entity_id','=',$entityId)->first();
         
-        return (is_object($model) == true) ? $model : false;
+        return (\is_object($model) == true) ? $model : false;
     } 
 
     /**

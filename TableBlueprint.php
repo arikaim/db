@@ -73,7 +73,7 @@ class TableBlueprint extends Blueprint
      */
     protected function buildPrototype($class, $options)
     {      
-        if (class_exists($class) == true) {               
+        if (\class_exists($class) == true) {               
             $prototype = new $class();
             if ($prototype instanceof BlueprintPrototypeInterface) {   
                 $options = (is_array($options) == false) ? [$options] : $options;
@@ -90,13 +90,13 @@ class TableBlueprint extends Blueprint
      */
     protected function resolveColumnPrototypeClass($name)
     {
-        if (class_exists($name) == true) {    
+        if (\class_exists($name) == true) {    
             return $name;
         }
-        $tokens = explode('_',$name);
+        $tokens = \explode('_',$name);
         $class_name = "";
         foreach ($tokens as $item) {
-            $class_name .= ucfirst($item);
+            $class_name .= \ucfirst($item);
         }
 
         return "\\Arikaim\\Core\\Db\\Prototypes\\Column\\" . $class_name;
@@ -111,8 +111,8 @@ class TableBlueprint extends Blueprint
      */
     public function __call($name, $arguments)
     {
-        if (substr($name,0,5) == 'table') {          
-            $this->tablePrototype(substr($name,5),$arguments);
+        if (\substr($name,0,5) == 'table') {          
+            $this->tablePrototype(\substr($name,5),$arguments);
         } else {
             $this->prototype($name,$arguments);
         }        

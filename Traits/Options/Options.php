@@ -77,7 +77,7 @@ trait Options
         }
 
         $optionType = $this->getOptionType($key);
-        if (is_object($optionType) == false) {           
+        if (\is_object($optionType) == false) {           
             return false;
         }
 
@@ -101,7 +101,7 @@ trait Options
     public function createOptions($referenceId, $typeName, $branch = null)
     {
         $optionsList = Model::create($this->getOptionsDefinitionClass());
-        if (is_object($optionsList) == false) {
+        if (\is_object($optionsList) == false) {
             return false;
         }
 
@@ -127,11 +127,11 @@ trait Options
         }
 
         $optionType = Model::create($optionTypeClass);
-        if (is_object($optionType) == false) {           
+        if (\is_object($optionType) == false) {           
             return false;
         }
 
-        $optionType = (is_numeric($key) == false) ? $optionType->where('key','=',$key) : $optionType->where('id','=',$key);
+        $optionType = (\is_numeric($key) == false) ? $optionType->where('key','=',$key) : $optionType->where('id','=',$key);
 
         return $optionType->first();
     }
@@ -146,14 +146,14 @@ trait Options
     public function getOption($key, $referenceId = null) 
     {
         $optionType = $this->getOptionType($key);
-        if (is_object($optionType) == false) {
+        if (\is_object($optionType) == false) {
             return false;
         }
       
         $referenceId = (empty($referenceId) == true) ? $this->reference_id : $referenceId;
         $model = $this->where('reference_id','=',$referenceId);
 
-        $model = (is_numeric($key) == true) ? $model->where('type_id','=',$key) : $model->where('key','=',$key);
+        $model = (\is_numeric($key) == true) ? $model->where('type_id','=',$key) : $model->where('key','=',$key);
         
         return $model->first();                    
     }
@@ -191,7 +191,7 @@ trait Options
     {
         $model = $this->getOption($key,$referenceId);
 
-        return is_object($model);
+        return \is_object($model);
     }
 
     /**
@@ -209,7 +209,7 @@ trait Options
         }
 
         $optionType = $this->getOptionType($key);
-        if (is_object($optionType) == false) {
+        if (\is_object($optionType) == false) {
             return false;
         }
         $model = $this->where('reference_id','=',$referenceId)->where('type_id','=',$optionType->id);

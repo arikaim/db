@@ -22,8 +22,8 @@ trait OptionsAttribute
      */
     public function setOptionsAttribute($value)
     {
-        $value = (is_array($value) == true) ? $value : [$value];    
-        $this->attributes['options'] = json_encode($value);
+        $value = (\is_array($value) == true) ? $value : [$value];    
+        $this->attributes['options'] = \json_encode($value);
     }
 
     /**
@@ -33,7 +33,7 @@ trait OptionsAttribute
      */
     public function getOptionsAttribute()
     {
-        return (empty($this->attributes['options']) == true) ? [] : json_decode($this->attributes['options'],true);
+        return (empty($this->attributes['options']) == true) ? [] : \json_decode($this->attributes['options'],true);
     }
 
     /**

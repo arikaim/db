@@ -94,7 +94,7 @@ abstract class Schema
     {
         $instance = Factory::createSchema($class);
 
-        return (is_object($instance) == false) ? false : $instance->getTableName();         
+        return (\is_object($instance) == false) ? false : $instance->getTableName();         
     }
 
     /**

@@ -32,7 +32,7 @@ class Relations implements BlueprintPrototypeInterface
         $table->relation($options[2],$options[3],false);
 
         $callback = (isset($options[4]) == true) ? $options[4] : null;
-        if (is_callable($callback) == true) {         
+        if (\is_callable($callback) == true) {         
             $call = function() use($callback,$table) {
                 $callback($table);                                 
             };

@@ -70,7 +70,7 @@ trait DefaultTrait
         $model = (empty($userId) == false) ? $this->where('user_id','=',$userId) : $this;
         $model = $model->where($column,'=','1')->first();
 
-        return (is_object($model) == true) ? $model : null; 
+        return (\is_object($model) == true) ? $model : null; 
     }
 
     /**
@@ -81,6 +81,6 @@ trait DefaultTrait
      */
     public function hasDefault($userId = null)
     {
-        return is_object($this->getDefault($userId));
+        return \is_object($this->getDefault($userId));
     }
 }

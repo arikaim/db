@@ -42,7 +42,7 @@ class Permissions implements BlueprintPrototypeInterface
         $table->unique(['relation_id','relation_type','entity_id'],'un_rel_id_type_' . $table->getTable());
         
         $callback = (isset($options[1]) == true) ? $options[1] : null;
-        if (is_callable($callback) == true) {         
+        if (\is_callable($callback) == true) {         
             $call = function() use($callback,$table) {
                 $callback($table);                                 
             };

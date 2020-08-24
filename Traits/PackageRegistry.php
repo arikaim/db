@@ -35,7 +35,7 @@ trait PackageRegistry
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());  
         
-        return (is_object($model) == true) ? $model->toArray() : false;
+        return (\is_object($model) == true) ? $model->toArray() : false;
     }
 
     /**
@@ -48,7 +48,7 @@ trait PackageRegistry
     {
         $model = $this->where($this->getPackageNameColumn(),'=',$name)->first();     
           
-        return is_object($model);
+        return \is_object($model);
     }
 
     /**
@@ -62,7 +62,7 @@ trait PackageRegistry
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());  
 
-        return (is_object($model) == true) ? $model->setStatus($status) : false;     
+        return (\is_object($model) == true) ? $model->setStatus($status) : false;     
     }
 
     /**
@@ -75,7 +75,7 @@ trait PackageRegistry
     {
         $model = $this->where($this->getPackageNameColumn(),'=',$name)->first();       
 
-        return (is_object($model) == false) ? 0 : $model->status;            
+        return (\is_object($model) == false) ? 0 : $model->status;            
     }
 
     /**
@@ -88,13 +88,13 @@ trait PackageRegistry
     public function addPackage($name, array $data)
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn()); 
-        if (is_object($model) == true) {
+        if (\is_object($model) == true) {
             $result = $model->update($data);
             return ($result !== false);
         }
         $model = $this->create($data);
 
-        return is_object($model);
+        return \is_object($model);
     }
 
     /**
@@ -138,7 +138,7 @@ trait PackageRegistry
     public function setPrimary($name)
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());
-        if (is_object($model) == false) {          
+        if (\is_object($model) == false) {          
             return false;
         }
       
@@ -154,7 +154,7 @@ trait PackageRegistry
     public function isPrimary($name)
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());
-        if (is_object($model) == false) {          
+        if (\is_object($model) == false) {          
             return null;
         }
 

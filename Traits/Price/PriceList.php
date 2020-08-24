@@ -36,12 +36,12 @@ trait PriceList
     public function getCurrency($code = null)
     {
         $currency = Model::create($this->getCurrencyClass());
-        if (is_object($currency) == false) {
+        if (\is_object($currency) == false) {
             return false;
         }
         $model = (empty($code) == false) ? $currency->findByColumn('code',$code) : $currency->getDefault();
         $model = $model->first();
-        if (is_object($model) == true) {
+        if (\is_object($model) == true) {
             return $model->id;
         }
 
@@ -134,7 +134,7 @@ trait PriceList
     public function createPiceList($productId, $typeName, $currency = null)
     {
         $optionsList = Model::create($this->getPriceListDefinitionClass());
-        if (is_object($optionsList) == false) {
+        if (\is_object($optionsList) == false) {
             return false;
         }
       
@@ -194,7 +194,7 @@ trait PriceList
     {
         $model = $this->getPrice($key,$productId);
 
-        return is_object($model);
+        return \is_object($model);
     }
 
     /**

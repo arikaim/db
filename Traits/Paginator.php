@@ -9,6 +9,8 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
+use Arikaim\Core\Paginator\SessionPaginator;
+
 /**
  * Paginator trait
 */
@@ -22,6 +24,6 @@ trait Paginator
      */
     public function createPaginator($namespace = null)
     {
-        return Arikaim\Core\Paginator\SessionPaginator::create($this,$namespace);
+        return SessionPaginator::create($this,$namespace);
     }
 }

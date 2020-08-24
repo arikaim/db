@@ -93,7 +93,7 @@ trait DocumentNumber
 
         $model = $this->where($columnName,'=',$columnValue)->where($indexColumn,'=',$filterColumnValue)->first();
         
-        return !is_object($model);
+        return (\is_object($model) == false);
     } 
 
     /**
@@ -108,6 +108,6 @@ trait DocumentNumber
         $label = $this->getDocumentNumberLabel();
         $documentNumber = (isset($this->attributes[$columnName]) == true) ? $this->attributes[$columnName] : null;
      
-        return (empty($documentNumber) == false) ? sprintf($label . '1%05d' . $prefix,$documentNumber) : null;       
+        return (empty($documentNumber) == false) ? \sprintf($label . '1%05d' . $prefix,$documentNumber) : null;       
     }   
 }
