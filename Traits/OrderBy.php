@@ -26,4 +26,15 @@ trait OrderBy
     {
         return OrderByClass::apply($this,$namespace);
     }
+    
+    /**
+     * Random order query
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeRandomOrder($query)
+    {
+        return $query->orderByRaw('RAND()');
+    }
 }
