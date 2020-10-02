@@ -9,7 +9,7 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
-use Arikaim\Core\View\Html\HtmlComponent;
+use Arikaim\Core\View\Html\Page;
 
 /**
  * Translations trait      
@@ -36,6 +36,16 @@ trait Translations
                 $model->translateAttributes($language);
             }          
         });        
+    }
+
+    /**
+     * Get current language
+     *
+     * @return string
+     */
+    public function getCurrentLanguage()
+    {
+        return (empty($this->currentLanguage) == true) ? Page::getCurrentLanguage() : $this->currentLanguage;
     }
 
     /**
@@ -86,16 +96,6 @@ trait Translations
     public function getTranslatedAttributes()
     {
         return (isset($this->translatedAttributes) == true) ? $this->translatedAttributes : [];
-    }
-
-    /**
-     * Get current language
-     *
-     * @return string
-     */
-    public function getCurrentLanguage()
-    {
-        return (empty($this->currentLanguage) == true) ? HtmlComponent::getLanguage() : $this->currentLanguage;
     }
 
     /**

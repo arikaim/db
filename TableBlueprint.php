@@ -60,7 +60,7 @@ class TableBlueprint extends Blueprint
      */
     public function tablePrototype($name, $options = null)
     {
-        $class = "\\Arikaim\\Core\\Db\\Prototypes\\Table\\" . ucfirst($name);
+        $class = '\\Arikaim\\Core\\Db\\Prototypes\\Table\\' . ucfirst($name);
         $this->buildPrototype($class,$options);
     }
 
@@ -94,12 +94,12 @@ class TableBlueprint extends Blueprint
             return $name;
         }
         $tokens = \explode('_',$name);
-        $class_name = "";
+        $class_name = '';
         foreach ($tokens as $item) {
             $class_name .= \ucfirst($item);
         }
 
-        return "\\Arikaim\\Core\\Db\\Prototypes\\Column\\" . $class_name;
+        return '\\Arikaim\\Core\\Db\\Prototypes\\Column\\' . $class_name;
     }
 
     /**

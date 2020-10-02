@@ -9,7 +9,7 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
-use Arikaim\Core\View\Html\HtmlComponent;
+use Arikaim\Core\View\Html\Page;
 
 /**
  * Page meta tags trait      
@@ -30,7 +30,7 @@ trait MetaTags
      */
     public function getCurrentLanguage()
     {
-        return (empty($this->currentLanguage) == true) ? HtmlComponent::getLanguage() : $this->currentLanguage;
+        return (empty($this->currentLanguage) == true) ? Page::getCurrentLanguage() : $this->currentLanguage;
     }
 
     /**

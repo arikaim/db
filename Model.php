@@ -56,7 +56,7 @@ class Model
             return (is_object($instance) == true) ? $callback($instance) : null;
         }
         if (\is_object($instance) == false && $showError == true) {
-            throw new Exception("Not valid db model class: $fullClass", 1);
+            throw new Exception('Not valid db model class: ' . $fullClass, 1);
         }
         
         return $instance;
@@ -77,12 +77,12 @@ class Model
     /**
      * Get sql 
      *
-     * @param Builder|Model $builder
+     * @param Builder $builder
      * @return string
      */
     public static function getSql($builder)
     {
-        $sql = \str_replace(array('?'),array('\'%s\''),$builder->toSql());
+        $sql = \str_replace(['?'],["\'%s\'"],$builder->toSql());
         
         return \vsprintf($sql,$builder->getBindings());     
     }
@@ -125,6 +125,6 @@ class Model
      */
     public static function isValidModel($instance)
     {
-        return \is_subclass_of($instance,"Illuminate\\Database\\Eloquent\\Model");
+        return \is_subclass_of($instance,'Illuminate\\Database\\Eloquent\\Model');
     }
 }

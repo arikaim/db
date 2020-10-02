@@ -61,9 +61,9 @@ class OrderBy
     /**
      * Apply order by to model
      *
-     * @param Model|Builder $builder
+     * @param Builder $builder
      * @param string $namespace
-     * @return Model|Builder
+     * @return Builder
      */
     public static function apply($builder, $namespace = null)
     {

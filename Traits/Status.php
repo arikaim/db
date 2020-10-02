@@ -201,7 +201,7 @@ trait Status
     public function resolveStatusValue($status = null)
     {
         $columnName = $this->getStatusColumn();
-        if ($status === "toggle") {     
+        if ($status === 'toggle') {     
             return ($this->$columnName == 1) ? 0 : 1;
         }
 

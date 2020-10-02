@@ -33,7 +33,7 @@ trait FileTypeTrait
         $start = $typeInfo['start'];
         $length = $typeInfo['length'];
        
-        return $query->whereRaw("SUBSTR(" . $columnName . ",$start,$length) = '$type' ");
+        return $query->whereRaw("SUBSTR(' . $columnName . ',$start,$length) = '$type' ");
     }
 
     /**

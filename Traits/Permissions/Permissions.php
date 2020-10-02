@@ -57,7 +57,7 @@ trait Permissions
     {
         if (\is_string($access) == true) {
             $access = \strtolower($access);
-            $access = ($access == 'full') ? ['read','write','delete','execute'] : Arrays::toArray($access,",");
+            $access = ($access == 'full') ? ['read','write','delete','execute'] : Arrays::toArray($access,',');
         }
 
         return [

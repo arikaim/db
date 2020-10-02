@@ -214,7 +214,7 @@ abstract class Schema
      */
     public static function hasTable($model)
     {      
-        $tableName = (is_object($model) == true) ? $model->getTable() : $model;
+        $tableName = (\is_object($model) == true) ? $model->getTable() : $model;
 
         try {          
             return Manager::schema()->hasTable($tableName);    
@@ -282,7 +282,8 @@ abstract class Schema
     public static function install($class, $extension = null) 
     {                   
         $instance = Factory::createSchema($class,$extension);
-        if (is_object($instance) == true) {
+        
+        if (\is_object($instance) == true) {
             try {
                 if ($instance->tableExists() == false) {
                     $instance->createTable();

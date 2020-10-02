@@ -12,7 +12,7 @@ namespace Arikaim\Core\Db\Traits;
 /**
  * Manage models with parent - child relations.
  *  Change parrent id column name in model:
- *       protected $parentColumn = "column name";
+ *       protected $parentColumn = 'column name';
 */
 trait Tree 
 {       

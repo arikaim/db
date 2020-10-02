@@ -158,7 +158,7 @@ class Search
     /**
      * Apply search condition 
      *
-     * @param Builder|Model $builder
+     * @param Builder $builder
      * @param array $condition
      * @param string|null $namespace
      * @return Builder
@@ -172,14 +172,14 @@ class Search
             
             if ($condition['query_operator'] == 'or') {
                 if ($condition['operator'] == 'ilike') {                   
-                    $builder = $builder->orWhereRaw("UPPER(" . $condition['field'] . ") LIKE ?",["%" . \strtoupper($condition['search_value']) . "%"]);                   
+                    $builder = $builder->orWhereRaw('UPPER(' . $condition['field'] . ') LIKE ?',['%' . \strtoupper($condition['search_value']) . '%']);                   
                 } else {
                     $builder = $builder->orWhere($condition['field'],$condition['operator'],$condition['search_value']);
                 }
                
             } else {
                 if ($condition['operator'] == 'ilike') {
-                    $builder = $builder->whereRaw("UPPER(" . $condition['field'] . ") LIKE ?",["%" . \strtoupper($condition['search_value']) . "%"]);                   
+                    $builder = $builder->whereRaw('UPPER(' . $condition['field'] . ') LIKE ?',['%' . \strtoupper($condition['search_value']) . '%']);                   
                 } else {
                     $builder = $builder->where($condition['field'],$condition['operator'],$condition['search_value']);
                 }                             

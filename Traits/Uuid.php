@@ -26,8 +26,8 @@ trait Uuid
     {
         static::creating(function($model) {   
             $columnName = $model->getUuidAttributeName();
-            if (empty($model->$columnName) == true) {  
-                $model->attributes[$model->getUuidAttributeName()] = UuidFactory::create();
+            if (empty($model->$columnName) == true) {                
+                $model->attributes[$columnName] = UuidFactory::create();
             }
         });
     }
@@ -40,5 +40,18 @@ trait Uuid
     public function getUuidAttributeName()
     {
         return (isset($this->uuidColumn) == true) ? $this->uuidColumn : 'uuid';
+    }
+
+    /**
+     * Init empty uuid column
+     *
+     * @return void
+     */
+    public function initUuid()
+    {
+        $columnName = $this->getUuidAttributeName();
+        if (empty($this->$columnName) == true) { 
+            $this->$columnName = UuidFactory::create();
+        }
     }
 }

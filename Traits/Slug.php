@@ -114,6 +114,23 @@ trait Slug
     }
 
     /**
+     * Set slug field
+     *
+     * @param string|null $text
+     * @return void
+     */
+    public function setSlug($text = null)
+    {
+        $slugColumn = $this->getSlugColumn();
+        $slugSourceColumn = $this->getSlugSourceColumn();
+        $separator = $this->getSlugSeparator();
+
+        $text = (empty($text) == true) ? $this->$slugSourceColumn : $text;
+
+        $this->$slugColumn = Utils::slug($text,$separator);
+    }
+
+    /**
      * Create slug from text
      *
      * @param string $text

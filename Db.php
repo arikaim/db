@@ -34,11 +34,11 @@ class Db
      * @var array
      */
     protected $default_pdo_options = [
-        PDO::ATTR_CASE => PDO::CASE_NATURAL,
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
+        PDO::ATTR_CASE              => PDO::CASE_NATURAL,
+        PDO::ATTR_ERRMODE           => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_ORACLE_NULLS      => PDO::NULL_NATURAL,
         PDO::ATTR_STRINGIFY_FETCHES => false,
-        PDO::ATTR_EMULATE_PREPARES => false,
+        PDO::ATTR_EMULATE_PREPARES  => false,
     ];
 
     /**
@@ -155,7 +155,7 @@ class Db
     public function isValidPdoConnection($config = null)
     {
         $config = ($config == null) ? $this->config : $config;
-        $dsn = $config['driver'] . ":dbname=" .  $config['database'] . ";host=" . $config['host'];
+        $dsn = $config['driver'] . ':dbname=' . $config['database'] . ';host=' . $config['host'];
     
         try {
             $pdo = new PDO($dsn,$config['username'],$config['password'],[
@@ -182,10 +182,10 @@ class Db
 
         $schema = $this->capsule->getConnection('schema');
         try {
-            $charset = ($charset != null) ? "CHARACTER SET $charset" : "";
-            $collation = ($charset != null) ? "COLLATE $collation" : "";
+            $charset = ($charset != null) ? 'CHARACTER SET ' . $charset : '';
+            $collation = ($charset != null) ? 'COLLATE ' . $collation : '';
 
-            $result = $schema->statement("CREATE DATABASE $databaseName $charset $collation");
+            $result = $schema->statement('CREATE DATABASE ' . $databaseName . ' ' . ' ' . $charset . ' ' . $collation);
         } catch(PDOException $e) {
             return false;
         }
@@ -260,7 +260,7 @@ class Db
     private function initSchemaConnection($config)
     {
         $config['database'] = 'information_schema';             
-        $this->capsule->addConnection($config,"schema");
+        $this->capsule->addConnection($config,'schema');
     }
 
     /**
@@ -271,11 +271,10 @@ class Db
     public function getInfo() 
     {        
         $pdo = $this->capsule->connection()->getPdo();
-
         return [
-            'driver'      => \is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) : "",
-            'server_info' => \is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_SERVER_INFO) : "",
-            'version'     => \is_object($pdo) ? substr($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION),0,6) : "",
+            'driver'      => \is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) : '',
+            'server_info' => \is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_SERVER_INFO) : '',
+            'version'     => \is_object($pdo) ? substr($pdo->getAttribute(\PDO::ATTR_SERVER_VERSION),0,6) : '',
             'name'        => null
         ];      
     }

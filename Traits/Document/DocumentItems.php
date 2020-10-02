@@ -9,9 +9,6 @@
 */
 namespace Arikaim\Core\Db\Traits\Price;
 
-use Arikaim\Core\Db\Model;
-use Arikaim\Core\Utils\Uuid;
-
 /**
  * Document items table trait
 */
