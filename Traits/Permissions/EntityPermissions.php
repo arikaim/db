@@ -49,15 +49,14 @@ trait EntityPermissions
     }
 
     /**
-     * Morphed model
+     * Morphed models
      *     
-     * @return void
+     * @return Relation
      */
     public function related()
-    {
-        return $this->morphTo('relation');      
+    {       
+        return $this->morphTo('relation');          
     }
-
 
     /**
      * Delete user permission
@@ -79,9 +78,39 @@ trait EntityPermissions
      * @param integer $entityId
      * @param integer $userId
      * @param array $permissions
+     * @param integer|null $permissionId
      * @return Model|false
      */
-    public function addUserPermission($entityId, $userId, $permissions)
+    public function addUserPermission($entityId, $userId, $permissions, $permissionId = null)
+    {
+        return $this->addPermission($entityId, $userId, $permissions,'user',$permissionId);
+    }
+
+    /**
+     * Add group permission
+     *
+     * @param integer $entityId
+     * @param integer $userId
+     * @param array $permissions
+     * @param integer|null $permissionId
+     * @return Model|false
+     */
+    public function addGroupPermission($entityId, $userId, $permissions, $permissionId = null)
+    {
+        return $this->addPermission($entityId, $userId, $permissions,'group',$permissionId);
+    }
+
+    /**
+     * Add permission
+     *
+     * @param integer $entityId
+     * @param integer $userId
+     * @param array $permissions
+     * @param string $type  (user or gorup)
+     * @param integer|null $permissionId
+     * @return Model|false
+     */
+    public function addPermission($entityId, $userId, $permissions, $type = 'user', $permissionId = null)
     {
         $permissions = $this->resolvePermissions($permissions);
         $model = $this->getPermission($entityId,$userId,'user');
@@ -91,7 +120,8 @@ trait EntityPermissions
 
         $permissions['entity_id'] = $entityId;
         $permissions['relation_id'] = $userId;
-        $permissions['relation_type'] = 'user';
+        $permissions['relation_type'] = $type;
+        $permissions['permission_id'] = $permissionId;
         
         return $this->create($permissions);
     }
@@ -132,6 +162,7 @@ trait EntityPermissions
         
         return $model;
     }
+    
     /**
      * Delete public permissions
      *

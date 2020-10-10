@@ -66,6 +66,19 @@ trait OptionType
     }
 
     /**
+     * Get option type name
+     *
+     * @param int|null $type
+     * @return string|false
+     */
+    public function getTypeText($type = null)
+    {
+        $type = (empty($type) == true) ? $this->type : $type;
+
+        return (isset(Self::$TYPES_LIST[$type]) == true) ? Self::$TYPES_LIST[$type] : false;
+    }
+
+    /**
      * Boot trait
      *
      * @return void

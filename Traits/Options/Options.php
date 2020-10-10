@@ -162,11 +162,14 @@ trait Options
      * Get options query
      *
      * @param integer $referenceId
+     * @param array|null $onlyTypes
      * @return QueryBuilder
      */
-    public function getOptionsQuery($referenceId)
+    public function getOptionsQuery($referenceId, array $onlyKeys = null)
     {
-        return $this->where('reference_id','=',$referenceId);
+        $query = $this->where('reference_id','=',$referenceId);
+        
+        return (empty($onlyKeys) == false) ? $query->whereIn('key',$onlyKeys) : $query;          
     }
 
     /**
@@ -175,9 +178,9 @@ trait Options
      * @param integer $referenceId
      * @return Model|null
      */
-    public function getOptions($referenceId)
+    public function getOptions($referenceId, array $onlyKeys = null)
     {
-        return $this->getOptionsQuery($referenceId)->get();
+        return $this->getOptionsQuery($referenceId,$onlyKeys)->get();
     }
 
     /**
