@@ -312,7 +312,7 @@ abstract class Schema
     public static function unInstall($class, $extension = null, $force = false) 
     {                   
         $instance = Factory::createSchema($class,$extension);
-        if (is_object($instance) == true) {
+        if (\is_object($instance) == true) {
             try {
                 return $instance->dropTable(!$force);
             } catch(\Exception $e) {

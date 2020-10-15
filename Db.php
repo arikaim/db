@@ -66,6 +66,16 @@ class Db
     }
 
     /**
+     * Get database name
+     *
+     * @return string|false
+    */
+    public function getDatabaseName()
+    {
+        return $this->config['database'] ?? false;
+    }
+
+    /**
      * Get relations morph map
      *
      * @return array
@@ -124,6 +134,26 @@ class Db
         }
 
         return (isset($result[0]->SCHEMA_NAME) == true) ? true : false;           
+    }
+
+    /**
+     * Get row format
+     *
+     * @param string $tableName
+     * @return string|false
+     */
+    public function getRowFormat($tableName)
+    {
+        try {
+            $schema = $this->capsule->getConnection('schema');
+            $db = $this->getDatabaseName();
+            $sql = "SELECT row_format FROM information_schema.tables WHERE table_schema = '$db' AND table_name='$tableName' LIMIT 1";          
+            $result = $schema->select($sql);            
+        } catch(Exception $e) {
+            return false;
+        }
+
+        return $result[0]->row_format ?? false;          
     }
 
     /**
