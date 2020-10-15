@@ -16,6 +16,7 @@ use Arikaim\Core\Utils\Factory;
 use Arikaim\Core\Db\Seed;
 use Arikaim\Core\Db\TableBlueprint;
 use PDOException;
+use Exception;
 
 /**
  * Database schema base class
@@ -216,11 +217,19 @@ abstract class Schema
     {      
         $tableName = (\is_object($model) == true) ? $model->getTable() : $model;
 
-        try {          
-            return Manager::schema()->hasTable($tableName);    
-        } catch(PDOException $e) {
+        try {      
+            if (\is_object(Manager::connection()) == true) {
+                $schema = Manager::schema();    
+                return (\is_object($schema) == true) ? $schema->hasTable($tableName) : false;
+            }
+            return false;
+        } 
+        catch(PDOException $e) {
             return false;
         }
+        catch(Exception $e) {           
+            return false;
+        }  
     }
 
     /**
@@ -294,7 +303,12 @@ abstract class Schema
                 
                 return $instance->tableExists();
                 
-            } catch(\Exception $e) {                           
+            } 
+            catch(PDOException $e) {
+                return false;
+            }
+            catch(Exception $e) {  
+                return false;                         
             }
         }
         
@@ -315,7 +329,12 @@ abstract class Schema
         if (\is_object($instance) == true) {
             try {
                 return $instance->dropTable(!$force);
-            } catch(\Exception $e) {
+            } 
+            catch(PDOException $e) {
+                return false;
+            }
+            catch(Exception $e) {
+                return false;
             }
         }
         

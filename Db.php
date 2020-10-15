@@ -33,7 +33,7 @@ class Db
      *
      * @var array
      */
-    protected $default_pdo_options = [
+    protected $defaultPdoOptions = [
         PDO::ATTR_CASE              => PDO::CASE_NATURAL,
         PDO::ATTR_ERRMODE           => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_ORACLE_NULLS      => PDO::NULL_NATURAL,
@@ -47,6 +47,8 @@ class Db
      * @var array
      */
     protected $config;
+
+    protected $hasError = false;
 
     /**
      * Constructor
@@ -93,19 +95,38 @@ class Db
      */
     public function init($config)
     {
-        try {              
+        try {                    
             $this->capsule = new Manager();
             $this->capsule->addConnection($config);
+            $connection = $this->capsule->getConnection();
+            $connection->getPdo()->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_WARNING);   
+
             $this->capsule->setEventDispatcher(new \Illuminate\Events\Dispatcher());
             $this->capsule->setAsGlobal();
             // schema db             
             $this->initSchemaConnection($config);      
             $this->capsule->bootEloquent();
-        } catch(Exception $e) {           
+        }  
+        catch(PDOException $e) {
+            $this->hasError = true;
             return false;
-        }      
+        }   
+        catch(Exception $e) {    
+            $this->hasError = true;       
+            return false;
+        }   
       
         return true;
+    }
+
+    /**
+     * Return true if has db error
+     *
+     * @return boolean
+     */
+    public function hasError()
+    {
+        return $this->hasError;
     }
 
     /**
@@ -129,7 +150,11 @@ class Db
         try {
             $schema = $this->capsule->getConnection('schema');
             $result = $schema->select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$databaseName'");            
-        } catch(Exception $e) {
+        } 
+        catch(PDOException $e) {
+            return false;
+        }
+        catch(Exception $e) {
             return false;
         }
 
@@ -149,7 +174,11 @@ class Db
             $db = $this->getDatabaseName();
             $sql = "SELECT row_format FROM information_schema.tables WHERE table_schema = '$db' AND table_name='$tableName' LIMIT 1";          
             $result = $schema->select($sql);            
-        } catch(Exception $e) {
+        }      
+        catch(PDOException $e) {
+            return false;
+        }
+        catch(Exception $e) {
             return false;
         }
 
@@ -167,12 +196,14 @@ class Db
         try {
             $connection = $this->capsule->getDatabaseManager()->connection($name);
             $pdo = $connection->getPdo(false);
-        } catch(Exception $e) {
-            return false;
-        } catch(PDOException $e) {
+        }        
+        catch(PDOException $e) {
             return false;
         } 
-      
+        catch(Exception $e) {
+            return false;
+        } 
+
         return \is_object($pdo);
     }
 
@@ -191,10 +222,14 @@ class Db
             $pdo = new PDO($dsn,$config['username'],$config['password'],[
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             ]);
-        } catch(PDOException $e) {
+        } 
+        catch(PDOException $e) {
             return false;
         }
-       
+        catch(Exception $e) {
+            return false;
+        }
+
         return \is_object($pdo);
     }
 
@@ -216,9 +251,14 @@ class Db
             $collation = ($charset != null) ? 'COLLATE ' . $collation : '';
 
             $result = $schema->statement('CREATE DATABASE ' . $databaseName . ' ' . ' ' . $charset . ' ' . $collation);
-        } catch(PDOException $e) {
+        } 
+        catch(PDOException $e) {
             return false;
         }
+        catch(Exception $e) {
+            return false;
+        }
+
         return $result;
     }
 
@@ -232,9 +272,14 @@ class Db
     {
         try {
             $connection->statement('SELECT 1');
-        } catch(PDOException $e) {
+        } 
+        catch(PDOException $e) {
             return false;
         }
+        catch(Exception $e) {
+            return false;
+        }
+
         return true;
     }
 
@@ -250,9 +295,13 @@ class Db
             $this->initSchemaConnection($config);     
             $this->capsule->getConnection('schema')->reconnect();
             $result = $this->checkConnection($this->capsule->getConnection('schema'));      
-        } catch(PDOException $e) {   
+        } 
+        catch(PDOException $e) {   
             return false;
         }     
+        catch(Exception $e) {
+            return false;
+        }
 
         return $result;
     }
@@ -274,9 +323,13 @@ class Db
             $this->capsule->getConnection('schema')->reconnect();
 
             $this->capsule->bootEloquent();
-        } catch(PDOException $e) {   
+        } 
+        catch(PDOException $e) {   
             return false;
         }   
+        catch(Exception $e) {
+            return false;
+        }
 
         return true;
     }
