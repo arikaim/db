@@ -151,7 +151,7 @@ class Db
                 $this->hasError = true;  
                 return;
             } 
-            $connection->getPdo();   
+            $connection->reconnect();   
             $this->capsule->getDatabaseManager()->setDefaultConnection($name);
             $this->capsule->setAsGlobal();
 
