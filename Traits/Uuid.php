@@ -39,7 +39,7 @@ trait Uuid
      */
     public function getUuidAttributeName()
     {
-        return (isset($this->uuidColumn) == true) ? $this->uuidColumn : 'uuid';
+        return $this->uuidColumn ?? 'uuid';
     }
 
     /**

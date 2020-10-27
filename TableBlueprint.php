@@ -76,7 +76,7 @@ class TableBlueprint extends Blueprint
         if (\class_exists($class) == true) {               
             $prototype = new $class();
             if ($prototype instanceof BlueprintPrototypeInterface) {   
-                $options = (is_array($options) == false) ? [$options] : $options;
+                $options = (\is_array($options) == false) ? [$options] : $options;
                 $prototype->build($this,...$options);                                            
             }           
         }

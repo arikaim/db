@@ -45,6 +45,6 @@ trait OptionsAttribute
      */
     public function getOption($key, $default = null)
     {
-        return (isset($this->options[$key]) == true) ? $this->options[$key] : $default;
+        return $this->options[$key] ?? $default;
     }
 }

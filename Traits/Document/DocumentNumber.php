@@ -36,7 +36,7 @@ trait DocumentNumber
      */
     public function getDocumentNumberColumn()
     {
-        return (isset($this->documentNumberColumn) == true) ? $this->documentNumberColumn : 'document_number';
+        return $this->documentNumberColumn ?? 'document_number';
     } 
 
     /**
@@ -46,7 +46,7 @@ trait DocumentNumber
      */
     public function getDocumentNumberUniqueIndex()
     {
-        return (isset($this->documentNumberUniqueIndex) == true) ? $this->documentNumberUniqueIndex : null;
+        return $this->documentNumberUniqueIndex ?? null;
     } 
 
     /**
@@ -56,7 +56,7 @@ trait DocumentNumber
      */
     public function getDocumentNumberLabel()
     {
-        return (isset($this->documentNumberLabel) == true) ? $this->documentNumberLabel : '';
+        return $this->documentNumberLabel ?? '';
     } 
 
     /**
@@ -106,7 +106,7 @@ trait DocumentNumber
     {
         $columnName = $this->getDocumentNumberColumn();
         $label = $this->getDocumentNumberLabel();
-        $documentNumber = (isset($this->attributes[$columnName]) == true) ? $this->attributes[$columnName] : null;
+        $documentNumber = $this->attributes[$columnName] ?? null;
      
         return (empty($documentNumber) == false) ? \sprintf($label . '1%05d' . $prefix,$documentNumber) : null;       
     }   

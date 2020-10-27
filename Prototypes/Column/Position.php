@@ -25,7 +25,7 @@ class Position implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {
-        $default = (isset($options[0]) == false) ? 1 : $options[0];
+        $default = $options[0] ?? 1;
 
         $table->integer('position')->nullable(true)->default($default); 
         $table->index('position');   

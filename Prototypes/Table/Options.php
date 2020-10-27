@@ -25,9 +25,9 @@ class Options implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {              
-        $optionTypeTable = (isset($options[0]) == true) ? $options[0] : null;     
-        $referenceTable = (isset($options[1]) == true) ? $options[1] : null; 
-        $callback = (isset($options[2]) == true) ? $options[2] : null;
+        $optionTypeTable =$options[0] ?? null;     
+        $referenceTable = $options[1] ?? null; 
+        $callback = $options[2] ?? null;
 
         // columns
         $table->id();

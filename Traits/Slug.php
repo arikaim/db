@@ -58,7 +58,7 @@ trait Slug
      */
     public function getSlugColumn()
     {
-        return (isset($this->slugColumn) == true) ? $this->slugColumn : 'slug';
+        return  $this->slugColumn ?? 'slug';
     }
 
     /**
@@ -68,7 +68,7 @@ trait Slug
      */
     public function getSlugSourceColumn()
     {
-        return (isset($this->slugSourceColumn) == true) ? $this->slugSourceColumn : 'title';
+        return $this->slugSourceColumn ?? 'title';
     }
 
     /**
@@ -78,7 +78,7 @@ trait Slug
      */
     public function getSlugSeparator()
     {
-        return (isset($this->slugSeparator) == true) ? $this->slugSeparator : '-';
+        return $this->slugSeparator ?? '-';
     }
 
     /**
@@ -139,7 +139,7 @@ trait Slug
      */
     public function createSlug($text, $separator = null)
     {
-        $separator = (empty($separator) == true) ? $this->getSlugSeparator() : $separator;
+        $separator = $separator ?? $this->getSlugSeparator();
 
         return Utils::slug($text,$separator);
     }

@@ -25,7 +25,7 @@ class ParentId implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {       
-        $columnName = (isset($options[0]) == false) ? 'parent_id' : $options[0];
+        $columnName = $options[0] ?? 'parent_id';
 
         $table->bigInteger($columnName)->unsigned()->nullable(true);
         $table->foreign($columnName)->references('id')->on($table->getTable())->onDelete('cascade');     

@@ -61,10 +61,10 @@ trait Permissions
         }
 
         return [
-            'read'      => in_array('read',$access) ? 1:0,
-            'write'     => in_array('write',$access) ? 1:0,
-            'delete'    => in_array('delete',$access) ? 1:0,
-            'execute'   => in_array('execute',$access) ? 1:0
+            'read'      => \in_array('read',$access) ? 1 : 0,
+            'write'     => \in_array('write',$access) ? 1 : 0,
+            'delete'    => \in_array('delete',$access) ? 1 : 0,
+            'execute'   => \in_array('execute',$access) ? 1 : 0
         ];       
     }
 }

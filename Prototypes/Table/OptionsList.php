@@ -25,7 +25,7 @@ class OptionsList implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {                       
-        $callback = (isset($options[1]) == true) ? $options[1] : null;
+        $callback = $options[1] ?? null;
 
         // columns
         $table->id();

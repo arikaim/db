@@ -26,9 +26,6 @@ trait DateSearch
      */
     public function scopeYear($query, $columnName, $year)
     {     
-        if (empty($year) == true) {
-            return $query;
-        }
         $start = DateTime::toTimestamp($year . '-01-01T00:00:00.0');
         $end = DateTime::toTimestamp($year . '-12-31T12:59:59.0');
        
@@ -44,9 +41,6 @@ trait DateSearch
      */
     public function scopeMonth($query, $columnName, $month, $year = null)
     {     
-        if (empty($month) == true) {
-            return $query;
-        }
         $year = (empty($year) == true) ? DateTime::getYear() : $year;
         $lastDay = DateTime::getLastDay($month);
         

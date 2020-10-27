@@ -43,7 +43,7 @@ trait FileTypeTrait
      */
     public function getMimeTypeColumnName()
     {
-        return (isset($this->mimeTypeColumnName) == true) ? $this->mimeTypeColumnName : 'mime_type';
+        return $this->mimeTypeColumnName ?? 'mime_type';
     }
 
     /**

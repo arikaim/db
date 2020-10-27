@@ -19,6 +19,13 @@ use Exception;
 class Model 
 {   
     /**
+     * Instance pool
+     *
+     * @var array
+     */
+    private static $instances = [];
+
+    /**
      * Db seed
      *
      * @param string $className
@@ -28,7 +35,7 @@ class Model
      */
     public static function seed($className, $extensionName, $callback = null)
     {
-        $model = Self::create($className, $extensionName);
+        $model = Self::create($className,$extensionName);
         if (\is_object($model) == false) {
             return null;
         }
@@ -50,7 +57,13 @@ class Model
     public static function create($className, $extensionName = null, $callback = null, $showError = true) 
     {         
         $fullClass = (\class_exists($className) == false) ? Factory::getModelClass($className,$extensionName) : $className; 
-        $instance = Factory::createInstance($fullClass);
+        
+        // check in pool
+        $instance = Self::$instances[$fullClass] ?? null;
+        if (empty($instance) == true) {
+            $instance = Factory::createInstance($fullClass);
+            Self::$instances[$fullClass] = $instance;
+        }
 
         if (\is_callable($callback) == true) {
             return (\is_object($instance) == true) ? $callback($instance) : null;
@@ -71,7 +84,7 @@ class Model
      */
     public static function hasAttribute($model, $name)
     {
-        return \array_key_exists($name, $model->attributes);
+        return \array_key_exists($name,$model->attributes);
     }
 
     /**
@@ -111,8 +124,8 @@ class Model
      */
     public static function __callStatic($name, $args)
     {  
-        $extensionName = (isset($args[0]) == true) ? $args[0] : null;
-        $callback = (isset($args[1]) == true) ? $args[1] : null;
+        $extensionName = $args[0] ?? null;
+        $callback = $args[1] ?? null;
 
         return Self::create($name,$extensionName,$callback);
     }

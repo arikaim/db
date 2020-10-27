@@ -44,7 +44,7 @@ class Seed
     {
         $query = Manager::table($this->tableName);     
         if ($query->where($search)->exists() == false) {
-            return $query->insert(\array_merge($search, $values));
+            return $query->insert(\array_merge($search,$values));
         }
 
         return true;

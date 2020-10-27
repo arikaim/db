@@ -52,7 +52,7 @@ trait PriceRelation
      */
     public function getPriceListClass()
     {
-        return (isset($this->priceListClass) == true) ? $this->priceListClass : null;
+        return $this->priceListClass ?? null;
     }
     
     /**

@@ -55,7 +55,7 @@ trait PriceList
      */
     public function getCurrencyClass()
     {
-        return (isset($this->currencyClass) == true) ? $this->currencyClass : null;
+        return $this->currencyClass ?? null;
     }
 
     /**
@@ -65,7 +65,7 @@ trait PriceList
      */
     public function getPriceTypeClass()
     {
-        return (isset($this->priceTypeClass) == true) ? $this->priceTypeClass : null;
+        return $this->priceTypeClass ?? null;
     }
     
     /**
@@ -75,7 +75,7 @@ trait PriceList
      */
     public function getPriceListDefinitionClass()
     {
-        return (isset($this->priceListDefinitionClass) == true) ? $this->priceListDefinitionClass : null;
+        return $this->priceListDefinitionClass ?? null;
     }
 
     /**
@@ -91,7 +91,7 @@ trait PriceList
         if (empty($priceType) == true) {
             return false;
         }
-        $key = (empty($key) == true) ? $this->key : $key;
+        $key = $key ?? $this->key;
 
         return $priceType->where('key','=',$key)->first();
     }
@@ -107,7 +107,7 @@ trait PriceList
      */
     public function createPrice($productId, $key, $currency = null, $price = null)
     {
-        $price = (empty($price) == true) ? 0 : $price;
+        $price = $price ?? 0;
 
         if ($this->hasPrice($key,$productId) == true) {     
             return false;

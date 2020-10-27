@@ -134,7 +134,7 @@ trait Status
      */
     public function getStatusColumn()
     {
-        return (isset($this->statusColumn) == true) ? $this->statusColumn : 'status';
+        return $this->statusColumn ?? 'status';
     }
 
     /**
@@ -149,7 +149,7 @@ trait Status
             return $status;
         }
 
-        return array_search($status,$this->statusText);
+        return \array_search($status,$this->statusText);
     } 
 
     /**

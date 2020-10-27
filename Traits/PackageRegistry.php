@@ -22,7 +22,7 @@ trait PackageRegistry
      */
     public function getPackageNameColumn()
     {
-        return (isset($this->pckageColumnName) == true) ? $this->pckageColumnName : 'name';
+        return $this->pckageColumnName ?? 'name';
     }
 
     /**
@@ -138,11 +138,8 @@ trait PackageRegistry
     public function setPrimary($name)
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());
-        if (\is_object($model) == false) {          
-            return false;
-        }
-      
-        return $model->setDefault();
+        
+        return (\is_object($model) == false) ? false : $model->setDefault();                    
     }
 
     /**
@@ -154,10 +151,7 @@ trait PackageRegistry
     public function isPrimary($name)
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());
-        if (\is_object($model) == false) {          
-            return null;
-        }
 
-        return ($model->primary == 1);
+        return (\is_object($model) == false) ? null : ($model->primary == 1);                
     }
 }

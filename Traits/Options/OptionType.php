@@ -73,7 +73,7 @@ trait OptionType
      */
     public function getTypeText($type = null)
     {
-        $type = (empty($type) == true) ? $this->type : $type;
+        $type = $type ?? $this->type;
 
         return (isset(Self::$TYPES_LIST[$type]) == true) ? Self::$TYPES_LIST[$type] : false;
     }

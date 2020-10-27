@@ -35,7 +35,7 @@ trait Position
      */
     protected function getPositionAttributeName()
     {
-        return (isset($this->positionColumnName) == true) ? $this->positionColumnName : 'position';
+        return $this->positionColumnName ?? 'position';
     }
 
     /**

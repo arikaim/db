@@ -39,6 +39,6 @@ trait DateUpdated
      */
     public function getDateUpdatedAttributeName()
     {
-        return (isset($this->dateUpdatedColumn) == true) ? $this->dateUpdatedColumn : 'date_updated';
+        return $this->dateUpdatedColumn ?? 'date_updated';
     }
 }

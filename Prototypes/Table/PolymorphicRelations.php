@@ -36,7 +36,7 @@ class PolymorphicRelations implements BlueprintPrototypeInterface
         $table->index('relation_id');
         $table->unique(['relation_id','relation_type',$options[0]],'un_rel_id_type_' . $table->getTable());
         
-        $callback = (isset($options[2]) == true) ? $options[2] : null;
+        $callback = $options[2] ?? null;
         if (\is_callable($callback) == true) {         
             $call = function() use($callback,$table) {
                 $callback($table);                                 

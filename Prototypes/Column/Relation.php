@@ -25,7 +25,7 @@ class Relation implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {       
-        $nullable = (isset($options[2]) == false) ? false : $options[2];
+        $nullable = $options[2] ?? false;
 
         $table->bigInteger($options[0])->unsigned()->nullable($nullable);
         $table->foreign($options[0])->references('id')->on($options[1]);   

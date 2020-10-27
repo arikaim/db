@@ -27,9 +27,6 @@ class OrderBy
      */
     public static function setOrderBy($fieldName, $type = null, $namespace = null)
     {
-        if (empty($fieldName) == true) {
-            return false;
-        }
         $type = (empty($type) == true) ? 'asc' : $type;
         Session::set(Utils::createKey('order.by',$namespace),[$fieldName => $type]);  
 
@@ -70,7 +67,7 @@ class OrderBy
         $order = Self::getOrderBy($namespace);
         
         $field = \key($order);
-        $type = (isset($order[$field]) == true) ? $order[$field] : 'asc';
+        $type = $order[$field] ?? 'asc';
        
         if (empty($field) == false) {
            $builder = $builder->orderBy($field,$type);

@@ -23,7 +23,7 @@ trait PolymorphicRelations
      */
     public function getRelationModelClass()
     {
-        return (isset($this->relationModelClass) == true) ? $this->relationModelClass : null;
+        return $this->relationModelClass ?? null;
     }
 
     /**
@@ -33,7 +33,7 @@ trait PolymorphicRelations
      */
     public function getRelationAttributeName()
     {
-        return (isset($this->relationColumnName) == true) ? $this->relationColumnName : null;
+        return $this->relationColumnName ?? null;
     }
 
     /**

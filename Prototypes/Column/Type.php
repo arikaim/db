@@ -25,7 +25,7 @@ class Type implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {
-        $default = (isset($options[0]) == false) ? 0 : $options[0];
+        $default = $options[0] ?? 0;
 
         $table->integer('type')->nullable(false)->default($default); 
         $table->index('type');   

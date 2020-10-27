@@ -25,7 +25,7 @@ class Language implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {
-        $default = (isset($options[0]) == false) ? 'en' : $options[0];
+        $default = $options[0] ?? 'en';
 
         $table->string('language',3)->nullable(false)->default($default);      
         $table->index('language');   

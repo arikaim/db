@@ -26,6 +26,17 @@ trait Find
     }
     
     /**
+     * Find multiole query
+     *
+     * @param array $idList
+     * @return Builder
+     */
+    public function findMultiple(array $idList)
+    {
+        return $this->whereIn('uuid',$idList)->orWhereIn('id',$idList);
+    }
+
+    /**
      * Get last row
      *
      * @param string $field

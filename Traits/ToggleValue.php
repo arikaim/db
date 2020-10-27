@@ -23,7 +23,7 @@ trait ToggleValue
      */
     public function toggle($fieldName, $id = null)
     {
-        $id = (empty($id) == true) ? $this->id : $id;
+        $id = $id ?? $this->id;
     
         $model = $this->findById($id);
         if (\is_object($model) == false) {
@@ -33,6 +33,6 @@ trait ToggleValue
         $value = ($value == 0) ? 1 : 0;
         $result = $model->update([$fieldName => $value]);  
         
-        return ($result !== false) ? true : false;
+        return ($result !== false);
     }
 }

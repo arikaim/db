@@ -25,7 +25,7 @@ class Translations implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {                    
-        $callback = (isset($options[2]) == true) ? $options[2] : null;
+        $callback = $options[2] ?? null;
         // columns
         $table->id();
         $table->prototype('uuid');      

@@ -44,7 +44,7 @@ class OptionType implements BlueprintPrototypeInterface
         // index
         $table->unique(['key']);
 
-        $callback = (isset($options[0]) == true) ? $options[0] : null;
+        $callback = $options[0] ?? null;
         if (\is_callable($callback) == true) {         
             $call = function() use($callback,$table) {
                 $callback($table);                                 

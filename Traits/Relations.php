@@ -21,7 +21,7 @@ trait Relations
      */
     public function getRelationsTargetAttributeName()
     {
-        return (isset($this->relationTargetColumn) == true) ? $this->relationTargetColumn : null;
+        return $this->relationTargetColumn ?? null;
     }
 
     /**
@@ -31,7 +31,7 @@ trait Relations
      */
     public function getRelationsSourceAttributeName()
     {
-        return (isset($this->relationSourceColumn) == true) ? $this->relationSourceColumn : null;
+        return $this->relationSourceColumn ?? null;
     }
 
     /**

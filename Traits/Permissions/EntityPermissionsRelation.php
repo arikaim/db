@@ -79,7 +79,7 @@ trait EntityPermissionsRelation
      */
     public function getPublicPermission($entityId = null)
     {
-        $entityId = (empty($entityId) == true) ? $this->id : $entityId;   
+        $entityId = $entityId ?? $this->id;   
         $model = new $this->entytyPermissionsClass();
 
         $model = $model
@@ -98,7 +98,7 @@ trait EntityPermissionsRelation
      */
     public function isPublic($entityId = null)
     {
-        $entityId = (empty($entityId) == true) ? $this->id : $entityId;
+        $entityId = $entityId ?? $this->id;
 
         return ($this->getPublicPermission($entityId) !== false);
     }

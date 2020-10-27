@@ -40,7 +40,7 @@ trait UserRelation
      */
     public function getAuthId()
     {
-        return (isset($this->authId) == true) ? $this->authId : null;
+        return $this->authId ?? null;
     }
 
     /**
@@ -50,7 +50,7 @@ trait UserRelation
      */
     public function getUserIdAttributeName()
     {
-        return (isset($this->userIdColumn) == true) ? $this->userIdColumn : 'user_id';
+        return $this->userIdColumn ?? 'user_id';
     }
 
     /**

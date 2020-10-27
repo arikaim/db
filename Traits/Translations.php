@@ -45,7 +45,7 @@ trait Translations
      */
     public function getCurrentLanguage()
     {
-        return (empty($this->currentLanguage) == true) ? Page::getCurrentLanguage() : $this->currentLanguage;
+        return $this->currentLanguage ?? Page::getCurrentLanguage();
     }
 
     /**
@@ -57,14 +57,14 @@ trait Translations
      */
     public function translateAttribute($attribute, $language = null)
     {
-        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
+        $language = $language ?? $this->getCurrentLanguage();
 
         $translation = $this->translation($language);
         if (\is_object($translation) == false) {
             return null;
         }
 
-        return (empty($translation->$attribute) == false) ? $translation->$attribute : null;
+        return $translation->$attribute ?? null;
     }
 
     /**
@@ -95,7 +95,7 @@ trait Translations
      */
     public function getTranslatedAttributes()
     {
-        return (isset($this->translatedAttributes) == true) ? $this->translatedAttributes : [];
+        return $this->translatedAttributes ?? [];
     }
 
     /**
@@ -105,7 +105,7 @@ trait Translations
      */
     public function getTranslationReferenceAttributeName()
     {
-        return (isset($this->translationReference) == true) ? $this->translationReference : null;
+        return $this->translationReference ?? null;
     }
 
     /**
@@ -115,7 +115,7 @@ trait Translations
      */
     public function getTranslationModelClass()
     {
-        return (isset($this->translationModelClass) == true) ? $this->translationModelClass : null;
+        return $this->translationModelClass ?? null;
     }
 
     /**
@@ -138,7 +138,7 @@ trait Translations
     {
         $class = $this->getTranslationModelClass();
         $model = new $class();
-        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
+        $language = $language ?? $this->getCurrentLanguage();
         
         return $model->where('language','=',$language);
     }
@@ -151,7 +151,7 @@ trait Translations
      */
     public function translation($language = null, $query = false)
     {
-        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
+        $language = $language ?? $this->getCurrentLanguage();
         $model = $this->translations()->getQuery()->where('language','=',$language);
         $model = ($query == false) ? $model->first() : $model;
 
@@ -169,7 +169,7 @@ trait Translations
      */
     public function saveTranslation(array $data, $language = null, $id = null)
     {
-        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
+        $language = $language ?? $this->getCurrentLanguage();
         $model = (empty($id) == true) ? $this : $this->findById($id);     
         $reference = $this->getTranslationReferenceAttributeName();
 
@@ -195,7 +195,7 @@ trait Translations
      */
     public function removeTranslation($id = null, $language = null)
     {
-        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
+        $language = $language ?? $this->getCurrentLanguage();
         $model = (empty($id) == true) ? $this : $this->findById($id);     
         $model = $model->translation($language);
 

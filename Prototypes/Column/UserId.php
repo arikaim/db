@@ -25,7 +25,7 @@ class UserId implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {
-        $nullable = (isset($options[0]) == false) ? true : $options[0];
+        $nullable = $options[0] ?? true;
 
         $table->bigInteger('user_id')->unsigned()->nullable($nullable);     
         $table->foreign('user_id')->references('id')->on('users'); 

@@ -30,7 +30,7 @@ trait MetaTags
      */
     public function getCurrentLanguage()
     {
-        return (empty($this->currentLanguage) == true) ? Page::getCurrentLanguage() : $this->currentLanguage;
+        return $this->currentLanguage ?? Page::getCurrentLanguage();
     }
 
     /**
@@ -42,8 +42,8 @@ trait MetaTags
      */
     public function getMetaTags($language = null, $query = null)
     {
-        $model = (empty($query) == true) ? $this : $query;
-        $language = (empty($language) == true) ? $this->getCurrentLanguage() : $language;
+        $model = $query ?? $this;
+        $language = $language ?? $this->getCurrentLanguage();
         $model = $model->where('language','=',$language)->first();
         
         return $this->getMetaTagsArray($model);        
@@ -57,7 +57,7 @@ trait MetaTags
      */
     public function getMetaTagsArray($model = null)
     {
-        $model = (empty($model) == true) ? $this : $model;
+        $model = $model ?? $this;
 
         return [
             'title'       => \is_object($model) ? $model->meta_title : null,

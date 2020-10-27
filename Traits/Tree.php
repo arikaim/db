@@ -45,7 +45,7 @@ trait Tree
      */
     public function getParentColumn()
     {
-        return (isset($this->parentColumn) == true) ? $this->parentColumn : 'parent_id';
+        return $this->parentColumn ?? 'parent_id';
     }
 
     /**
@@ -66,12 +66,12 @@ trait Tree
      */
     public function hasChild($id = null)
     {
-        $id = (empty($id) == true) ? $this->id : $id;
+        $id = $id ?? $this->id;
         $columnName = $this->getParentColumn();
 
         $model = $this->findByColumn($this->id,$columnName);
         if (\is_object($model) == true) {
-            return ($model->count() > 0) ? true : false; 
+            return ($model->count() > 0);
         }
 
         return false;

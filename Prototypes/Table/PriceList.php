@@ -25,9 +25,9 @@ class PriceList implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {  
-        $productsTable = (isset($options[0]) == true) ? $options[0] : null;  
-        $currencyTable = (isset($options[1]) == true) ? $options[1] : null;                          
-        $callback = (isset($options[2]) == true) ? $options[2] : null;
+        $productsTable = $options[0] ?? null;  
+        $currencyTable = $options[1] ?? null;                          
+        $callback = $options[2] ?? null;
 
         // columns
         $table->id();

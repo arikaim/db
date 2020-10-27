@@ -24,7 +24,7 @@ trait Options
      */
     public function getOptionTypeClass()
     {
-        return (isset($this->optionTypeClass) == true) ? $this->optionTypeClass : null;
+        return $this->optionTypeClass ?? null;
     }
     
     /**
@@ -34,7 +34,7 @@ trait Options
      */
     public function getOptionsDefinitionClass()
     {
-        return (isset($this->optionsDefinitionClass) == true) ? $this->optionsDefinitionClass : null;
+        return $this->optionsDefinitionClass ?? null;
     }
 
     /**
@@ -44,7 +44,7 @@ trait Options
      */
     public function getValAttribute()
     {
-        return (isset($this->attributes['value']) == true) ? $this->attributes['value'] : null;
+        return $this->attributes['value'] ?? null;
     }
 
     /**

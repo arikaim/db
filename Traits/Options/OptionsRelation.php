@@ -64,7 +64,7 @@ trait OptionsRelation
      */
     public function getOptionsClass()
     {
-        return (isset($this->optionsClass) == true) ? $this->optionsClass : null;
+        return $this->optionsClass ?? null;
     }
 
     /**
@@ -74,7 +74,7 @@ trait OptionsRelation
      */
     public function getOptionsPrimarykey()
     {
-        return (isset($this->optionsPrimaryKey) == true) ? $this->optionsPrimaryKey : 'id';
+        return $this->optionsPrimaryKey ?? 'id';
     }
 
     /**

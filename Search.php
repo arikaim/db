@@ -23,15 +23,15 @@ class Search
      * Return search value
      *
      * @param string $field
-     * @param string|nmull $namespace
+     * @param string|null $namespace
      * @param mixed $default
      * @return mixed|null
      */
     public static function getSearchValue($field, $namespace = null, $default = null)
     {
         $search = Self::getSearch($namespace);
-
-        return (isset($search[$field]) == true) ? $search[$field] : $default;      
+      
+        return $search[$field] ?? $default;      
     }
 
     /**
@@ -79,7 +79,7 @@ class Search
     {
         $conditions = Self::getSearchConditions($namespace);
 
-        return (isset($conditions[$field]) == true) ? $conditions[$field] : null;
+        return $conditions[$field] ?? null;
     }
 
     /**

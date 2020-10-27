@@ -41,6 +41,6 @@ trait DateCreated
      */
     public function getDateCreatedAttributeName()
     {
-        return (isset($this->dateCreatedColumn) == true) ? $this->dateCreatedColumn : 'date_created';
+        return $this->dateCreatedColumn ?? 'date_created';
     }
 }

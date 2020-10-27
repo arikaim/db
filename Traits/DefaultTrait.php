@@ -21,7 +21,7 @@ trait DefaultTrait
      */
     public function getDefaultColumnName()
     {
-        return (isset($this->defaultColumnName) == true) ? $this->defaultColumnName : 'default';
+        return $this->defaultColumnName ?? 'default';
     }
 
     /**
@@ -46,7 +46,7 @@ trait DefaultTrait
     public function setDefault($id = null, $userId = null)
     {
         $column = $this->getDefaultColumnName();
-        $id = (empty($id) == true) ? $this->id : $id;
+        $id = $id ?? $this->id;
 
         $models = (empty($userId) == false) ? $this->where('user_id','=',$userId) : $this->where('id','<>',$id);
         $models->update([$column => null]);

@@ -28,7 +28,7 @@ abstract class Schema
      *
      * @var string
      */
-    protected $tableName;
+    protected $tableName = null;
 
     /**
      * Db storage engine
@@ -66,13 +66,9 @@ abstract class Schema
     /**
      * Constructor
      *
-     * @param string|null $tableName
      */
-    public function __construct($tableName = null) 
+    public function __construct() 
     {      
-        if (empty($tableName) == false) {
-            $this->tableName = $tableName;
-        }
     }
 
     /**
