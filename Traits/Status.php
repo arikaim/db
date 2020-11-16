@@ -155,12 +155,11 @@ trait Status
     /**
      * Return active model query builder
      *
-     * @return void
+     * @return Builder
      */
     public function getActive()
     {
-        $model = parent::where($this->getStatusColumn(),'=',Self::$ACTIVE);
-
+        $model = $this->where($this->getStatusColumn(),'=',Self::$ACTIVE);
         if (\method_exists($model,'getNotDeletedQuery') == true) {
             $model = $model->getNotDeletedQuery();
         }

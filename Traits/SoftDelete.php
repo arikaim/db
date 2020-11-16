@@ -48,9 +48,10 @@ trait SoftDelete
     public function softDelete($id = null)
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
+        $columnName = $model->getDeletedColumn();
 
         return $model->update([
-            $model->getDeletedColumn() => DateTime::getTimestamp()
+            $columnName => DateTime::getTimestamp()
         ]);
     }
 
@@ -63,7 +64,8 @@ trait SoftDelete
     public function restore($id = null)
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
-        $model->{$model->getDeletedColumn()} = null;
+        $columnName = $model->getDeletedColumn();
+        $model->{$columnName} = null;
         
         return $model->save();
     }
@@ -110,7 +112,29 @@ trait SoftDelete
      */
     public function getNotDeletedQuery()
     {
-        return parent::whereNull($this->getDeletedColumn());
+        return $this->whereNull($this->getDeletedColumn());
+    }
+
+    /**
+     * Get not deleted scope
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeGetNotDeleted($query)
+    {
+        return $query->whereNull($this->getDeletedColumn());
+    }
+
+    /**
+     * Get deleted scope
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeGetDeleted($query)
+    {
+        return $query->whereNotNull($this->getDeletedColumn());
     }
 
     /**

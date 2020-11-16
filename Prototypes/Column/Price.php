@@ -26,8 +26,9 @@ class Price implements BlueprintPrototypeInterface
     public function build($table,...$options)
     {
         $default = $options[0] ?? 0.00;
+        $columnName = $options[1] ?? 'price';
 
-        $table->decimal('price',15,4)->nullable(false)->default($default); 
-        $table->index('price');   
+        $table->decimal($columnName,15,4)->nullable(false)->default($default); 
+        $table->index($columnName);   
     }
 }

@@ -9,7 +9,7 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
-use Arikaim\Core\View\Html\Page;
+use Arikaim\Core\Http\Session;
 
 /**
  * Translations trait      
@@ -45,7 +45,7 @@ trait Translations
      */
     public function getCurrentLanguage()
     {
-        return $this->currentLanguage ?? Page::getCurrentLanguage();
+        return $this->currentLanguage ?? Session::get('language','en');
     }
 
     /**
@@ -221,13 +221,12 @@ trait Translations
      *
      * @param string $attributeName
      * @param mixed $value
-     * @return void
+     * @return Model|null
      */
     public function findTranslation($attributeName, $value)
     {     
         $class = $this->getTranslationModelClass();
         $model = new $class();
-
         $model = $model->whereIgnoreCase($attributeName,trim($value));
 
         return $model->first();

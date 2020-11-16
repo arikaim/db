@@ -30,10 +30,10 @@ trait FileTypeTrait
             return false;
         }
         $columnName = $this->getMimeTypeColumnName();
-        $start = $typeInfo['start'];
+        $start = $typeInfo['start'] + 1;
         $length = $typeInfo['length'];
        
-        return $query->whereRaw("SUBSTR(' . $columnName . ',$start,$length) = '$type' ");
+        return $query->whereRaw("SUBSTR(" . $columnName . ",$start,$length) = '$type' ");
     }
 
     /**
