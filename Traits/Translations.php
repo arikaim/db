@@ -81,8 +81,9 @@ trait Translations
         }
 
         $list = $this->getTranslatedAttributes();
-        foreach ($list as $attribute) {         
-            $this->attributes[$attribute] = (empty($translation->$attribute) == false) ? $translation->$attribute : $this->attributes[$attribute];
+        foreach ($list as $attribute) {     
+            $translatedValue = (empty($translation->$attribute) == false) ? $translation->$attribute : $this->attributes[$attribute] ?? null;    
+            $this->attributes[$attribute] = $translatedValue;
         }
 
         return true;
