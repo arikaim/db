@@ -168,6 +168,17 @@ trait Status
     }
     
     /**
+     * Active status scope
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeActiveQuery($query)
+    {       
+        return $query->where($this->getStatusColumn(),'=',Self::$ACTIVE);
+    }
+
+    /**
      * Return disabled model query builder
      *
      * @return void

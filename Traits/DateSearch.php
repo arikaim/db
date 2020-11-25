@@ -9,7 +9,7 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
-use Arikaim\Core\Utils\DateTime;
+use Arikaim\Core\Utils\TimePeriod;
 
 /**
  * Date search query
@@ -20,33 +20,31 @@ trait DateSearch
     /**
      * Get year query scope
      *
+     * @param Builder $query 
      * @param string $columnName
-     * @param string $year
+     * @param string|null $year
      * @return Builder
      */
-    public function scopeYear($query, $columnName, $year)
+    public function scopeYear($query, $columnName, $year = null)
     {     
-        $start = DateTime::toTimestamp($year . '-01-01T00:00:00.0');
-        $end = DateTime::toTimestamp($year . '-12-31T12:59:59.0');
-       
-        return $query->where($columnName,'>',$start)->where($columnName,'<',$end);
+        $period = TimePeriod::getYearPeriod($year);
+
+        return $query->where($columnName,'>',$period['start'])->where($columnName,'<',$period['end']);
     }
 
     /**
      * Get month query scope
      *
+     * @param Builder $query 
      * @param string $columnName
-     * @param string $year
+     * @param string|null $month
+     * @param string|null $year
      * @return Builder
      */
-    public function scopeMonth($query, $columnName, $month, $year = null)
+    public function scopeMonth($query, $columnName, $month = null, $year = null)
     {     
-        $year = (empty($year) == true) ? DateTime::getYear() : $year;
-        $lastDay = DateTime::getLastDay($month);
-        
-        $start = DateTime::toTimestamp($year . '-' . $month . '-01T00:00:00.0');
-        $end = DateTime::toTimestamp($year . '-' . $month . '-' . $lastDay . 'T12:59:59.0');
+        $period = TimePeriod::getMonthPeriod($month,$year);
        
-        return $query->where($columnName,'>',$start)->where($columnName,'<',$end);
+        return $query->where($columnName,'>',$period['start'])->where($columnName,'<',$period['end']);
     }
 }
