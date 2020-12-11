@@ -117,7 +117,7 @@ trait Status
      * @param mixed $items
      * @return Builder
      */
-    public function scopeStatus($query, $items)
+    public function scopeStatusQuery($query, $items)
     {
         $column = $this->getStatusColumn();
         if (\is_array($items) == true) {       

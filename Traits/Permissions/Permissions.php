@@ -24,11 +24,27 @@ trait Permissions
      */
     public function hasPermission($name)
     {
-        if (isset($this->attributes[$name]) == true) {
-            return ($this->attributes[$name] == 1) ? true : false;
+        $permission = $this->attributes[$name] ?? null;
+       
+        return ($permission == 1);
+    }
+
+    /**
+     * Check for permissions
+     *
+     * @param array $permissions
+     * @return boolean
+     */
+    public function verifyPermissions(array $permissions)
+    {
+        foreach ($permissions as $key => $value) {
+            $success = ($value == 1) ? $this->hasPermission($key) : true;
+            if ($success == false) {
+                return false;
+            }
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -61,10 +77,10 @@ trait Permissions
         }
 
         return [
-            'read'      => \in_array('read',$access) ? 1 : 0,
-            'write'     => \in_array('write',$access) ? 1 : 0,
-            'delete'    => \in_array('delete',$access) ? 1 : 0,
-            'execute'   => \in_array('execute',$access) ? 1 : 0
+            'read'    => \in_array('read',$access) ? 1 : 0,
+            'write'   => \in_array('write',$access) ? 1 : 0,
+            'delete'  => \in_array('delete',$access) ? 1 : 0,
+            'execute' => \in_array('execute',$access) ? 1 : 0
         ];       
     }
 }

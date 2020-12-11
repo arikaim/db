@@ -43,19 +43,28 @@ trait EntityPermissionsRelation
      */
     public function hasAccess($userId, $access)
     {
-        $permissions = $this->resolvePermissions($access);
+        if ($this->isPublic() == true) {
+            return true;
+        }
+        // check owner
+        $ownerId = $this->user_id ?? null;
+        if ((empty($ownerId) == false) && ($ownerId == $userId)) {
+            return true;
+        }
+
+        $permissions = $this->resolvePermissions($access);   
         
-        $model = $this->getPermission($userId);
+        $model = $this->permissions()->permissionsForUser($userId)->get();
         if (\is_object($model) == false) {
             return false;
         }
-
-        foreach ($permissions as $key => $permission) { 
-            if ($model->hasPermission($key) == true) {           
+        foreach ($model as $item) {           
+            $success = $item->verifyPermissions($permissions);
+            if ($success == true) {
                 return true;
             }
         }
-        
+       
         return false;
     }
 

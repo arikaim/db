@@ -10,6 +10,7 @@
 namespace Arikaim\Core\Db\Traits\Permissions;
 
 use Arikaim\Core\Models\Permissions;
+use Arikaim\Core\Models\UserGroupMembers;
 
 /**
  * Entity permissions
@@ -71,6 +72,20 @@ trait EntityPermissions
 
         return (\is_object($model) == true) ? $model->delete() : true;
     }
+    
+    /**
+     * Delete group permission
+     *
+     * @param integer $entityId
+     * @param integer $groupId
+     * @return boolean
+     */
+    public function deleteGroupPermission($entityId, $groupId)
+    {
+        $model = $this->getPermission($entityId,$groupId,'group');
+
+        return (\is_object($model) == true) ? $model->delete() : true;
+    }
 
     /**
      * Add user permission
@@ -90,14 +105,14 @@ trait EntityPermissions
      * Add group permission
      *
      * @param integer $entityId
-     * @param integer $userId
+     * @param integer $groupId
      * @param array $permissions
      * @param integer|null $permissionId
      * @return Model|false
      */
-    public function addGroupPermission($entityId, $userId, $permissions, $permissionId = null)
+    public function addGroupPermission($entityId, $groupId, $permissions, $permissionId = null)
     {
-        return $this->addPermission($entityId, $userId, $permissions,'group',$permissionId);
+        return $this->addPermission($entityId,$groupId,$permissions,'group',$permissionId);
     }
 
     /**
@@ -113,7 +128,7 @@ trait EntityPermissions
     public function addPermission($entityId, $userId, $permissions, $type = 'user', $permissionId = null)
     {
         $permissions = $this->resolvePermissions($permissions);
-        $model = $this->getPermission($entityId,$userId,'user');
+        $model = $this->getPermission($entityId,$userId,$type);
         if (\is_object($model) == true) {
             return false;
         }
@@ -182,7 +197,7 @@ trait EntityPermissions
      * @param integer $entityId
      * @param integer $id
      * @param string $type
-     * @return Model
+     * @return Model|null
      */
     public function getPermission($entityId, $id, $type = 'user')
     {
@@ -197,11 +212,67 @@ trait EntityPermissions
     /**
      * Get permissions query 
      *
-     * @param ineteger $entityId
+     * @param int $entityId
+     * @param string|null $type
      * @return Builder
      */
-    public function getPermissionsQuery($entityId)
+    public function getPermissionsQuery($entityId, $type = null)
     {
-        return $this->where('entity_id','=',$entityId)->whereNotNull('relation_id');      
+        $query = $this->where('entity_id','=',$entityId);
+        if (empty($type) == false) {
+            $query = $query->where('relation_type','=',$type);
+        }
+
+        return $query->whereNotNull('relation_id');      
     }
+
+    /**
+     * Query for all permissions for user
+     *
+     * @param Builder $query
+     * @param int $userId
+     * @return Builder
+     */
+    public function scopePermissionsForUser($query, $userId)
+    {
+        $groups = new UserGroupMembers();
+        $groups = $groups->userGroups($userId)->pluck('group_id')->toArray();
+        
+        $query = $query->where(function($query) use ($userId) {
+            // user
+            $query->where('relation_id','=',$userId);
+            $query->where('relation_type','=','user');
+        })->orWhere(function($query) use ($groups) {
+            // groups
+            $query->whereIn('relation_id',$groups);
+            $query->where('relation_type','=','group');
+        })->orWhere(function($query) {
+            // public
+            $query->whereNull('relation_id');           
+        });
+
+        return $query;
+    }
+
+    /**
+     * Get user permissions query
+     *
+     * @param Builder $query
+     * @return Builder
+    */
+    public function scopeUserPermissions($query)
+    {
+        return $query->where('relation_type','=','user');
+    } 
+
+    /**
+     * Get group permissions query
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeGroupPermissions($query)
+    {
+        return $query->where('relation_type','=','group');
+    } 
 }

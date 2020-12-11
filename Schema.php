@@ -268,6 +268,28 @@ abstract class Schema
     }
     
     /**
+     * Return true if index exist
+     *
+     * @param string $indexName
+     * @return boolean
+     */
+    public function hasIndex($indexName)
+    {
+        if (empty($indexName) == true) {
+            return false;
+        }
+        $result = Manager::select('SHOW INDEXES FROM ' . $this->tableName);
+      
+        foreach ($result as $item) {
+            if ($item->Key_name == $indexName) {
+                return true;
+            }           
+        }
+    
+        return false;
+    }
+
+    /**
      * Return shema object
      *
      * @return object
