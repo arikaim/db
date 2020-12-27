@@ -29,7 +29,7 @@ trait PackageRegistry
      * Get package
      * 
      * @param string $name
-     * @return array
+     * @return array|false
      */
     public function getPackage($name)
     {

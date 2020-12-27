@@ -106,7 +106,7 @@ trait Status
         'active',
         'completed',
         'published',
-        'pemding',
+        'pending',
         'suspended'
     ];
 

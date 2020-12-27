@@ -314,13 +314,13 @@ abstract class Schema
             try {
                 if ($instance->tableExists() == false) {
                     $instance->createTable();
+                } else {
+                    $instance->updateTable();
                 }
               
-                $instance->updateTable();
                 $instance->runSeeds();
                 
-                return $instance->tableExists();
-                
+                return $instance->tableExists();                
             } 
             catch(PDOException $e) {
                 return false;
@@ -329,7 +329,7 @@ abstract class Schema
                 return false;                         
             }
         }
-        
+      
         return false;
     }
 

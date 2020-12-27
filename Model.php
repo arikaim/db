@@ -11,6 +11,7 @@ namespace Arikaim\Core\Db;
 
 use Arikaim\Core\Utils\Factory;
 use Arikaim\Core\Db\Seed;
+use Arikaim\Core\Db\Schema;
 use Exception;
 
 /**
@@ -37,6 +38,9 @@ class Model
     {
         $model = Self::create($className,$extensionName);
         if (\is_object($model) == false) {
+            return null;
+        }
+        if (Schema::hasTable($model) == false) {
             return null;
         }
         $seed = new Seed($model->getTable());
