@@ -98,12 +98,26 @@ class Db
     }
 
     /**
+     * Reboot connection
+     *
+     * @return void
+     */
+    public function reboot(array $config = null)
+    {
+        $this->capsule->getDatabaseManager()->purge();
+        if (empty($config) == false) {
+            $this->config = $config;
+        }
+        $this->init($this->config);        
+    }
+
+    /**
      * Create db connection and boot Eloquent
      *
      * @param array $config
      * @return boolean
      */
-    public function init($config)
+    public function init($config, $showError = false)
     {
         try {                    
             $this->capsule->setEventDispatcher(new \Illuminate\Events\Dispatcher());
@@ -118,17 +132,24 @@ class Db
                 $this->initSchemaConnection($config); 
                 $this->hasError = false;        
             } else {
-                $this->hasError = true;                
+                $this->hasError = true; 
+                return false;               
             }
            
             $this->capsule->bootEloquent();
         }  
         catch(PDOException $e) {
             $this->hasError = true;
+            if ($showError == true) {
+                echo $e->getMessage();
+            }
             return false;
         }   
         catch(Exception $e) {    
-            $this->hasError = true;       
+            $this->hasError = true; 
+            if ($showError == true) {
+                echo $e->getMessage();
+            }      
             return false;
         }   
         
@@ -183,11 +204,21 @@ class Db
     /**
      * Return capsule object
      *
-     * @return object
+     * @return Illuminate\Database\Capsule
      */
     public function getCapsule()
     {
         return $this->capsule;
+    }
+
+    /**
+     * Get DatabaseManager
+     *
+     * @return @return \Illuminate\Database\DatabaseManager
+     */
+    public function getDatabaseManager()
+    {
+        return $this->capsule->getDatabaseManager();
     }
 
     /**
@@ -212,7 +243,7 @@ class Db
             return false;
         }
 
-        return (isset($result[0]->SCHEMA_NAME) == true) ? true : false;           
+        return (isset($result[0]->SCHEMA_NAME) == true);         
     }
 
     /**

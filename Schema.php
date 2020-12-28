@@ -304,28 +304,37 @@ abstract class Schema
      *
      * @param string $class
      * @param string $extension
+     * @param bool $showErorr
      * @return bool
      */
-    public static function install($class, $extension = null) 
+    public static function install($class, $extension = null, $showErorr = false) 
     {                   
         $instance = Factory::createSchema($class,$extension);
         
         if (\is_object($instance) == true) {
             try {
-                if ($instance->tableExists() == false) {
+                if ($instance->tableExists() == false) {                 
                     $instance->createTable();
-                } else {
+                } else {                   
                     $instance->updateTable();
                 }
               
                 $instance->runSeeds();
                 
-                return $instance->tableExists();                
+                return $instance->tableExists();              
             } 
             catch(PDOException $e) {
+                if ($showErorr == true) {
+                    echo $e->getMessage();
+                }
+               
                 return false;
             }
             catch(Exception $e) {  
+                if ($showErorr == true) {
+                    echo $e->getMessage();
+                }
+               
                 return false;                         
             }
         }
