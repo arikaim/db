@@ -9,29 +9,13 @@
 */
 namespace Arikaim\Core\Db\Traits\Options;
 
+use Arikaim\Core\Db\Interfaces\OptionTypeInterface;
+
 /**
  * Option type table trait
 */
 trait OptionType 
 {    
-    /**
-     * Option type constant 
-     */
-    static $TEXT          = 0;
-    static $CHECKBOX      = 1;
-    static $DROPDOWN      = 2;
-    static $TEXT_AREA     = 3;
-    static $RELATION      = 4;
-    static $NUMBER        = 5;
-    static $IMAGE         = 6;
-    static $PRICE         = 7;
-    static $FILE          = 8;
-    static $MARKDOWN      = 9;
-    static $DATE          = 10;
-    static $TIME_INTERVAL = 11;
-    static $USER_GROUP    = 12;
-    static $PERMISSION    = 13;
-
     /**
      *  Option type text
      */
@@ -93,7 +77,9 @@ trait OptionType
             'readonly',
             'default',
             'items',
-            'items_type'      
+            'items_type',
+            'data_source',
+            'data_source_type'      
         ];
 
         static::retrieved(function($model) use ($fillable) {
@@ -112,7 +98,7 @@ trait OptionType
      */
     public function TIME_INTERVAL()
     {
-        return Self::$TIME_INTERVAL;
+        return OptionTypeInterface::TIME_INTERVAL;
     }
 
     /**
@@ -122,7 +108,7 @@ trait OptionType
      */
     public function DATE()
     {
-        return Self::$DATE;
+        return OptionTypeInterface::DATE;
     }
 
     /**
@@ -132,7 +118,7 @@ trait OptionType
      */
     public function USERGROUP()
     {
-        return Self::$USER_GROUP;
+        return OptionTypeInterface::USER_GROUP;
     }
 
     /**
@@ -142,7 +128,7 @@ trait OptionType
     */
     public function PERMISSION()
     {
-        return Self::$PERMISSION;
+        return OptionTypeInterface::PERMISSION;
     }
 
     /**
@@ -152,7 +138,7 @@ trait OptionType
      */
     public function TEXT()
     {
-        return Self::$TEXT;
+        return OptionTypeInterface::TEXT;
     }
 
     /**
@@ -162,7 +148,7 @@ trait OptionType
      */
     public function CHECKBOX()
     {
-        return Self::$CHECKBOX;
+        return OptionTypeInterface::CHECKBOX;
     }
 
     /**
@@ -172,7 +158,7 @@ trait OptionType
      */
     public function DROPDOWN()
     {
-        return Self::$DROPDOWN;
+        return OptionTypeInterface::DROPDOWN;
     }
 
     /**
@@ -182,7 +168,7 @@ trait OptionType
      */
     public function TEXTAREA()
     {
-        return Self::$TEXT_AREA;
+        return OptionTypeInterface::TEXT_AREA;
     }
 
     /**
@@ -192,7 +178,7 @@ trait OptionType
      */
     public function RELATION()
     {
-        return Self::$RELATION;
+        return OptionTypeInterface::RELATION;
     }
 
     /**
@@ -202,7 +188,7 @@ trait OptionType
      */
     public function NUMBER()
     {
-        return Self::$NUMBER;
+        return OptionTypeInterface::NUMBER;
     }
 
     /**
@@ -212,7 +198,7 @@ trait OptionType
      */
     public function PRICE()
     {
-        return Self::$PRICE;
+        return OptionTypeInterface::PRICE;
     }
     
     /**

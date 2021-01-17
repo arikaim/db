@@ -9,7 +9,7 @@
 */
 namespace Arikaim\Core\Db\Prototypes\Table;
 
-use Arikaim\Core\Db\BlueprintPrototypeInterface;
+use Arikaim\Core\Db\Interfaces\BlueprintPrototypeInterface;
 
 /**
  * Options table prototype class
@@ -25,7 +25,7 @@ class Options implements BlueprintPrototypeInterface
      */
     public function build($table,...$options)
     {              
-        $optionTypeTable =$options[0] ?? null;     
+        $optionTypeTable = $options[0] ?? null;     
         $referenceTable = $options[1] ?? null; 
         $callback = $options[2] ?? null;
 

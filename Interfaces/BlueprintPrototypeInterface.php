@@ -7,7 +7,7 @@
  * @license     http://www.arikaim.com/license
  * 
 */
-namespace Arikaim\Core\Db;
+namespace Arikaim\Core\Db\Interfaces;
 
 /**
  * Db Column prototype interface

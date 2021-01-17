@@ -53,16 +53,21 @@ trait MetaTags
      * Get meta tags field values
      *
      * @param Model|null $model
+     * @param array|null $default
      * @return array
      */
-    public function getMetaTagsArray($model = null)
+    public function getMetaTagsArray($model = null, ?array $default = [])
     {
         $model = $model ?? $this;
 
+        $title = (empty($model->meta_title) == false) ? $model->meta_title : $default['title'] ?? '';
+        $description = (empty($model->meta_description) == false) ? $model->meta_description : $default['description'] ?? '';
+        $keywords = (empty($model->meta_keywords) == false) ? $model->meta_keywords : $default['keywords'] ?? '';
+
         return [
-            'title'       => \is_object($model) ? $model->meta_title : null,
-            'description' => \is_object($model) ? $model->meta_description : null,
-            'keywords'    => \is_object($model) ? $model->meta_keywords : null,
+            'title'       => $title,
+            'description' => $description,
+            'keywords'    => $keywords
         ];
     }
 }

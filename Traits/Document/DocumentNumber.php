@@ -34,7 +34,7 @@ trait DocumentNumber
      *
      * @return string
      */
-    public function getDocumentNumberColumn()
+    public function getDocumentNumberColumn(): string
     {
         return $this->documentNumberColumn ?? 'document_number';
     } 
@@ -54,7 +54,7 @@ trait DocumentNumber
      *
      * @return string
      */
-    public function getDocumentNumberLabel()
+    public function getDocumentNumberLabel(): string
     {
         return $this->documentNumberLabel ?? '';
     } 
@@ -64,7 +64,7 @@ trait DocumentNumber
      *     
      * @return integer
      */
-    public function getNextDocumentNumber($filterColumnValue = null)
+    public function getNextDocumentNumber($filterColumnValue = null): int
     {
         $columnName = $this->getDocumentNumberColumn();
         $indexColumn = $this->getDocumentNumberUniqueIndex();
@@ -83,7 +83,7 @@ trait DocumentNumber
      * @param string|null $filterColumnValue
      * @return boolean
      */
-    public function isValidDocumentNumber($documentNumber = null, $filterColumnValue = null)
+    public function isValidDocumentNumber(?int $documentNumber = null, $filterColumnValue = null): bool
     {
         $columnName = $this->getDocumentNumberColumn();
         $columnValue = (isset($this->attributes[$columnName]) == true) ? $this->attributes[$columnName] : $documentNumber;
@@ -102,12 +102,12 @@ trait DocumentNumber
      * @param string $prefix
      * @return string|null
      */
-    public function getDocumentNumber($prefix = '')
+    public function getDocumentNumber(string $prefix = '')
     {
         $columnName = $this->getDocumentNumberColumn();
         $label = $this->getDocumentNumberLabel();
         $documentNumber = $this->attributes[$columnName] ?? null;
      
-        return (empty($documentNumber) == false) ? \sprintf($label . '1%05d' . $prefix,$documentNumber) : null;       
+        return (empty($documentNumber) == false) ? \sprintf($label . '%010d' . $prefix,$documentNumber) : null;       
     }   
 }

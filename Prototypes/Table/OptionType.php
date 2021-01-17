@@ -9,7 +9,7 @@
 */
 namespace Arikaim\Core\Db\Prototypes\Table;
 
-use Arikaim\Core\Db\BlueprintPrototypeInterface;
+use Arikaim\Core\Db\Interfaces\BlueprintPrototypeInterface;
 
 /**
  * Option type table prototype class
@@ -41,6 +41,9 @@ class OptionType implements BlueprintPrototypeInterface
         $table->integer('cols')->nullable(true);
         $table->string('placeholder')->nullable(true);
         $table->integer('primary')->nullable(true);
+        // 
+        $table->string('data_source')->nullable(true);
+        $table->string('data_source_type')->nullable(true);
         // index
         $table->unique(['key']);
 

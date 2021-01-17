@@ -61,7 +61,7 @@ class Db
      * @param array $config
      * @param array|null $relations
      */
-    public function __construct($config, $relations = null) 
+    public function __construct(array $config, ?array $relations = null) 
     {
         $config['options'] = $config['options'] ?? $this->pdoOptions;
         
@@ -80,19 +80,19 @@ class Db
     /**
      * Get database name
      *
-     * @return string|false
+     * @return string|null
     */
-    public function getDatabaseName()
+    public function getDatabaseName(): ?string
     {
-        return $this->config['database'] ?? false;
+        return $this->config['database'] ?? null;
     }
 
     /**
      * Get relations morph map
      *
-     * @return array
+     * @return array|null
      */
-    public function getRelationsMap()
+    public function getRelationsMap(): ?array
     {
         return Relation::$morphMap;
     }
@@ -100,9 +100,10 @@ class Db
     /**
      * Reboot connection
      *
+     * @param array|null $config
      * @return void
      */
-    public function reboot(array $config = null)
+    public function reboot(?array $config = null): void
     {
         $this->capsule->getDatabaseManager()->purge();
         if (empty($config) == false) {
@@ -115,9 +116,10 @@ class Db
      * Create db connection and boot Eloquent
      *
      * @param array $config
+     * @param bool $showError
      * @return boolean
      */
-    public function init($config, $showError = false)
+    public function init(array $config, bool $showError = false): bool
     {
         try {                    
             $this->capsule->setEventDispatcher(new \Illuminate\Events\Dispatcher());
@@ -160,9 +162,10 @@ class Db
      * Init db connection
      *
      * @param array $config
+     * @param string $name
      * @return boolean
      */
-    public function initConnection($config, $name = 'default')
+    public function initConnection(array $config, string $name = 'default'): bool
     {
         try {
             $this->capsule->addConnection($config,$name);
@@ -170,7 +173,7 @@ class Db
 
             if (empty($connection) == true) {
                 $this->hasError = true;  
-                return;
+                return false;
             } 
             $connection->reconnect();   
             $this->capsule->getDatabaseManager()->setDefaultConnection($name);
@@ -196,7 +199,7 @@ class Db
      *
      * @return boolean
      */
-    public function hasError()
+    public function hasError(): bool
     {
         return $this->hasError;
     }
@@ -227,7 +230,7 @@ class Db
      * @param string $databaseName
      * @return boolean
      */
-    public function has($databaseName)
+    public function has(string $databaseName): bool
     {   
         try {
             $connection = $this->capsule->getConnection('schema');
@@ -252,7 +255,7 @@ class Db
      * @param string $tableName
      * @return string|false
      */
-    public function getRowFormat($tableName)
+    public function getRowFormat(string $tableName)
     {
         try {
             $connection = $this->capsule->getConnection('schema');
@@ -278,7 +281,7 @@ class Db
      * @param string|null $name
      * @return boolean
      */
-    public function isValidConnection($name = null)
+    public function isValidConnection(?string $name = null): bool
     {
         try {
             $connection = $this->capsule->getDatabaseManager()->connection($name);
@@ -297,10 +300,10 @@ class Db
     /**
      * Return true if connection is valid
      *
-     * @param array $config
+     * @param array|null $config
      * @return boolean
      */
-    public function isValidPdoConnection($config = null)
+    public function isValidPdoConnection(?array $config = null): bool
     {
         $config = ($config == null) ? $this->config : $config;
         $dsn = $config['driver'] . ':dbname=' . $config['database'] . ';host=' . $config['host'];
@@ -324,9 +327,11 @@ class Db
      * Create database
      *
      * @param string $databaseName
+     * @param string|null $charset
+     * @param string|null $collation
      * @return boolean
      */
-    public function createDb($databaseName, $charset = null, $collation = null) 
+    public function createDb(string $databaseName, ?string $charset = null, ?string $collation = null) 
     {    
         if ($this->has($databaseName) == true) {
             return true;
@@ -357,7 +362,7 @@ class Db
      * @param object $connection
      * @return boolean
      */
-    public static function checkConnection($connection)
+    public static function checkConnection($connection): bool
     {
         try {
             $connection->statement('SELECT 1');
@@ -378,7 +383,7 @@ class Db
      * @param array $config
      * @return bool
      */
-    public function testConnection($config)
+    public function testConnection(array $config)
     {                
         try {
             $connection = $this->initSchemaConnection($config);     
@@ -402,7 +407,7 @@ class Db
      * @param array|null $config
      * @return Connection
      */
-    private function initSchemaConnection($config = null)
+    private function initSchemaConnection(?array $config = null)
     {
         $config = $config ?? $this->config;      
         $config['database'] = 'information_schema';  
@@ -417,7 +422,7 @@ class Db
      *
      * @return array
      */
-    public function getInfo() 
+    public function getInfo(): array 
     {        
         $pdo = $this->capsule->connection()->getPdo();
         return [

@@ -9,7 +9,7 @@
 */
 namespace Arikaim\Core\Db\Prototypes\Column;
 
-use Arikaim\Core\Db\BlueprintPrototypeInterface;
+use Arikaim\Core\Db\Interfaces\BlueprintPrototypeInterface;
 
 /**
  * Default multiuser column prototype class

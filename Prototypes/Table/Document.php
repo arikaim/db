@@ -12,9 +12,9 @@ namespace Arikaim\Core\Db\Prototypes\Table;
 use Arikaim\Core\Db\Interfaces\BlueprintPrototypeInterface;
 
 /**
- * Options list table prototype class
+ * Document table prototype class
 */
-class OptionsList implements BlueprintPrototypeInterface
+class Document implements BlueprintPrototypeInterface
 {
     /**
      * Build table
@@ -24,19 +24,28 @@ class OptionsList implements BlueprintPrototypeInterface
      * @return void
      */
     public function build($table,...$options)
-    {                       
-        $callback = $options[1] ?? null;
+    {             
+        $callback = $options[0] ?? null;
+        $currencyTableName =  $options[1] ?? 'currency';         
 
         // columns
         $table->id();
         $table->prototype('uuid');              
-        $table->position();
-        $table->string('type_name')->nullable(false);
-        $table->string('key')->nullable(false);
-        $table->string('branch')->nullable(true);
+        $table->status();
+        $table->userId();    
+        $table->relation('currency_id',$currencyTableName);
+    
+        $table->string('external_id')->nullable(true);
+        $table->string('api_driver')->nullable(true);
+        $table->string('external_client')->nullable(true); 
+        $table->integer('document_number')->nullable(true);        
+        $table->dateCreated();
+        $table->dateUpdated();
+        $table->dateDeleted();
 
         // unique      
-        $table->unique(['type_name','key','branch']);
+        $table->unique(['document_number','user_id']);
+        $table->unique(['external_id','api_driver']);
 
         if (\is_callable($callback) == true) {         
             $call = function() use($callback,$table) {

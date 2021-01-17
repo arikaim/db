@@ -9,7 +9,7 @@
 */
 namespace Arikaim\Core\Db\Prototypes\Column;
 
-use Arikaim\Core\Db\BlueprintPrototypeInterface;
+use Arikaim\Core\Db\Interfaces\BlueprintPrototypeInterface;
 
 /**
  * DateColumn column prototype class

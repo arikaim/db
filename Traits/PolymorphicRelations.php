@@ -166,7 +166,7 @@ trait PolymorphicRelations
      * @param integer $relationId
      * @return Model|boolean
      */
-    public function saveRelation($id, $type, $relationId)
+    public function saveRelation($id, string $type, $relationId)
     {
         if (empty($relationId) == true || empty($id) == true) {
             return false;

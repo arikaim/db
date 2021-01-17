@@ -237,16 +237,17 @@ trait Translations
      * Get meta tags values
      *
      * @param string|null $language
+     * @param array|null $default
      * @return array
      */
-    public function getMetaTags($language = null)
+    public function getMetaTags(?string $language = null, ?array $default = [])
     {
         $translation = $this->translation($language);
         
         return [
-            'title'       => \is_object($translation) ? $translation->meta_title : null,
-            'description' => \is_object($translation) ? $translation->meta_description : null,
-            'keywords'    => \is_object($translation) ? $translation->meta_keywords : null,
+            'title'       => \is_object($translation) ? $translation->meta_title : $default['title'] ?? null,
+            'description' => \is_object($translation) ? $translation->meta_description : $default['description'] ?? null,
+            'keywords'    => \is_object($translation) ? $translation->meta_keywords : $default['keywords'] ?? null,
         ];  
     }
 }

@@ -13,6 +13,7 @@ use Arikaim\Core\Utils\Factory;
 use Arikaim\Core\Db\Seed;
 use Arikaim\Core\Db\Schema;
 use Exception;
+use Closure;
 
 /**
  * Database Model Factory 
@@ -30,11 +31,11 @@ class Model
      * Db seed
      *
      * @param string $className
-     * @param string $extensionName
-     * @param \Closure|null $callback
+     * @param string|null $extensionName
+     * @param Closure|null $callback
      * @return mixed
      */
-    public static function seed($className, $extensionName, $callback = null)
+    public static function seed(string $className, ?string $extensionName, $callback = null)
     {
         $model = Self::create($className,$extensionName);
         if (\is_object($model) == false) {
@@ -52,13 +53,13 @@ class Model
      * Create db model instance
      *
      * @param string $className Base model class name
-     * @param string $extensionName
+     * @param string|null $extensionName
      * @param Closure|null $callback
      * @param boolean $showError
      * @throws Exception
      * @return object|null
      */ 
-    public static function create($className, $extensionName = null, $callback = null, $showError = true) 
+    public static function create(string $className, ?string $extensionName = null, $callback = null, bool $showError = true) 
     {         
         $fullClass = (\class_exists($className) == false) ? Factory::getModelClass($className,$extensionName) : $className; 
         
@@ -86,7 +87,7 @@ class Model
      * @param Model $model
      * @return boolean
      */
-    public static function hasAttribute($model, $name)
+    public static function hasAttribute($model, string $name): bool
     {
         return \array_key_exists($name,$model->attributes);
     }
@@ -97,7 +98,7 @@ class Model
      * @param Builder $builder
      * @return string
      */
-    public static function getSql($builder)
+    public static function getSql($builder): string
     {
         $sql = \str_replace(['?'],["\'%s\'"],$builder->toSql());
         
@@ -109,10 +110,10 @@ class Model
      *
      * @param string $className
      * @param string $constantName
-     * @param string $extensionName
+     * @param string|null $extensionName
      * @return mixed
      */
-    public static function getConstant($className, $constantName, $extensionName = null)
+    public static function getConstant(string $className, string $constantName, ?string $extensionName = null)
     {
         $className = Self::getFullClassName($className,$extensionName);
 
@@ -140,7 +141,7 @@ class Model
      * @param object $instance
      * @return boolean
      */
-    public static function isValidModel($instance)
+    public static function isValidModel($instance): bool
     {
         return \is_subclass_of($instance,'Illuminate\\Database\\Eloquent\\Model');
     }

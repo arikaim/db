@@ -9,7 +9,7 @@
 */
 namespace Arikaim\Core\Db\Prototypes\Table;
 
-use Arikaim\Core\Db\BlueprintPrototypeInterface;
+use Arikaim\Core\Db\Interfaces\BlueprintPrototypeInterface;
 
 /**
  * Permissions (Many to Many) table prototype class
