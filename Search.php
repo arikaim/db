@@ -131,7 +131,7 @@ class Search
      */
     public static function setSearchCondition($field, $namespace = null, $operator = null, $queryOperator = null, $searchFieldName = 'search_text')
     {
-        $condition = SearchCondition::crate($field,$searchFieldName,$operator,$queryOperator);
+        $condition = SearchCondition::create($field,$searchFieldName,$operator,$queryOperator);
         $conditions = Self::getSearchConditions($namespace);
         $conditions[$field] = $condition;
     
