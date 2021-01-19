@@ -28,7 +28,7 @@ class Seed
      *
      * @param string|null $tableName
      */
-    public function __construct($tableName) 
+    public function __construct(?string $tableName) 
     {             
         $this->tableName = $tableName;
     }
@@ -40,7 +40,7 @@ class Seed
      * @param array $values
      * @return boolean
      */
-    public function create(array $search, array $values)
+    public function create(array $search, array $values): bool
     {
         $query = Manager::table($this->tableName);     
         if ($query->where($search)->exists() == false) {
@@ -58,11 +58,10 @@ class Seed
      * @param Closure|null $callback
      * @return boolean
      */
-    public function createFromArray(array $searchKeys, array $items, $callback = null)
+    public function createFromArray(array $searchKeys, array $items, $callback = null): bool
     {
         $errors = 0;     
         foreach ($items as $item) {
-
             $search = $this->createSearchValues($searchKeys,$item);
           
             if (\is_callable($callback) == true) {
@@ -83,7 +82,7 @@ class Seed
      * @param array $item
      * @return array
      */
-    protected function createSearchValues(array $keys, array $item)
+    protected function createSearchValues(array $keys, array $item): array
     {
         $search = [];
         foreach ($keys as $key) {
@@ -100,7 +99,7 @@ class Seed
      * @param array $values
      * @return boolean
      */
-    public function update(array $search, array $values)
+    public function update(array $search, array $values): bool
     {
         $query = Manager::table($this->tableName);     
         if ($query->where($search)->exists() == false) {
@@ -118,7 +117,7 @@ class Seed
      * @param Closure|null $callback
      * @return boolean
      */
-    public function updateFromArray(array $searchKeys, array $items, $callback = null)
+    public function updateFromArray(array $searchKeys, array $items, $callback = null): bool
     {
         $errors = 0;     
         foreach ($items as $item) {
@@ -157,7 +156,7 @@ class Seed
      * @param Closure|null $callback
      * @return boolean
      */
-    public function updateOrCreateFromArray(array $searchKeys, array $items, $callback = null)
+    public function updateOrCreateFromArray(array $searchKeys, array $items, $callback = null): bool
     {
         $errors = 0;     
         foreach ($items as $item) {
@@ -180,7 +179,7 @@ class Seed
      * @param array $search
      * @return boolean
      */
-    public function delete(array $search)
+    public function delete(array $search): bool
     {
         $query = Manager::table($this->tableName);    
 

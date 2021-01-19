@@ -17,9 +17,9 @@ trait Relations
     /**
      * Get relations target refernce column name 
      *
-     * @return string
+     * @return string|null
      */
-    public function getRelationsTargetAttributeName()
+    public function getRelationsTargetAttributeName(): ?string
     {
         return $this->relationTargetColumn ?? null;
     }
@@ -27,9 +27,9 @@ trait Relations
     /**
      * Get relations source refernce column name 
      *
-     * @return string
+     * @return string|null
      */
-    public function getRelationsSourceAttributeName()
+    public function getRelationsSourceAttributeName(): ?string
     {
         return $this->relationSourceColumn ?? null;
     }

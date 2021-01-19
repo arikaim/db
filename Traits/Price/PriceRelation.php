@@ -76,13 +76,23 @@ trait PriceRelation
      */
     public function getIsFreeAttribute()
     {
-        foreach ($this->price as $item) {
-           if ($item->price > 0) {
-               return false;
-           }
-        }
+        return $this->IsFree();
+    }
 
-        return true;
+    /**
+     * Return true if product is free
+     *
+     * @return boolean
+     */
+    public function IsFree(): bool
+    {
+        foreach ($this->price as $item) {
+            if ($item->price > 0) {
+                return false;
+            }
+         }
+ 
+         return true;
     }
 
     /**

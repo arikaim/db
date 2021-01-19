@@ -25,7 +25,7 @@ class OrderBy
      * @param string|null $namespace
      * @return bool
      */
-    public static function setOrderBy($fieldName, $type = null, $namespace = null)
+    public static function setOrderBy(string $fieldName, ?string $type = null, ?string $namespace = null): bool
     {
         $type = (empty($type) == true) ? 'asc' : $type;
         Session::set(Utils::createKey('order.by',$namespace),[$fieldName => $type]);  
@@ -36,10 +36,10 @@ class OrderBy
     /**
      * Return order by
      *
-     * @param string:null $namespace
+     * @param string|null $namespace
      * @return mixed
      */
-    public static function getOrderBy($namespace = null)
+    public static function getOrderBy(?string $namespace = null)
     {
         return Session::get(Utils::createKey('order.by',$namespace),[]);
     }
@@ -47,10 +47,10 @@ class OrderBy
     /**
      * Delete order by column
      *
-     * @param string:null $namespace
+     * @param string|null $namespace
      * @return void
      */
-    public static function deleteOrderBy($namespace = null)
+    public static function deleteOrderBy(?string $namespace = null)
     {
         return Session::remove(Utils::createKey('order.by',$namespace));
     }
@@ -59,10 +59,10 @@ class OrderBy
      * Apply order by to model
      *
      * @param Builder $builder
-     * @param string $namespace
+     * @param string|null $namespace
      * @return Builder
      */
-    public static function apply($builder, $namespace = null)
+    public static function apply($builder, ?string $namespace = null)
     {
         $order = Self::getOrderBy($namespace);
         

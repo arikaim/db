@@ -76,7 +76,7 @@ abstract class Schema
      *
      * @return string
      */
-    public function getTableName() 
+    public function getTableName(): string 
     {
         return $this->tableName;
     }
@@ -85,9 +85,9 @@ abstract class Schema
      * Return model table name
      *
      * @param string $class Model class name
-     * @return boo|string
+     * @return bool|string
      */
-    public static function getTable($class)
+    public static function getTable(string $class)
     {
         $instance = Factory::createSchema($class);
 
@@ -99,7 +99,7 @@ abstract class Schema
      *    
      * @return void
      */
-    public function createTable()
+    public function createTable(): void
     {
         if ($this->tableExists() == false) {                                  
             $blueprint = new TableBlueprint($this->tableName,null);
@@ -121,13 +121,12 @@ abstract class Schema
      *
      * @return void
      */
-    public function updateTable() 
+    public function updateTable(): void 
     {
         if ($this->tableExists() == true) {                           
             $blueprint = new TableBlueprint($this->tableName,null);
             
-            $call = function() use($blueprint) {
-                
+            $call = function() use($blueprint) {                
                 $this->update($blueprint);
                 $blueprint->engine = $this->storageEngine;     
             };
@@ -158,7 +157,7 @@ abstract class Schema
      *
      * @return boolean
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         $query = Manager::table($this->tableName); 
 
@@ -171,7 +170,7 @@ abstract class Schema
      * @param string $tableName
      * @return QueryBuilder
      */
-    public static function getQuery($tableName)
+    public static function getQuery(string $tableName)
     {
         return Manager::table($tableName);  
     }
@@ -209,7 +208,7 @@ abstract class Schema
      * @param  object|string $model Table name or db model object
      * @return boolean
      */
-    public static function hasTable($model)
+    public static function hasTable($model): bool
     {      
         $tableName = (\is_object($model) == true) ? $model->getTable() : $model;
 
@@ -234,7 +233,7 @@ abstract class Schema
      * @param boolean $emptyOnly
      * @return boolean
      */
-    public function dropTable($emptyOnly = true) 
+    public function dropTable($emptyOnly = true): bool 
     {
         if ($emptyOnly == true && $this->isEmpty() == true) {                  
             Manager::schema()->dropIfExists($this->tableName);
@@ -273,7 +272,7 @@ abstract class Schema
      * @param string $indexName
      * @return boolean
      */
-    public function hasIndex($indexName)
+    public function hasIndex(string $indexName): bool
     {
         if (empty($indexName) == true) {
             return false;
@@ -307,7 +306,7 @@ abstract class Schema
      * @param bool $showErorr
      * @return bool
      */
-    public static function install($class, $extension = null, $showErorr = false) 
+    public static function install(string $class, ?string $extension = null, bool $showErorr = false): bool 
     {                   
         $instance = Factory::createSchema($class,$extension);
         
@@ -350,7 +349,7 @@ abstract class Schema
      * @param boolean $force Set to true will drop table if have rows.
      * @return bool
      */
-    public static function unInstall($class, $extension = null, $force = false) 
+    public static function unInstall(string $class, ?string $extension = null, bool $force = false): bool 
     {                   
         $instance = Factory::createSchema($class,$extension);
         if (\is_object($instance) == true) {

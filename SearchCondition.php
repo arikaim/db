@@ -14,10 +14,10 @@ namespace Arikaim\Core\Db;
 */
 class SearchCondition 
 {
-    const AND = 'and';
-    const OR = 'or';
-    const NOT = 'not';
-    const IN = 'in';
+    const AND    = 'and';
+    const OR     = 'or';
+    const NOT    = 'not';
+    const IN     = 'in';
     const NOT_IN = 'not in';
 
     /**
@@ -29,7 +29,7 @@ class SearchCondition
      * @param string $queryOperator
      * @return array
      */
-    public static function crate($field, $searchFieldName, $operator = null, $queryOperator = null)
+    public static function create($field, $searchFieldName, $operator = null, $queryOperator = null)
     {
         $operator = $operator ?? '=';
         $tokens = \explode(':',$operator);
