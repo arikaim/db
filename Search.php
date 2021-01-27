@@ -114,7 +114,7 @@ class Search
      * @param string|null $namespace
      * @return void
      */
-    public static function setSearchConditions($conditions, $namespace = null)
+    public static function setSearchConditions($conditions, ?string $namespace = null): void
     {
         Session::set(Utils::createKey('search.conditions',$namespace),$conditions); 
     }
@@ -124,17 +124,23 @@ class Search
      *
      * @param string $field
      * @param mixed $searchFieldName
-     * @param string $operator
-     * @param string $queryOperator
+     * @param string|null $operator
+     * @param string|null $queryOperator
      * @param string|null $namespace
      * @return void
      */
-    public static function setSearchCondition($field, $namespace = null, $operator = null, $queryOperator = null, $searchFieldName = 'search_text')
+    public static function setSearchCondition(
+        string $field, 
+        ?string $namespace = null, 
+        ?string $operator = null, 
+        ?string $queryOperator = null, 
+        $searchFieldName = 'search_text'
+    )
     {
         $condition = SearchCondition::create($field,$searchFieldName,$operator,$queryOperator);
         $conditions = Self::getSearchConditions($namespace);
         $conditions[$field] = $condition;
-    
+           
         Self::setSearchConditions($conditions,$namespace);
     }
 
@@ -145,7 +151,7 @@ class Search
      * @param string|null $namespace
      * @return Builder
      */
-    public static function apply($builder, $namespace = null)
+    public static function apply($builder, ?string $namespace = null)
     {    
         $conditions = Self::getSearchConditions($namespace); 
         foreach ($conditions as $condition) {          
@@ -163,7 +169,7 @@ class Search
      * @param string|null $namespace
      * @return Builder
      */
-    public static function applyCondition($builder, $condition, $namespace = null)
+    public static function applyCondition($builder, array $condition, ?string $namespace = null)
     {
         $search = Self::getSearch($namespace);
         $condition = SearchCondition::parse($condition,$search);
@@ -171,15 +177,17 @@ class Search
         if (empty($condition['search_value']) == false) {
             
             if ($condition['query_operator'] == 'or') {
-                if ($condition['operator'] == 'ilike') {                   
-                    $builder = $builder->orWhereRaw('UPPER(' . $condition['field'] . ') LIKE ?',['%' . \strtoupper($condition['search_value']) . '%']);                   
+                if ($condition['operator'] == 'ilike') {    
+                    $searchValue = \mb_strtoupper($condition['search_value']);              
+                    $builder = $builder->orWhereRaw('UPPER(' . $condition['field'] . ') LIKE ?',['%' . $searchValue . '%']);                   
                 } else {
                     $builder = $builder->orWhere($condition['field'],$condition['operator'],$condition['search_value']);
                 }
                
             } else {
                 if ($condition['operator'] == 'ilike') {
-                    $builder = $builder->whereRaw('UPPER(' . $condition['field'] . ') LIKE ?',['%' . \strtoupper($condition['search_value']) . '%']);                   
+                    $searchValue = \mb_strtoupper($condition['search_value']);       
+                    $builder = $builder->whereRaw('UPPER(' . $condition['field'] . ') LIKE ?',['%' . $searchValue . '%']);                   
                 } else {
                     $builder = $builder->where($condition['field'],$condition['operator'],$condition['search_value']);
                 }                             

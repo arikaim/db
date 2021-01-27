@@ -18,7 +18,7 @@ trait Find
      * Find model by id or uuid
      *
      * @param integer|string $id
-     * @return object|false
+     * @return Model|false
      */
     public function findById($id)
     {        
@@ -62,9 +62,9 @@ trait Find
     /**
      * Find model by column name
      *
-     * @param mxied $value
-     * @param string $column
-     * @return object|false
+     * @param mixed $value
+     * @param string|null|array $column
+     * @return Model|false
      */
     public function findByColumn($value, $column = null)
     {
@@ -105,7 +105,7 @@ trait Find
      *  Return query builder
      *
      * @param integer|string $id
-     * @return object
+     * @return Builder
      */
     public function findByIdQuery($id)
     {       
@@ -116,7 +116,7 @@ trait Find
      * Return id column name dependiv of id value type for string return uuid
      *
      * @param integer|string $id
-     * @return void
+     * @return string
      */
     public function getIdAttributeName($id)
     {
@@ -142,9 +142,9 @@ trait Find
      * @param string $attribute
      * @param mixed $value
      * @param string $operator
-     * @return Query
+     * @return Builder
      */
-    public function whereIgnoreCase($attribute, $value, $operator = '=')
+    public function whereIgnoreCase(string $attribute, $value, string $operator = '=')
     {
         $value = \strtolower($value);
         

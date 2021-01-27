@@ -32,9 +32,7 @@ trait Translations
     {
         static::retrieved(function($model) {           
             $language = $model->getCurrentLanguage();
-            if (empty($language) == false) {
-                $model->translateAttributes($language);
-            }          
+            $model->translateAttributes($language);          
         });        
     }
 
@@ -43,7 +41,7 @@ trait Translations
      *
      * @return string
      */
-    public function getCurrentLanguage()
+    public function getCurrentLanguage(): string
     {
         return $this->currentLanguage ?? Session::get('language','en');
     }
@@ -52,10 +50,10 @@ trait Translations
      * Return translated value
      *
      * @param string $attribute
-     * @param string $language
+     * @param string|null $language
      * @return string|null
      */
-    public function translateAttribute($attribute, $language = null)
+    public function translateAttribute(string $attribute, ?string $language = null): ?string
     {
         $language = $language ?? $this->getCurrentLanguage();
 
@@ -73,7 +71,7 @@ trait Translations
      * @param string $language
      * @return boolean
      */
-    public function translateAttributes($language)
+    public function translateAttributes(string $language): bool
     {
         $translation = $this->translation($language);
         if (\is_object($translation) == false) {
@@ -94,7 +92,7 @@ trait Translations
      *
      * @return array
      */
-    public function getTranslatedAttributes()
+    public function getTranslatedAttributes(): array
     {
         return $this->translatedAttributes ?? [];
     }
@@ -104,7 +102,7 @@ trait Translations
      *
      * @return string|null
      */
-    public function getTranslationReferenceAttributeName()
+    public function getTranslationReferenceAttributeName(): ?string
     {
         return $this->translationReference ?? null;
     }
@@ -114,7 +112,7 @@ trait Translations
      *
      * @return string|null
      */
-    public function getTranslationModelClass()
+    public function getTranslationModelClass(): ?string
     {
         return $this->translationModelClass ?? null;
     }
@@ -122,7 +120,7 @@ trait Translations
     /**
      * HasMany relation
      *
-     * @return mixed
+     * @return Relation|null
      */
     public function translations()
     {       
@@ -132,10 +130,10 @@ trait Translations
     /**
      * Get translations query
      *
-     * @param string|mull $language
+     * @param string|null $language
      * @return Builder
      */
-    public function getTranslationsQuery($language = null)
+    public function getTranslationsQuery(?string $language = null)
     {
         $class = $this->getTranslationModelClass();
         $model = new $class();
@@ -147,10 +145,11 @@ trait Translations
     /**
      * Get translation model
      *
-     * @param string $language
+     * @param string|null $language
+     * @param bool $query
      * @return Model|false
      */
-    public function translation($language = null, $query = false)
+    public function translation(?string $language = null, bool $query = false)
     {
         $language = $language ?? $this->getCurrentLanguage();
         $model = $this->translations()->getQuery()->where('language','=',$language);
@@ -161,14 +160,13 @@ trait Translations
 
     /**
      * Create or update translation 
-     *
-     * @param string|integer|null $id
+     *   
      * @param array $data
-     * @param string $language
+     * @param string|null $language
      * @param string|integer|null $id 
-     * @return Model
+     * @return Model|false
      */
-    public function saveTranslation(array $data, $language = null, $id = null)
+    public function saveTranslation(array $data, ?string $language = null, $id = null)
     {
         $language = $language ?? $this->getCurrentLanguage();
         $model = (empty($id) == true) ? $this : $this->findById($id);     
@@ -182,25 +180,25 @@ trait Translations
         if ($translation === false) {
             return $model->translations()->create($data);
         } 
-        $translation->update($data);  
+        $result = (bool)$translation->update($data);  
         
-        return $translation;
+        return ($result === false) ? false : $translation;
     }
 
     /**
      * Delete translation
      *
      * @param string|integer|null $id
-     * @param string $language
+     * @param string|null $language
      * @return boolean
      */
-    public function removeTranslation($id = null, $language = null)
+    public function removeTranslation($id = null, ?string $language = null): bool
     {
         $language = $language ?? $this->getCurrentLanguage();
         $model = (empty($id) == true) ? $this : $this->findById($id);     
         $model = $model->translation($language);
 
-        return (\is_object($model) == true) ? $model->delete() : false;
+        return (\is_object($model) == true) ? (bool)$model->delete() : false;
     }
 
     /**
@@ -209,12 +207,12 @@ trait Translations
      * @param string|integer|null $id
      * @return boolean
      */
-    public function removeTranslations($id = null)
+    public function removeTranslations($id = null): bool
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
         $model = $model->translations();
 
-        return (\is_object($model) == true) ? $model->delete() : false;
+        return (\is_object($model) == true) ? (bool)$model->delete() : false;
     }
 
     /**
@@ -224,11 +222,11 @@ trait Translations
      * @param mixed $value
      * @return Model|null
      */
-    public function findTranslation($attributeName, $value)
+    public function findTranslation(string $attributeName, $value)
     {     
         $class = $this->getTranslationModelClass();
         $model = new $class();
-        $model = $model->whereIgnoreCase($attributeName,trim($value));
+        $model = $model->whereIgnoreCase($attributeName,\trim($value));
 
         return $model->first();
     }
@@ -240,7 +238,7 @@ trait Translations
      * @param array|null $default
      * @return array
      */
-    public function getMetaTags(?string $language = null, ?array $default = [])
+    public function getMetaTags(?string $language = null, ?array $default = []): array
     {
         $translation = $this->translation($language);
         

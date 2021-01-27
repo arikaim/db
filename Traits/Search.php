@@ -22,7 +22,7 @@ trait Search
      * @param string|null $namespace
      * @return Builder|Model
      */
-    public function applySearch($namespace = null)
+    public function applySearch(?string $namespace = null)
     {
         return DbSearch::apply($this,$namespace);
     }

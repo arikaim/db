@@ -22,7 +22,7 @@ trait Tree
      * @param Moldel $model
      * @return array
      */
-    public function getModelPath($model)
+    public function getModelPath($model): array
     {
         $result = [];
         \array_unshift($result,$model->toArray());
@@ -43,7 +43,7 @@ trait Tree
      *
      * @return string
      */
-    public function getParentColumn()
+    public function getParentColumn(): string
     {
         return $this->parentColumn ?? 'parent_id';
     }
@@ -51,9 +51,9 @@ trait Tree
     /**
      * Gte model tree for current model
      *
-     * @return void
+     * @return array
      */
-    public function getTreePath()
+    public function getTreePath(): array
     {      
         return $this->getModelPath($this);
     }
@@ -61,10 +61,10 @@ trait Tree
     /**
      * Return true if model item have child items
      *
-     * @param integer $id
+     * @param integer|string|null $id
      * @return boolean
      */
-    public function hasChild($id = null)
+    public function hasChild($id = null): bool
     {
         $id = $id ?? $this->id;
         $columnName = $this->getParentColumn();

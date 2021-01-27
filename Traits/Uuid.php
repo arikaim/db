@@ -37,7 +37,7 @@ trait Uuid
      *
      * @return string
      */
-    public function getUuidAttributeName()
+    public function getUuidAttributeName(): string
     {
         return $this->uuidColumn ?? 'uuid';
     }
@@ -47,7 +47,7 @@ trait Uuid
      *
      * @return void
      */
-    public function initUuid()
+    public function initUuid(): void
     {
         $columnName = $this->getUuidAttributeName();
         if (empty($this->$columnName) == true) { 

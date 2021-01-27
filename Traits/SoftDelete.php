@@ -22,7 +22,7 @@ trait SoftDelete
      *
      * @return boolean
      */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         return (\is_null($this->{$this->getDeletedColumn()}) == false);
     }
@@ -32,7 +32,7 @@ trait SoftDelete
      *
      * @return integer
      */
-    public function getDeletedCount()
+    public function getDeletedCount(): int
     {
         $query = $this->softDeletedQuery();
         
@@ -42,15 +42,15 @@ trait SoftDelete
     /**
      * Soft delete model
      *
-     * @param integer string $id
+     * @param integer|string|null string $id
      * @return boolean
      */
-    public function softDelete($id = null)
+    public function softDelete($id = null): bool
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
         $columnName = $model->getDeletedColumn();
 
-        return $model->update([
+        return (bool)$model->update([
             $columnName => DateTime::getTimestamp()
         ]);
     }
@@ -61,13 +61,13 @@ trait SoftDelete
      * @param integer|string|null string $id
      * @return boolean
      */
-    public function restore($id = null)
+    public function restore($id = null): bool
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
         $columnName = $model->getDeletedColumn();
         $model->{$columnName} = null;
         
-        return $model->save();
+        return (bool)$model->save();
     }
 
     /**
@@ -142,7 +142,7 @@ trait SoftDelete
      *
      * @return string
      */
-    public function getDeletedColumn()
+    public function getDeletedColumn(): string
     {
         return $this->softDeleteColumn ?? 'date_deleted';
     } 

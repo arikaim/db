@@ -48,7 +48,7 @@ trait UserRelation
      *
      * @return string
      */
-    public function getUserIdAttributeName()
+    public function getUserIdAttributeName(): string
     {
         return $this->userIdColumn ?? 'user_id';
     }
@@ -56,7 +56,7 @@ trait UserRelation
     /**
      * Get user relation
      *
-     * @return mixed
+     * @return Relation|null
      */
     public function user()
     {      

@@ -24,12 +24,12 @@ class SearchCondition
      * Create condition array
      *
      * @param string $field
-     * @param mixed $value
-     * @param string $operator
-     * @param string $queryOperator
+     * @param mixed $searchFieldName
+     * @param string|null $operator
+     * @param string|null $queryOperator
      * @return array
      */
-    public static function create($field, $searchFieldName, $operator = null, $queryOperator = null)
+    public static function create(string $field, $searchFieldName, ?string $operator = null, ?string $queryOperator = null): array
     {
         $operator = $operator ?? '=';
         $tokens = \explode(':',$operator);
@@ -55,7 +55,7 @@ class SearchCondition
      * @param array $search
      * @return array
      */
-    public static function parse($condition, $search)
+    public static function parse(array $condition, array $search): array
     {
         $searchField = $condition['search_field'];
         $searchValue = $search[$searchField] ?? '';
