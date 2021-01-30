@@ -50,7 +50,7 @@ trait PriceRelation
      *
      * @return string|null
      */
-    public function getPriceListClass()
+    public function getPriceListClass(): ?string
     {
         return $this->priceListClass ?? null;
     }
@@ -98,7 +98,7 @@ trait PriceRelation
     /**
      * Price list relation
      *
-     * @return mixed
+     * @return Relation|null
      */
     public function price()
     {

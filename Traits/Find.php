@@ -9,6 +9,8 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
+use Google\Protobuf\StringValue;
+
 /**
  * Find model
 */
@@ -42,7 +44,7 @@ trait Find
      * @param string $field
      * @return Model|null
      */
-    public function getLastRow($field = 'id')
+    public function getLastRow(string $field = 'id')
     {
         return $this->latest($field)->first();
     }
@@ -52,7 +54,7 @@ trait Find
      *
      * @return integer|null
      */
-    public function getLastId()
+    public function getLastId(): ?int
     {
         $model = $this->getLastRow();
 
@@ -118,20 +120,20 @@ trait Find
      * @param integer|string $id
      * @return string
      */
-    public function getIdAttributeName($id)
+    public function getIdAttributeName($id): string
     {
         $uuidAttribute = (\method_exists($this,'getUuidAttributeName') == true) ? $this->getUuidAttributeName() : 'uuid';
 
-        return (\is_numeric($id) == true) ? $this->getKeyName() : $uuidAttribute;
+        return (\is_numeric($id) == true) ? (string)$this->getKeyName() : $uuidAttribute;
     }
 
     /**
      * Find collection of models by id or uuid
      *
-     * @param array $items
-     * @return QueryBuilder
+     * @param array|null $items
+     * @return QueryBuilder|false
      */
-    public function findItems($items) 
+    public function findItems(?array $items) 
     {
         return (empty($items) == true) ? false : parent::whereIn($this->getIdAttributeName($items[0]),$items);      
     }

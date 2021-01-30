@@ -42,9 +42,9 @@ trait DocumentNumber
     /**
      * Get document number unique index columns
      *
-     * @return string
+     * @return string|null
      */
-    public function getDocumentNumberUniqueIndex()
+    public function getDocumentNumberUniqueIndex(): ?string
     {
         return $this->documentNumberUniqueIndex ?? null;
     } 
@@ -80,7 +80,7 @@ trait DocumentNumber
      * Return true if document number is valid
      *
      * @param integer|null $documentNumber
-     * @param string|null $filterColumnValue
+     * @param mixed|null $filterColumnValue
      * @return boolean
      */
     public function isValidDocumentNumber(?int $documentNumber = null, $filterColumnValue = null): bool
@@ -102,7 +102,7 @@ trait DocumentNumber
      * @param string $prefix
      * @return string|null
      */
-    public function getDocumentNumber(string $prefix = '')
+    public function getDocumentNumber(string $prefix = ''): ?string
     {
         $columnName = $this->getDocumentNumberColumn();
         $label = $this->getDocumentNumberLabel();

@@ -28,7 +28,7 @@ trait MetaTags
      *
      * @return string
      */
-    public function getCurrentLanguage()
+    public function getCurrentLanguage(): string
     {
         return $this->currentLanguage ?? Session::get('language','en');
     }
@@ -40,7 +40,7 @@ trait MetaTags
      * @param Builder|null $query
      * @return array
      */
-    public function getMetaTags($language = null, $query = null)
+    public function getMetaTags(?string $language = null, $query = null): array
     {
         $model = $query ?? $this;
         $language = $language ?? $this->getCurrentLanguage();
@@ -56,7 +56,7 @@ trait MetaTags
      * @param array|null $default
      * @return array
      */
-    public function getMetaTagsArray($model = null, ?array $default = [])
+    public function getMetaTagsArray($model = null, ?array $default = []): array
     {
         $model = $model ?? $this;
 

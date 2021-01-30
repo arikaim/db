@@ -55,7 +55,7 @@ trait Relations
      * @param array $data
      * @return Model|false
      */
-    public function addRelation($targetId, $data = [])
+    public function addRelation($targetId, array $data = [])
     {        
         $model = $this->relation($targetId);
 
@@ -78,7 +78,7 @@ trait Relations
      * @param array $items
      * @return void
      */
-    public function addRelations(array $items)
+    public function addRelations(array $items): void
     {        
         foreach ($items as $key => $id) {
             $this->addRelation($id);
@@ -91,7 +91,7 @@ trait Relations
      * @param integer $target_id
      * @return boolean
      */
-    public function hasRelation($targetId)
+    public function hasRelation($targetId): bool
     {
         return \is_object($this->relation($targetId));
     }
@@ -100,14 +100,13 @@ trait Relations
      * Delete translation
      *
      * @param integer $id
-     * @param string $language
      * @return boolean
      */
-    public function removeRelation($id)
+    public function removeRelation($id): bool
     {        
         $model = $this->relation($id);
         
-        return (\is_object($model) == true) ? $model->delete() : false;
+        return (\is_object($model) == true) ? (bool)$model->delete() : false;
     }
 
     /**
@@ -115,8 +114,8 @@ trait Relations
      *
      * @return boolean
      */
-    public function removeRelations()
+    public function removeRelations(): bool
     {
-        return $this->delete();      
+        return (bool)$this->delete();      
     }
 }

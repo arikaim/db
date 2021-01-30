@@ -39,7 +39,7 @@ trait DateCreated
      *
      * @return string
      */
-    public function getDateCreatedAttributeName()
+    public function getDateCreatedAttributeName(): string
     {
         return $this->dateCreatedColumn ?? 'date_created';
     }

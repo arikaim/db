@@ -22,7 +22,7 @@ trait Permissions
      * @param string $name valid values read|write|delete|execute
      * @return boolean
      */
-    public function hasPermission($name)
+    public function hasPermission($name): bool
     {
         $permission = $this->attributes[$name] ?? null;
        
@@ -35,7 +35,7 @@ trait Permissions
      * @param array $permissions
      * @return boolean
      */
-    public function verifyPermissions(array $permissions)
+    public function verifyPermissions(array $permissions): bool
     {
         foreach ($permissions as $key => $value) {
             $success = ($value == 1) ? $this->hasPermission($key) : true;
@@ -52,7 +52,7 @@ trait Permissions
      *
      * @return boolean
      */
-    public function hasFull()
+    public function hasFull(): bool
     {
         $count = 0;
         $count += ($this->hasPermission('read') == false) ? 0 : 1;
@@ -60,7 +60,7 @@ trait Permissions
         $count += ($this->hasPermission('delete') == false) ? 0 : 1;
         $count += ($this->hasPermission('execute') == false) ? 0 : 1;
 
-        return ($count == 4) ? true : false;
+        return ($count == 4);
     }
 
     /**
@@ -69,7 +69,7 @@ trait Permissions
      * @param array|string $access
      * @return array
      */
-    public function resolvePermissions($access) 
+    public function resolvePermissions($access): array 
     {
         if (\is_string($access) == true) {
             $access = \strtolower($access);

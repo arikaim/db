@@ -22,7 +22,7 @@ trait Paginator
      * @param string|null $namespace
      * @return Builder|Model
      */
-    public function createPaginator($namespace = null)
+    public function createPaginator(?string $namespace = null)
     {
         return SessionPaginator::create($this,$namespace);
     }

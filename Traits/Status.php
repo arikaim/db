@@ -51,7 +51,7 @@ trait Status
      *
      * @return integer
      */
-    public function ACTIVE()
+    public function ACTIVE(): int
     {
         return Self::$ACTIVE;
     }
@@ -61,7 +61,7 @@ trait Status
      *
      * @return integer
      */
-    public function DISABLED()
+    public function DISABLED(): int
     {
         return Self::$DISABLED;
     }
@@ -71,7 +71,7 @@ trait Status
      *
      * @return integer
      */
-    public function COMPLETED()
+    public function COMPLETED(): int
     {
         return Self::$COMPLETED;
     }
@@ -81,7 +81,7 @@ trait Status
      *
      * @return integer
      */
-    public function PENDING()
+    public function PENDING(): int
     {
         return Self::$PENDING;
     }
@@ -91,7 +91,7 @@ trait Status
      *
      * @return integer
      */
-    public function SUSPENDED()
+    public function SUSPENDED(): int
     {
         return Self::$SUSPENDED;
     }
@@ -132,7 +132,7 @@ trait Status
      *
      * @return string
      */
-    public function getStatusColumn()
+    public function getStatusColumn(): string
     {
         return $this->statusColumn ?? 'status';
     }
@@ -140,7 +140,7 @@ trait Status
     /**
      * Resolve status id
      *
-     * @param string $status
+     * @param string|int $status
      * @return integer|false
      */
     public function resolveStatusText($status) 
@@ -181,7 +181,7 @@ trait Status
     /**
      * Return disabled model query builder
      *
-     * @return void
+     * @return Builder
      */
     public function getDisabled()
     {
@@ -194,12 +194,12 @@ trait Status
      * @param integer|string|null $status
      * @return bool
      */
-    public function setStatus($status = null)
+    public function setStatus($status = null): bool
     {
         $columnName = $this->getStatusColumn();
         $this->$columnName = $this->resolveStatusValue($status);
 
-        return $this->save();         
+        return (bool)$this->save();         
     }
 
     /**
@@ -208,7 +208,7 @@ trait Status
      * @param integer|null|string $status
      * @return integer
      */
-    public function resolveStatusValue($status = null)
+    public function resolveStatusValue($status = null): int
     {
         $columnName = $this->getStatusColumn();
         if ($status === 'toggle') {     

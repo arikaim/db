@@ -20,7 +20,7 @@ trait PackageRegistry
      *
      * @return string
      */
-    public function getPackageNameColumn()
+    public function getPackageNameColumn(): string
     {
         return $this->pckageColumnName ?? 'name';
     }
@@ -31,7 +31,7 @@ trait PackageRegistry
      * @param string $name
      * @return array|false
      */
-    public function getPackage($name)
+    public function getPackage(string $name)
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());  
         
@@ -44,7 +44,7 @@ trait PackageRegistry
      * @param string $name
      * @return boolean
      */
-    public function hasPackage($name)
+    public function hasPackage(string $name): bool
     {
         $model = $this->where($this->getPackageNameColumn(),'=',$name)->first();     
           
@@ -55,27 +55,27 @@ trait PackageRegistry
      * Set package status
      *
      * @param string $name
-     * @param integer $status
+     * @param integer|string $status
      * @return boolean
     */
-    public function setPackageStatus($name, $status)
+    public function setPackageStatus(string $name, $status): bool
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());  
 
-        return (\is_object($model) == true) ? $model->setStatus($status) : false;     
+        return (\is_object($model) == true) ? (bool)$model->setStatus($status) : false;     
     }
 
     /**
      * get package status
      *
      * @param string $name
-     * @return integer
+     * @return integer|null
     */
-    public function getPackageStatus($name)
+    public function getPackageStatus(string $name): ?int
     {
         $model = $this->where($this->getPackageNameColumn(),'=',$name)->first();       
 
-        return (\is_object($model) == false) ? 0 : $model->status;            
+        return (\is_object($model) == false) ? null : $model->status;            
     }
 
     /**
@@ -85,7 +85,7 @@ trait PackageRegistry
      * @param array $data
      * @return boolean
      */
-    public function addPackage($name, array $data)
+    public function addPackage(string $name, array $data): bool
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn()); 
         if (\is_object($model) == true) {
@@ -103,10 +103,10 @@ trait PackageRegistry
      * @param string $name
      * @return boolean
      */
-    public function removePackage($name)
+    public function removePackage(string $name): bool
     {
         if ($this->hasPackage($name) == true) {
-            return $this->where($this->getPackageNameColumn(),'=',$name)->delete();
+            return (bool)$this->where($this->getPackageNameColumn(),'=',$name)->delete();
         }
 
         return true;
@@ -118,7 +118,7 @@ trait PackageRegistry
      * @param array $filter
      * @return array
     */
-    public function getPackagesList($filter = [])
+    public function getPackagesList(array $filter = [])
     {        
         $model = $this;
         foreach ($filter as $key => $value) {
@@ -135,11 +135,11 @@ trait PackageRegistry
      * @param string $name
      * @return boolean
     */
-    public function setPrimary($name)
+    public function setPrimary(string $name): bool
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());
         
-        return (\is_object($model) == false) ? false : $model->setDefault();                    
+        return (\is_object($model) == false) ? false : (bool)$model->setDefault();                    
     }
 
     /**
@@ -148,7 +148,7 @@ trait PackageRegistry
      * @param string $name
      * @return boolean|null
     */
-    public function isPrimary($name)
+    public function isPrimary(string $name): ?bool
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());
 

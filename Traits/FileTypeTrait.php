@@ -23,7 +23,7 @@ trait FileTypeTrait
      * @param string $type
      * @return Builder|false
      */
-    public function scopeFileTypeQuery($query, $type)
+    public function scopeFileTypeQuery($query, string $type)
     {
         $typeInfo = FileType::getFileTypeItem($type);
         if ($typeInfo === false) {
@@ -41,7 +41,7 @@ trait FileTypeTrait
      *
      * @return string
      */
-    public function getMimeTypeColumnName()
+    public function getMimeTypeColumnName(): string
     {
         return $this->mimeTypeColumnName ?? 'mime_type';
     }
@@ -64,7 +64,7 @@ trait FileTypeTrait
      * @param string $type one from: image,video,audio,application,text,pdd,font
      * @return boolean
      */
-    public function isFileType($type)
+    public function isFileType(string $type): bool
     {
         return FileType::isFileType($type,$this->getMimeTypeColumnValue());       
     }
@@ -84,7 +84,7 @@ trait FileTypeTrait
      *
      * @return boolean
      */
-    public function isZip()
+    public function isZip(): bool
     {
         return $this->isFileType('zip');
     }
@@ -94,7 +94,7 @@ trait FileTypeTrait
      *
      * @return boolean
     */
-    public function isImage()
+    public function isImage(): bool
     {
         return $this->isFileType('image');
     }
@@ -114,7 +114,7 @@ trait FileTypeTrait
      *
      * @return boolean
     */
-    public function isVideo()
+    public function isVideo(): bool
     {
         return $this->isFileType('video');       
     }
@@ -124,7 +124,7 @@ trait FileTypeTrait
      *
      * @return boolean
     */
-    public function isAudio()
+    public function isAudio(): bool
     {
         return $this->isFileType('audio');  
     }
@@ -134,7 +134,7 @@ trait FileTypeTrait
      *
      * @return boolean
     */
-    public function isApplication()
+    public function isApplication(): bool
     {
         return $this->isFileType('application');
     }
@@ -144,7 +144,7 @@ trait FileTypeTrait
      *
      * @return boolean
     */
-    public function isText()
+    public function isText(): bool
     {
         return $this->isFileType('text');
     }
@@ -154,7 +154,7 @@ trait FileTypeTrait
      *
      * @return boolean
     */
-    public function isFont()
+    public function isFont(): bool
     {
         return $this->isFileType('font');
     }
@@ -164,7 +164,7 @@ trait FileTypeTrait
      *
      * @return boolean
     */
-    public function isPdf()
+    public function isPdf(): bool
     {
         return $this->isFileType('pdf');
     }

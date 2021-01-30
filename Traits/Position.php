@@ -33,7 +33,7 @@ trait Position
      *
      * @return string
      */
-    protected function getPositionAttributeName()
+    protected function getPositionAttributeName(): string
     {
         return $this->positionColumnName ?? 'position';
     }
@@ -72,7 +72,7 @@ trait Position
         $this->$column = $first->$column;
         $this->save();
 
-        $this->where($this->getKeyName(), '!=', $this->id)->increment($column);
+        $this->where($this->getKeyName(),'!=',$this->id)->increment($column);
 
         return $this;
     }

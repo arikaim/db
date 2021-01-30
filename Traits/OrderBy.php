@@ -22,7 +22,7 @@ trait OrderBy
      * @param string|null $namespace
      * @return Builder|Model
      */
-    public function applyOrderBy($namespace = null)
+    public function applyOrderBy(?string $namespace = null)
     {
         return OrderByClass::apply($this,$namespace);
     }

@@ -29,7 +29,7 @@ trait EntityPermissionsRelation
      *
      * @return boolean
      */
-    public function hasPermissions()
+    public function hasPermissions(): bool
     {
         return ($this->permissions->count() > 0);
     } 
@@ -41,7 +41,7 @@ trait EntityPermissionsRelation
      * @param string|array $access
      * @return boolean
      */
-    public function hasAccess($userId, $access)
+    public function hasAccess($userId, $access): bool
     {
         if ($this->isPublic() == true) {
             return true;
@@ -75,7 +75,7 @@ trait EntityPermissionsRelation
      * @param string $type
      * @return Model|null
      */
-    public function getPermission($userId, $type = 'user')
+    public function getPermission($userId, string $type = 'user')
     {
         return $this->permissions->where('relation_id','=',$userId)->where('relation_type','=',$type)->first();
     }
@@ -105,7 +105,7 @@ trait EntityPermissionsRelation
      * @param integer|null $entityId
      * @return boolean
      */
-    public function isPublic($entityId = null)
+    public function isPublic($entityId = null): bool
     {
         $entityId = $entityId ?? $this->id;
 

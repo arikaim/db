@@ -18,11 +18,11 @@ trait IncrementValue
      * Increment field value
      *
      * @param string|integer $uuid Unique row id or uuid
-     * @param string $fieldName Field name
+     * @param string $fieldName field name
      * @param integer $increment 
-     * @return integer
+     * @return integer|false
      */
-    public function incrementValue($uuid, $fieldName, $increment = 1)
+    public function incrementValue($uuid, string $fieldName, int $increment = 1)
     {        
         $model = (\is_string($uuid) == true) ? parent::where('uuid','=',$uuid)->first() : parent::where('id','=',$uuid)->first();
           

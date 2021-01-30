@@ -33,7 +33,8 @@ trait OptionsAttribute
      */
     public function getOptionsAttribute()
     {
-        return (empty($this->attributes['options']) == true) ? [] : \json_decode($this->attributes['options'],true);
+        $options = $this->attributes['options'] ?? null;
+        return (empty($options) == true) ? [] : \json_decode($options,true);
     }
 
     /**
@@ -43,7 +44,7 @@ trait OptionsAttribute
      * @param mixed $default
      * @return mixed
      */
-    public function getOption($key, $default = null)
+    public function getOption(string $key, $default = null)
     {
         return $this->options[$key] ?? $default;
     }

@@ -22,10 +22,10 @@ trait DateSearch
      *
      * @param Builder $query 
      * @param string $columnName
-     * @param string|null $year
+     * @param int|null $year
      * @return Builder
      */
-    public function scopeYear($query, $columnName, $year = null)
+    public function scopeYear($query, string $columnName, ?int $year = null)
     {     
         $period = TimePeriod::getYearPeriod($year);
 
@@ -37,11 +37,11 @@ trait DateSearch
      *
      * @param Builder $query 
      * @param string $columnName
-     * @param string|null $month
-     * @param string|null $year
+     * @param int|null $month
+     * @param int|null $year
      * @return Builder
      */
-    public function scopeMonth($query, $columnName, $month = null, $year = null)
+    public function scopeMonth($query, string $columnName, ?int $month = null, ?int $year = null)
     {     
         $period = TimePeriod::getMonthPeriod($month,$year);
        

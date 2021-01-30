@@ -20,7 +20,7 @@ trait PriceList
     /**
      * Currency relation
      *
-     * @return mixed
+     * @return Relatioin|null
      */
     public function currency()
     {
@@ -33,7 +33,7 @@ trait PriceList
      * @param string|null $code
      * @return integer|null
      */
-    public function getCurrency($code = null)
+    public function getCurrency(?string $code = null): ?int
     {
         $currency = Model::create($this->getCurrencyClass());
         if (\is_object($currency) == false) {
@@ -41,11 +41,8 @@ trait PriceList
         }
         $model = (empty($code) == false) ? $currency->findByColumn('code',$code) : $currency->getDefault();
         $model = $model->first();
-        if (\is_object($model) == true) {
-            return $model->id;
-        }
 
-        return null;
+        return (empty($model) == false) ? $model->id : null;       
     }
 
     /**
@@ -53,7 +50,7 @@ trait PriceList
      *
      * @return string|null
      */
-    public function getCurrencyClass()
+    public function getCurrencyClass(): ?string
     {
         return $this->currencyClass ?? null;
     }
@@ -63,7 +60,7 @@ trait PriceList
      *
      * @return string|null
      */
-    public function getPriceTypeClass()
+    public function getPriceTypeClass(): ?string
     {
         return $this->priceTypeClass ?? null;
     }
@@ -73,7 +70,7 @@ trait PriceList
      *
      * @return string|null
      */
-    public function getPriceListDefinitionClass()
+    public function getPriceListDefinitionClass(): ?string
     {
         return $this->priceListDefinitionClass ?? null;
     }
@@ -82,12 +79,11 @@ trait PriceList
      * Get price type
      *
      * @param string|null $key
-     * @return mixed
+     * @return Model|null
      */
-    public function getType($key = null)
+    public function getType(?string $key = null)
     {       
         $priceType = Model::create($this->getPriceTypeClass());
-
         if (empty($priceType) == true) {
             return false;
         }
@@ -101,18 +97,18 @@ trait PriceList
      *
      * @param integer $productId
      * @param string $key
-     * @param string|null $currency
+     * @param string|null $currencyCode
      * @param mixed $price
      * @return Model|false
      */
-    public function createPrice($productId, $key, $currency = null, $price = null)
+    public function createPrice($productId, $key, ?string $currencyCode = null, $price = null)
     {
         $price = $price ?? 0;
 
         if ($this->hasPrice($key,$productId) == true) {     
             return false;
         }
-        $currencyId = $this->getCurrency($currency);
+        $currencyId = $this->getCurrency($currencyCode);
 
         return $this->create([
             'product_id'  => $productId,
@@ -152,9 +148,9 @@ trait PriceList
      *
      * @param integer $productId
      * @param string $key
-     * @return Model|false
+     * @return Model|null
      */
-    public function getPrice($key,$productId) 
+    public function getPrice(string $key, $productId) 
     {      
         $model = $this->where('product_id','=',$productId)->where('key','=',$key);
   
@@ -190,7 +186,7 @@ trait PriceList
      * @param string $key
      * @return boolean
      */
-    public function hasPrice($key, $productId)
+    public function hasPrice(string $key, $productId): bool
     {
         $model = $this->getPrice($key,$productId);
 

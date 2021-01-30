@@ -20,7 +20,7 @@ trait EntityPermissions
     /**
      * Get entity relation
      *
-     * @return mixed
+     * @return Relation|null
      */
     public function entity()
     {      
@@ -30,7 +30,7 @@ trait EntityPermissions
     /**
      * Get permission relation
      *
-     * @return mixed
+     * @return Relation|null
      */
     public function permission()
     {      
@@ -52,7 +52,7 @@ trait EntityPermissions
     /**
      * Morphed models
      *     
-     * @return Relation
+     * @return Relation|null
      */
     public function related()
     {       
@@ -66,11 +66,11 @@ trait EntityPermissions
      * @param integer $userId
      * @return boolean
      */
-    public function deleteUserPermission($entityId, $userId)
+    public function deleteUserPermission($entityId, $userId): bool
     {
         $model = $this->getPermission($entityId,$userId,'user');
 
-        return (\is_object($model) == true) ? $model->delete() : true;
+        return (\is_object($model) == true) ? (bool)$model->delete() : true;
     }
     
     /**
@@ -80,11 +80,11 @@ trait EntityPermissions
      * @param integer $groupId
      * @return boolean
      */
-    public function deleteGroupPermission($entityId, $groupId)
+    public function deleteGroupPermission($entityId, $groupId): bool
     {
         $model = $this->getPermission($entityId,$groupId,'group');
 
-        return (\is_object($model) == true) ? $model->delete() : true;
+        return (\is_object($model) == true) ? (bool)$model->delete() : true;
     }
 
     /**
@@ -166,7 +166,7 @@ trait EntityPermissions
      * Get public permission
      *
      * @param integer $entityId
-     * @return Model
+     * @return Model|null
      */
     public function getPublicPermission($entityId)
     {
@@ -184,11 +184,11 @@ trait EntityPermissions
      * @param integer $entityId
      * @return boolean
      */
-    public function deletePublicPermission($entityId)
+    public function deletePublicPermission($entityId): bool
     {
         $model = $this->getPublicPermission($entityId);
 
-        return (\is_object($model) == true) ? $model->delete() : true;
+        return (\is_object($model) == true) ? (bool)$model->delete() : true;
     }
 
     /**

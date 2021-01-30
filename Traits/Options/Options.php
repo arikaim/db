@@ -22,7 +22,7 @@ trait Options
      *
      * @return string|null
      */
-    public function getOptionTypeClass()
+    public function getOptionTypeClass(): ?string
     {
         return $this->optionTypeClass ?? null;
     }
@@ -32,7 +32,7 @@ trait Options
      *
      * @return string|null
      */
-    public function getOptionsDefinitionClass()
+    public function getOptionsDefinitionClass(): ?string
     {
         return $this->optionsDefinitionClass ?? null;
     }
@@ -98,7 +98,7 @@ trait Options
      * @param string|null $branch
      * @return boolean
      */
-    public function createOptions($referenceId, $typeName, $branch = null)
+    public function createOptions($referenceId, $typeName, ?string $branch = null)
     {
         $optionsList = Model::create($this->getOptionsDefinitionClass());
         if (\is_object($optionsList) == false) {
@@ -176,9 +176,10 @@ trait Options
      * Get options list
      *
      * @param integer $referenceId
+     * @param array|null $onlyTypes
      * @return Model|null
      */
-    public function getOptions($referenceId, array $onlyKeys = null)
+    public function getOptions($referenceId, ?array $onlyKeys = null)
     {
         return $this->getOptionsQuery($referenceId,$onlyKeys)->get();
     }

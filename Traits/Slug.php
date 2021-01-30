@@ -36,7 +36,7 @@ trait Slug
      *
      * @return string
      */
-    public function getSlugPrefix()
+    public function getSlugPrefix(): string
     {
         return (isset($this->slugPrefix) == true) ? \trim($this->slugPrefix) : '';
     }
@@ -46,7 +46,7 @@ trait Slug
      *
      * @return string
     */
-    public function getSlugSuffix()
+    public function getSlugSuffix(): string
     {
         return (isset($this->slugSuffix) == true) ? \trim($this->slugSuffix) : '';
     }
@@ -56,7 +56,7 @@ trait Slug
      *
      * @return string
      */
-    public function getSlugColumn()
+    public function getSlugColumn(): string
     {
         return  $this->slugColumn ?? 'slug';
     }
@@ -66,7 +66,7 @@ trait Slug
      *
      * @return string
      */
-    public function getSlugSourceColumn()
+    public function getSlugSourceColumn(): string
     {
         return $this->slugSourceColumn ?? 'title';
     }
@@ -74,9 +74,9 @@ trait Slug
     /**
      * Get slug separator
      *
-     * @return void
+     * @return string
      */
-    public function getSlugSeparator()
+    public function getSlugSeparator(): string
     {
         return $this->slugSeparator ?? '-';
     }
@@ -86,7 +86,7 @@ trait Slug
      *
      * @return string
      */
-    public function getSlug()
+    public function getSlug(): string
     {
         $slugColumn = $this->getSlugColumn();
 
@@ -96,9 +96,8 @@ trait Slug
     /**
      * Save slug
      *
-     * @param string $text
-     * @param string $options
-     * @return string
+     * @param Model $model   
+     * @return Model
      */
     public static function saveSlug($model)
     {
@@ -119,7 +118,7 @@ trait Slug
      * @param string|null $text
      * @return void
      */
-    public function setSlug($text = null)
+    public function setSlug(?string $text = null): void
     {
         $slugColumn = $this->getSlugColumn();
         $slugSourceColumn = $this->getSlugSourceColumn();
@@ -134,10 +133,10 @@ trait Slug
      * Create slug from text
      *
      * @param string $text
-     * @param string $separator
+     * @param string|null $separator
      * @return string
      */
-    public function createSlug($text, $separator = null)
+    public function createSlug(string $text, ?string $separator = null): string
     {
         $separator = $separator ?? $this->getSlugSeparator();
 
@@ -148,9 +147,9 @@ trait Slug
      * Find model by slug
      *
      * @param string $slug
-     * @return Model
+     * @return Model|false
      */
-    public function findBySlug($slug)
+    public function findBySlug(string $slug)
     {
         $slugColumn = $this->getSlugColumn();
         $model = $this->where($slugColumn,'=',$slug)->orWhere($slugColumn,'=',$this->createSlug($slug))->first();

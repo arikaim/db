@@ -19,7 +19,7 @@ trait DefaultTrait
      *
      * @return string
      */
-    public function getDefaultColumnName()
+    public function getDefaultColumnName(): string
     {
         return $this->defaultColumnName ?? 'default';
     }
@@ -27,7 +27,7 @@ trait DefaultTrait
     /**
      * Mutator (get) for default attribute.
      *
-     * @return array
+     * @return bool
      */
     public function getDefaultAttribute()
     {       
@@ -40,10 +40,10 @@ trait DefaultTrait
      * Set model as default
      *
      * @param integer|string|null $id
-     * @param integer $userId
+     * @param integer|null $userId
      * @return bool
      */
-    public function setDefault($id = null, $userId = null)
+    public function setDefault($id = null, ?int $userId = null): bool
     {
         $column = $this->getDefaultColumnName();
         $id = $id ?? $this->id;
@@ -54,16 +54,16 @@ trait DefaultTrait
         $model = $this->findById($id);      
         $model->$column = 1;
        
-        return $model->save();               
+        return (bool)$model->save();               
     }
 
     /**
      * Get default model
      *
-     * @param integer $userId
+     * @param integer|null $userId
      * @return Model|null
      */
-    public function getDefault($userId = null)
+    public function getDefault(?int $userId = null)
     {
         $column = $this->getDefaultColumnName();
 
@@ -76,10 +76,10 @@ trait DefaultTrait
     /**
      * Return true if default value is set 
      *
-     * @param integer $userId
+     * @param integer|null $userId
      * @return boolean
      */
-    public function hasDefault($userId = null)
+    public function hasDefault(?int $userId = null): bool
     {
         return \is_object($this->getDefault($userId));
     }

@@ -21,7 +21,7 @@ trait ToggleValue
      * @param string|integer|null $id
      * @return boolean
      */
-    public function toggle($fieldName, $id = null)
+    public function toggle(string $fieldName, $id = null): bool
     {
         $id = $id ?? $this->id;
     

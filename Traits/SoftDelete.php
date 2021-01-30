@@ -75,12 +75,12 @@ trait SoftDelete
      *
      * @return boolean
      */
-    public function restoreAll()
+    public function restoreAll(): bool
     {
         $columName = $this->getDeletedColumn();
         $query = $this->softDeletedQuery();
         
-        return $query->update([
+        return (bool)$query->update([
             $columName => null
         ]);
     }
@@ -100,9 +100,9 @@ trait SoftDelete
      *
      * @return boolean
      */
-    public function clearDeleted()
+    public function clearDeleted(): bool
     {
-        return $this->softDeletedQuery()->delete();
+        return (bool)$this->softDeletedQuery()->delete();
     }
 
     /**
