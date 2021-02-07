@@ -64,13 +64,24 @@ trait DefaultTrait
      * @return Model|null
      */
     public function getDefault(?int $userId = null)
+    {      
+        return $this->defaultQuery($userId)->first();
+    }
+
+    /**
+     * Default scope
+     *
+     * @param Builder $query
+     * @param integer|null $userId
+     * @return Builder
+     */
+    public function scopeDefaultQuery($query, ?int $userId = null)
     {
         $column = $this->getDefaultColumnName();
+        $query = (empty($userId) == false) ? $query->where('user_id','=',$userId) : $query;
+        $query = $query->where($column,'=','1');
 
-        $model = (empty($userId) == false) ? $this->where('user_id','=',$userId) : $this;
-        $model = $model->where($column,'=','1')->first();
-
-        return (\is_object($model) == true) ? $model : null; 
+        return $query;
     }
 
     /**
