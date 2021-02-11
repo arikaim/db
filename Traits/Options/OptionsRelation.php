@@ -44,7 +44,7 @@ trait OptionsRelation
      * @param string $typeName
      * @return boolean
      */
-    public function createOptions($typeName = null)
+    public function createOptions(?string $typeName = null)
     {
         $options = Model::create($this->getOptionsClass());
         $typeName = (empty($typeName) == true) ? $this->getOptionsType() : $typeName;
@@ -62,7 +62,7 @@ trait OptionsRelation
      *
      * @return string|null
      */
-    public function getOptionsClass()
+    public function getOptionsClass(): ?string
     {
         return $this->optionsClass ?? null;
     }
@@ -72,7 +72,7 @@ trait OptionsRelation
      *
      * @return string
      */
-    public function getOptionsPrimarykey()
+    public function getOptionsPrimarykey(): string
     {
         return $this->optionsPrimaryKey ?? 'id';
     }

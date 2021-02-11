@@ -44,7 +44,7 @@ trait DateSearch
     public function scopeMonth($query, string $columnName, ?int $month = null, ?int $year = null)
     {     
         $period = TimePeriod::getMonthPeriod($month,$year);
-       
+           
         return $query->where($columnName,'>',$period['start'])->where($columnName,'<',$period['end']);
     }
 }

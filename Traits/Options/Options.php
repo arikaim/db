@@ -81,13 +81,18 @@ trait Options
             return false;
         }
 
-        return $this->create([
+        $item = [
             'reference_id' => $referenceId,
             'uuid'         => Uuid::create(),
             'type_id'      => $optionType->id,
             'key'          => $optionType->key,
             'value'        => ($value == null) ? $optionType->default : $value,        
-        ]);      
+        ];
+
+        print_r($item);
+        return null;
+
+        return $this->create($item);      
     }
 
     /**
@@ -98,7 +103,7 @@ trait Options
      * @param string|null $branch
      * @return boolean
      */
-    public function createOptions($referenceId, $typeName, ?string $branch = null)
+    public function createOptions($referenceId, $typeName, ?string $branch = null): bool
     {
         $optionsList = Model::create($this->getOptionsDefinitionClass());
         if (\is_object($optionsList) == false) {
