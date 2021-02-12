@@ -89,9 +89,6 @@ trait Options
             'value'        => ($value == null) ? $optionType->default : $value,        
         ];
 
-        print_r($item);
-        return null;
-
         return $this->create($item);      
     }
 

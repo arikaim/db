@@ -246,6 +246,17 @@ abstract class Schema
     } 
 
     /**
+     * Get column type
+     *
+     * @param string $columnName
+     * @return string
+     */
+    public function getColumnType(string $columnName)
+    {
+        return Manager::schema()->getColumnType($this->tableName,$columnName);
+    }
+
+    /**
      * Checkif table exist
      *
      * @return bool
