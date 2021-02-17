@@ -9,8 +9,6 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
-use Google\Protobuf\StringValue;
-
 /**
  * Find model
 */
@@ -70,9 +68,10 @@ trait Find
      */
     public function findByColumn($value, $column = null)
     {
-        $model = $this->findQuery($value,$column);
-        
-        return (\is_object($model) == false) ? false : $model->first();
+        $query = $this->findQuery($value,$column);
+        $model = (\is_object($query) == true) ? $query->first() : null;
+
+        return (empty($model) == false) ? $model : false;
     }
 
     /**
