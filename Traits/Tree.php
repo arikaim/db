@@ -9,6 +9,8 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
+use Closure;
+
 /**
  * Manage models with parent - child relations.
  *  Change parrent id column name in model:
@@ -75,5 +77,46 @@ trait Tree
         }
 
         return false;
+    }
+
+    /**
+     * Childs list query
+     *
+     * @param Builder $query
+     * @param string|integer $id
+     * @return Builder
+     */
+    public function scopeChildListQuery($query, $id)
+    {
+        $columnName = $this->getParentColumn();
+        return $query->where($columnName,'=',$id);
+    }
+
+    /**
+     * Delete recursive
+     *
+     * @param string|integer $id
+     * @param Closure|null $callback
+     * @return bool
+     */
+    public function deleteChilds($id, ?Closure $callback = null): bool
+    {
+        if ($this->hasChild($id) == false) {
+            $model = $this->findById($id);
+            if (\is_object($model) == true) {
+                if (is_callable($callback) == true) {
+                    $callback($model->id);
+                }
+                $model->delete();
+            }
+            return true;
+        }
+
+        $model = $this->childListQuery($id)->get();
+        foreach($model as $item) {
+            $this->deleteChilds($item->id);              
+        }
+
+        return true;
     }
 }
