@@ -141,6 +141,7 @@ trait Options
     /**
      * Get option
      *
+     * @param string $key
      * @param integer|null $referenceId
      * @param string|integer $key Option typekey or id     
      * @return Model|false
@@ -158,6 +159,21 @@ trait Options
         $model = (\is_numeric($key) == true) ? $model->where('type_id','=',$key) : $model->where('key','=',$key);
         
         return $model->first();                    
+    }
+
+    /**
+     * Get option value
+     *
+     * @param string  $key
+     * @param mixed $referenceId
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getOptionValue($key, $referenceId = null, $default = null) 
+    {
+        $model = $this->getOption($key,$referenceId);
+
+        return (\is_object($model) == true) ? $model->value : $default; 
     }
 
     /**
@@ -193,7 +209,7 @@ trait Options
      * @param string $key
      * @return boolean
      */
-    public function hasOption($key, $referenceId = null)
+    public function hasOption($key, $referenceId = null): bool
     {
         $model = $this->getOption($key,$referenceId);
 
