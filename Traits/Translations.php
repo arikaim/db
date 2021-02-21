@@ -220,13 +220,15 @@ trait Translations
      *
      * @param string $attributeName
      * @param mixed $value
+     * @param string|null $language
      * @return Model|null
      */
-    public function findTranslation(string $attributeName, $value)
+    public function findTranslation(string $attributeName, $value, ?string $language = null)
     {     
+        $language = $language ?? $this->getCurrentLanguage();
         $class = $this->getTranslationModelClass();
-        $model = new $class();
-        $model = $model->whereIgnoreCase($attributeName,\trim($value));
+        $model = new $class(); 
+        $model = $model->where('language','=',$language)->where($attributeName,'=',\trim($value));
 
         return $model->first();
     }
