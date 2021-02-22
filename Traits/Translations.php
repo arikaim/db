@@ -244,10 +244,14 @@ trait Translations
     {
         $translation = $this->translation($language);
         
+        $title = \is_object($translation) ? $translation->meta_title : null;
+        $description = \is_object($translation) ? $translation->meta_description : null;
+        $keywords = \is_object($translation) ? $translation->meta_keywords : null;
+
         return [
-            'title'       => \is_object($translation) ? $translation->meta_title : $default['title'] ?? null,
-            'description' => \is_object($translation) ? $translation->meta_description : $default['description'] ?? null,
-            'keywords'    => \is_object($translation) ? $translation->meta_keywords : $default['keywords'] ?? null,
+            'title'       => (empty($title) == true) ? $default['title'] ?? '' : $title,
+            'description' => (empty($description) == true) ? $default['description'] ?? '' : $description,
+            'keywords'    => (empty($keywords) == true) ? $default['keywords'] ?? '' : $keywords,
         ];  
     }
 }
