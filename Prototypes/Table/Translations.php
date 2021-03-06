@@ -36,7 +36,7 @@ class Translations implements BlueprintPrototypeInterface
             $call = function() use($callback,$table) {
                 $callback($table);                                 
             };
-            $call($table);
+            $call();
         }
         // indexes
         $table->unique([$options[0],'language']);     
