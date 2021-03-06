@@ -9,7 +9,6 @@
 */
 namespace Arikaim\Core\Db\Interfaces;
 
-use Arikaim\Core\Db\TableBlueprint;
 
 /**
  * Db Column prototype interface
@@ -19,7 +18,7 @@ interface BlueprintPrototypeInterface
     /**
      * Build column
      *
-     * @param TableBlueprint $table
+     * @param Arikaim\Core\Db\TableBlueprint $table
      * @param mixed $options
      * @return void
      */
