@@ -19,7 +19,7 @@ class Permissions implements BlueprintPrototypeInterface
     /**
      * Build table
      *
-     * @param Arikaim\Core\Db\TableBlueprint $table
+     * @param \Arikaim\Core\Db\TableBlueprint $table
      * @param mixed $options (reference feild, reference table, callback)
      * @return void
      */

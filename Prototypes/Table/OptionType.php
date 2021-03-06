@@ -19,7 +19,7 @@ class OptionType implements BlueprintPrototypeInterface
     /**
      * Build table
      *
-     * @param Arikaim\Core\Db\TableBlueprint $table
+     * @param \Arikaim\Core\Db\TableBlueprint $table
      * @param mixed $options (source table, callback)
      * @return void
      */

@@ -19,7 +19,7 @@ class DefaultColumn implements BlueprintPrototypeInterface
     /**
      * Build column
      *
-     * @param Arikaim\Core\Db\TableBlueprint $table
+     * @param \Arikaim\Core\Db\TableBlueprint $table
      * @param mixed $options
      * @return void
      */
