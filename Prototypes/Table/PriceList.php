@@ -59,7 +59,7 @@ class PriceList implements BlueprintPrototypeInterface
             $call = function() use($callback,$table) {
                 $callback($table);                                 
             };
-            $call($table);
+            $call();
         }
     }
 }
