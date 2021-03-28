@@ -64,14 +64,6 @@ abstract class Schema
     }
 
     /**
-     * Constructor
-     *
-     */
-    public function __construct() 
-    {      
-    }
-
-    /**
      * Return table name
      *
      * @return string

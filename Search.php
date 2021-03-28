@@ -27,7 +27,7 @@ class Search
      * @param mixed $default
      * @return mixed|null
      */
-    public static function getSearchValue($field, $namespace = null, $default = null)
+    public static function getSearchValue(string $field, ?string $namespace = null, $default = null)
     {
         $search = Self::getSearch($namespace);
       
@@ -40,7 +40,7 @@ class Search
      * @param string|null $namespace
      * @return array
      */
-    public static function getSearch($namespace = null)
+    public static function getSearch(?string $namespace = null)
     {
         return Session::get(Utils::createKey('search',$namespace),[]);      
     }
@@ -51,7 +51,7 @@ class Search
      * @param string|null $namespace
      * @return void
      */
-    public static function clearSearch($namespace = null)
+    public static function clearSearch(?string $namespace = null): void
     {
         Session::remove(Utils::createKey('search',$namespace));
     }
@@ -63,7 +63,7 @@ class Search
      * @param string|null $namespace
      * @return void
      */
-    public static function setSearch($searchData, $namespace = null)
+    public static function setSearch($searchData, ?string $namespace = null): void
     {
         Session::set(Utils::createKey('search',$namespace),$searchData);      
     }
@@ -75,7 +75,7 @@ class Search
      * @param string|null $namespace
      * @return array|null
      */
-    public static function getSearchCondition($field, $namespace = null)
+    public static function getSearchCondition(string $field, ?string $namespace = null)
     {
         $conditions = Self::getSearchConditions($namespace);
 
@@ -88,7 +88,7 @@ class Search
      * @param string|null $namespace
      * @return array
      */
-    public static function getSearchConditions($namespace = null)
+    public static function getSearchConditions(?string $namespace = null)
     {
         return Session::get(Utils::createKey('search.conditions',$namespace),[]); 
     }
@@ -100,7 +100,7 @@ class Search
      * @param string|null $namespace
      * @return void
      */
-    public static function deleteSearchCondition($field, $namespace = null)
+    public static function deleteSearchCondition(string $field, ?string $namespace = null): void
     {
         $conditions = Self::getSearchConditions($namespace);
         unset($conditions[$field]);
@@ -135,7 +135,7 @@ class Search
         ?string $operator = null, 
         ?string $queryOperator = null, 
         $searchFieldName = 'search_text'
-    )
+    ): void
     {
         $condition = SearchCondition::create($field,$searchFieldName,$operator,$queryOperator);
         $conditions = Self::getSearchConditions($namespace);
