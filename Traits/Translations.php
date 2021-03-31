@@ -176,7 +176,7 @@ trait Translations
         $data[$reference] = $model->id;
 
         $translation = $model->translation($language);
-    
+        
         if ($translation === false) {
             return $model->translations()->create($data);
         } 
