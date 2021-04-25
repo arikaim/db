@@ -49,19 +49,12 @@ class Db
     protected $config;
 
     /**
-     * Has db error
-     *
-     * @var boolean
-     */
-    protected $hasError = false;
-
-    /**
      * Constructor
      *
      * @param array $config
-     * @param array|null $relations
+     * @param array $relations
      */
-    public function __construct(array $config, ?array $relations = null) 
+    public function __construct(array $config, array $relations = []) 
     {
         $config['options'] = $config['options'] ?? $this->pdoOptions;
         
@@ -71,10 +64,8 @@ class Db
         // options 
         $this->init($config); 
 
-        // init relations morph map
-        if (\is_array($relations) == true) {                   
-            Relation::morphMap($relations);                          
-        }
+        // init relations morph map            
+        Relation::morphMap($relations);                                  
     }
 
     /**
@@ -116,42 +107,20 @@ class Db
      * Create db connection and boot Eloquent
      *
      * @param array $config
-     * @param bool $showError
      * @return boolean
      */
-    public function init(array $config, bool $showError = false): bool
+    public function init(array $config): bool
     {
-        try {                    
+        try {                      
             $this->capsule->setEventDispatcher(new \Illuminate\Events\Dispatcher());
-
             $this->capsule->addConnection($config);
-            $connection = $this->capsule->getConnection();
-
-            if (empty($connection) == false) {
-                $connection->getPdo();            
-                $this->capsule->setAsGlobal();
-                // schema db             
-                $this->initSchemaConnection($config); 
-                $this->hasError = false;        
-            } else {
-                $this->hasError = true; 
-                return false;               
-            }
-           
+            $this->capsule->setAsGlobal();
             $this->capsule->bootEloquent();
         }  
         catch(PDOException $e) {
-            $this->hasError = true;
-            if ($showError == true) {
-                echo $e->getMessage();
-            }
             return false;
         }   
-        catch(Exception $e) {    
-            $this->hasError = true; 
-            if ($showError == true) {
-                echo $e->getMessage();
-            }      
+        catch(Exception $e) {      
             return false;
         }   
         
@@ -172,7 +141,6 @@ class Db
             $connection = $this->capsule->getConnection($name);
 
             if (empty($connection) == true) {
-                $this->hasError = true;  
                 return false;
             } 
             $connection->reconnect();   
@@ -180,28 +148,15 @@ class Db
             $this->capsule->setAsGlobal();
 
             $this->capsule->bootEloquent();
-            $this->hasError = false;
         } 
         catch(PDOException $e) {   
-            $this->hasError = true;
             return false;
         }   
         catch(Exception $e) {
-            $this->hasError = true;
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Return true if has db error
-     *
-     * @return boolean
-     */
-    public function hasError(): bool
-    {
-        return $this->hasError;
     }
 
     /**
@@ -407,7 +362,7 @@ class Db
      * @param array|null $config
      * @return Connection
      */
-    private function initSchemaConnection(?array $config = null)
+    public function initSchemaConnection(?array $config = null)
     {
         $config = $config ?? $this->config;      
         $config['database'] = 'information_schema';  

@@ -65,7 +65,7 @@ class Seed
             $search = $this->createSearchValues($searchKeys,$item);
           
             if (\is_callable($callback) == true) {
-                $item = $callback($item);              
+                $item = $callback($item);           
             }
     
             $result = $this->create($search,$item);
