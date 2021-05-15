@@ -28,7 +28,7 @@ trait DateUpdated
     {
         static::updating(function($model) {   
             $name = $model->getDateUpdatedAttributeName();             
-            $model->attributes[$name] = DateTime::getTimestamp();             
+            $model->attributes[$name] = DateTime::getCurrentTimestamp();             
         });
     }
     

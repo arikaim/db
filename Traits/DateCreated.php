@@ -28,7 +28,7 @@ trait DateCreated
     {
         static::creating(function($model) {  
             $columnName = $model->getDateCreatedAttributeName();   
-            $dateCreated = (empty($model->$columnName) == true) ? DateTime::getTimestamp() : $model->$columnName;
+            $dateCreated = (empty($model->$columnName) == true) ? DateTime::getCurrentTimestamp() : $model->$columnName;
 
             $model->attributes[$columnName] = $dateCreated;               
         });
