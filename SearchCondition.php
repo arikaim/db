@@ -29,7 +29,7 @@ class SearchCondition
      * @param string|null $queryOperator
      * @return array
      */
-    public static function create(string $field, $searchFieldName, ?string $operator = null, ?string $queryOperator = null): array
+    public static function create(string $field, $searchFieldName = null, ?string $operator = null, ?string $queryOperator = null): array
     {
         $operator = $operator ?? '=';
         $tokens = \explode(':',$operator);
@@ -41,7 +41,7 @@ class SearchCondition
 
         return [
             'field'           => $field,
-            'search_field'    => $searchFieldName,
+            'search_field'    => $searchFieldName ?? $field,
             'operator'        => $operator,
             'operator_params' => $operatorParams,
             'query_operator'  => $queryOperator ?? 'and'
@@ -57,7 +57,7 @@ class SearchCondition
      */
     public static function parse(array $condition, array $search): array
     {
-        $searchField = $condition['search_field'];
+        $searchField = $condition['search_field'] ?? $condition['field'];
         $searchValue = $search[$searchField] ?? '';
 
         if (empty($condition['operator_params']) == false && $condition['operator'] == 'like') {

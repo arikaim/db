@@ -41,4 +41,18 @@ trait DateUpdated
     {
         return $this->dateUpdatedColumn ?? 'date_updated';
     }
+
+    /**
+     * Set date updated
+     *
+     * @param integer|null $dateTime
+     * @return boolean
+     */
+    public function setDateUpdated(?int $dateTime = null): bool
+    {
+        $dateTime = $dateTime ?? DateTime::getCurrentTimestamp();
+        $fieldNname = $this->getDateUpdatedAttributeName();  
+
+        return (bool)$this->update([$fieldNname => $dateTime]);
+    }
 }

@@ -62,6 +62,7 @@ trait DocumentNumber
     /**
      * Get next document number
      *     
+     * @param mixed|null $filterColumnValue
      * @return integer
      */
     public function getNextDocumentNumber($filterColumnValue = null): int
@@ -104,10 +105,23 @@ trait DocumentNumber
      */
     public function getDocumentNumber(string $prefix = ''): ?string
     {
-        $columnName = $this->getDocumentNumberColumn();
-        $label = $this->getDocumentNumberLabel();
+        $columnName = $this->getDocumentNumberColumn();      
         $documentNumber = $this->attributes[$columnName] ?? null;
      
-        return (empty($documentNumber) == false) ? \sprintf($label . '%010d' . $prefix,$documentNumber) : null;       
+        return (empty($documentNumber) == false) ? $this->filterColumnValue($documentNumber,$prefix) : null;       
     }   
+
+    /**
+     * Print doc number
+     *
+     * @param integer $number
+     * @param string $prefix
+     * @return string
+     */
+    public function printDocumentNumber(int $number, string $prefix = ''): string
+    {
+        $label = $this->getDocumentNumberLabel();
+
+        return \sprintf($label . '%012d' . $prefix,$number);
+    }
 }
