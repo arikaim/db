@@ -92,15 +92,15 @@ class Db
      * Reboot connection
      *
      * @param array|null $config
-     * @return void
+     * @return bool
      */
-    public function reboot(?array $config = null): void
+    public function reboot(?array $config = null): bool
     {
         $this->capsule->getDatabaseManager()->purge();
         if (empty($config) == false) {
             $this->config = $config;
         }
-        $this->init($this->config);        
+        return $this->init($this->config);        
     }
 
     /**
@@ -187,7 +187,7 @@ class Db
      */
     public function has(string $databaseName): bool
     {   
-        try {
+        try {          
             $connection = $this->capsule->getConnection('schema');
             $connection = $connection ?? $this->initSchemaConnection();
 
@@ -201,7 +201,9 @@ class Db
             return false;
         }
 
-        return (isset($result[0]->SCHEMA_NAME) == true);         
+        $dbName = $result[0]->SCHEMA_NAME ?? null;
+    
+        return (\trim($dbName) == \trim($databaseName));      
     }
 
     /**
