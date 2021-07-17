@@ -97,7 +97,7 @@ class Db
     public function reboot(?array $config = null): bool
     {
         $this->capsule->getDatabaseManager()->purge();
-        if (empty($config) == false) {
+        if (\is_array($config) == true) {
             $this->config = $config;
         }
         return $this->init($this->config);        
