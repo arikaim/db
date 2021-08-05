@@ -97,10 +97,9 @@ class Db
     public function reboot(?array $config = null): bool
     {
         $this->capsule->getDatabaseManager()->purge();
-        if (\is_array($config) == true) {
-            $this->config = $config;
-        }
-        return $this->init($this->config);        
+        $config = \is_array($config) ? $config : $this->config;
+
+        return $this->init($config);        
     }
 
     /**
@@ -288,7 +287,7 @@ class Db
      * @param string|null $collation
      * @return boolean
      */
-    public function createDb(string $databaseName, ?string $charset = null, ?string $collation = null) 
+    public function createDb(string $databaseName, ?string $charset = null, ?string $collation = null): bool 
     {    
         if ($this->has($databaseName) == true) {
             return true;
@@ -310,7 +309,7 @@ class Db
             return false;
         }
 
-        return $result;
+        return (bool)$result;
     }
 
     /**

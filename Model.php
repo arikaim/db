@@ -129,10 +129,7 @@ class Model
      */
     public static function __callStatic($name, $args)
     {  
-        $extensionName = $args[0] ?? null;
-        $callback = $args[1] ?? null;
-
-        return Self::create($name,$extensionName,$callback);
+        return Self::create($name,$args[0] ?? null,$args[1] ?? null);
     }
     
     /**
