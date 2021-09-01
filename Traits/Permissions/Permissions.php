@@ -83,4 +83,44 @@ trait Permissions
             'execute' => \in_array('execute',$access) ? 1 : 0
         ];       
     }
+
+    /**
+     * Add permission type
+     *
+     * @param string $permissionType
+     * @param string|null|int $id
+     * @return boolean
+     */
+    public function addPermisionType(string $permissionType, $id = null): bool
+    {
+        $model = (empty($id) == true) ? $this : $this->findById($id);
+        if (\is_object($model) == false) {
+            return false;
+        }
+        $result = $model->update([
+            $permissionType => 1
+        ]);
+
+        return ($result !== false);
+    }
+
+    /**
+     * Remove permission type
+     *
+     * @param string $permissionType
+     * @param string|null|int $id
+     * @return boolean
+     */
+    public function removePermisionType(string $permissionType, $id = null): bool
+    {
+        $model = (empty($id) == true) ? $this : $this->findById($id);
+        if (\is_object($model) == false) {
+            return false;
+        }
+        $result = $model->update([
+            $permissionType => 0
+        ]);
+
+        return ($result !== false);
+    }
 }
