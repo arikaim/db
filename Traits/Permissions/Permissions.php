@@ -20,25 +20,27 @@ trait Permissions
      * Return true if have permission 
      *
      * @param string $name valid values read|write|delete|execute
+     * @param bool $deny
      * @return boolean
      */
-    public function hasPermission($name): bool
+    public function hasPermission(string $name, bool $deny = false): bool
     {
         $permission = $this->attributes[$name] ?? null;
        
-        return ($permission == 1);
+        return ($deny == true) ? ($permission != 1) : ($permission == 1);
     }
 
     /**
      * Check for permissions
      *
      * @param array $permissions
+     * @param bool $deny
      * @return boolean
      */
-    public function verifyPermissions(array $permissions): bool
+    public function verifyPermissions(array $permissions, bool $deny = false): bool
     {
         foreach ($permissions as $key => $value) {
-            $success = ($value == 1) ? $this->hasPermission($key) : true;
+            $success = ($value == 1) ? $this->hasPermission($key,$deny) : true;
             if ($success == false) {
                 return false;
             }
@@ -48,17 +50,18 @@ trait Permissions
     }
 
     /**
-     *Return true if have all permissions
+     * Return true if have all permissions
      *
+     * @param bool $deny
      * @return boolean
      */
-    public function hasFull(): bool
+    public function hasFull(bool $deny = false): bool
     {
         $count = 0;
-        $count += ($this->hasPermission('read') == false) ? 0 : 1;
-        $count += ($this->hasPermission('write') == false) ? 0 : 1;
-        $count += ($this->hasPermission('delete') == false) ? 0 : 1;
-        $count += ($this->hasPermission('execute') == false) ? 0 : 1;
+        $count += ($this->hasPermission('read',$deny) == false) ? 0 : 1;
+        $count += ($this->hasPermission('write',$deny) == false) ? 0 : 1;
+        $count += ($this->hasPermission('delete',$deny) == false) ? 0 : 1;
+        $count += ($this->hasPermission('execute',$deny) == false) ? 0 : 1;
 
         return ($count == 4);
     }
