@@ -76,7 +76,7 @@ trait PriceRelation
      */
     public function getIsFreeAttribute()
     {
-        return $this->IsFree();
+        return $this->isFree();
     }
 
     /**
@@ -84,7 +84,7 @@ trait PriceRelation
      *
      * @return boolean
      */
-    public function IsFree(): bool
+    public function isFree(): bool
     {
         foreach ($this->price as $item) {
             if ($item->price > 0) {
