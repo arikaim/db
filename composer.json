@@ -17,7 +17,7 @@
         "illuminate/database": "6.20.*",
         "illuminate/events": "6.20.*",
         "doctrine/inflector": "2.0.*",
-        "doctrine/dbal": "2.9.*"       
+        "doctrine/dbal": "2.13.*"       
     },
     "autoload": {       
         "psr-4": {
