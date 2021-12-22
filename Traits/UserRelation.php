@@ -62,4 +62,21 @@ trait UserRelation
     {      
         return $this->belongsTo(Users::class,$this->getUserIdAttributeName());
     }
+
+    /**
+     * Filter by user
+     *
+     * @param Builder $query
+     * @param integer|null $userId
+     * @return Builder
+     */
+    public function scopeUserQuery($query, ?int $userId)
+    {
+        $column = $this->getUserIdAttributeName();
+        if ($userId === null) {
+            return $query->whereNull($column);
+        }
+
+        return (empty($userId) == false) ? $query->where($column,'=',$userId) : $query;         
+    }
 }
