@@ -15,6 +15,16 @@ namespace Arikaim\Core\Db\Traits;
 trait OptionsAttribute 
 {        
     /**
+     * Get options column name
+     *
+     * @return string
+     */
+    public function getOptionsColumnName(): string
+    {
+        return $this->optionsColumnName ?? 'options';
+    }
+
+    /**
      * Mutator (set) for options attribute.
      *
      * @param array $value
@@ -22,8 +32,9 @@ trait OptionsAttribute
      */
     public function setOptionsAttribute($value)
     {
+        $column = $this->getOptionsColumnName();
         $value = (\is_array($value) == true) ? $value : [$value];    
-        $this->attributes['options'] = \json_encode($value);
+        $this->attributes[$column] = \json_encode($value);
     }
 
     /**
@@ -33,7 +44,9 @@ trait OptionsAttribute
      */
     public function getOptionsAttribute()
     {
-        $options = $this->attributes['options'] ?? null;
+        $column = $this->getOptionsColumnName();
+        $options = $this->attributes[$column] ?? null;
+
         return (empty($options) == true) ? [] : \json_decode($options,true);
     }
 
@@ -47,5 +60,41 @@ trait OptionsAttribute
     public function getOption(string $key, $default = null)
     {
         return $this->options[$key] ?? $default;
+    }
+
+    /**
+     * Save option
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return boolean
+     */
+    public function saveOption(string $key, $value): bool
+    {
+        $options = $this->options;
+        $options[$key] = $value;
+        $column = $this->getOptionsColumnName();
+
+        $result = $this->update([
+            $column => \json_encode($options)
+        ]);
+
+        return ($result !== false);
+    }
+
+    /**
+     * Save options
+     *
+     * @param array $options
+     * @return boolean
+     */
+    public function saveOptions(array $options): bool
+    {
+        $column = $this->getOptionsColumnName();
+        $result = $this->update([
+            $column => \json_encode($options)
+        ]);
+
+        return ($result !== false);
     }
 }
