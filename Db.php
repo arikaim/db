@@ -200,7 +200,7 @@ class Db
             return false;
         }
 
-        $dbName = $result[0]->SCHEMA_NAME ?? null;
+        $dbName = $result[0]->SCHEMA_NAME ?? '';
     
         return (\trim($dbName) == \trim($databaseName));      
     }
