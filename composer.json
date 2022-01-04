@@ -14,8 +14,8 @@
         "php": ">=7.3|^8.0",
         "arikaim/utils": "^1.0.0",
         "arikaim/http": "^1.0.0",
-        "illuminate/database": "8.44.*",
-        "illuminate/events": "8.44.*",
+        "illuminate/database": "8.56.*",
+        "illuminate/events": "8.56.*",
         "doctrine/inflector": "2.0.*",
         "doctrine/dbal": "2.13.*"       
     },
