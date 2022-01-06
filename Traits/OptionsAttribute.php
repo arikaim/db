@@ -25,19 +25,6 @@ trait OptionsAttribute
     }
 
     /**
-     * Mutator (set) for options attribute.
-     *
-     * @param array $value
-     * @return void
-     */
-    public function setOptionsAttribute($value)
-    {
-        $column = $this->getOptionsColumnName();
-        $value = (\is_array($value) == true) ? $value : [$value];    
-        $this->attributes[$column] = \json_encode($value);
-    }
-
-    /**
      * Mutator (get) for options attribute.
      *
      * @return array
@@ -71,7 +58,7 @@ trait OptionsAttribute
      */
     public function saveOption(string $key, $value): bool
     {
-        $options = $this->options;
+        $options = $this->getOptionsAttribute();
         $options[$key] = $value;
         $column = $this->getOptionsColumnName();
 
