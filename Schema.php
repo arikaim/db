@@ -270,6 +270,24 @@ abstract class Schema
     }
     
     /**
+    * Drop table index
+    *
+    * @param string $indexName
+    * @return boolean
+    */
+    public function dropIndex(string $indexName): bool 
+    {
+        if ($this->hasIndex($indexName) == false) {
+            return true;
+        }
+
+        $sql = 'ALTER TABLE ' . $this->tableName . ' DROP INDEX `' . $indexName . '`';
+        Manager::connection()->statement($sql);
+
+       return ($this->hasIndex($indexName) == true);
+    }
+
+    /**
      * Return true if index exist
      *
      * @param string $indexName
