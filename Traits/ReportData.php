@@ -64,7 +64,12 @@ trait ReportData
      * @param integer|null $year
      * @return array
      */
-    public function getReportData(string $period, ?int $day = null, ?int $month = null, ?int $year = null): array
+    public function getReportData(
+        string $period, 
+        ?int $day = null, 
+        ?int $month = null, 
+        ?int $year = null
+    ): array
     {
         return $this->reportDataQuery($period,$day,$month,$year)->get()->toArray();       
     }

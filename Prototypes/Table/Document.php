@@ -32,9 +32,8 @@ class Document implements BlueprintPrototypeInterface
         $table->id();
         $table->prototype('uuid');              
         $table->status();
-        $table->userId();    
-        $table->relation('currency_id',$currencyTableName);
-    
+        $table->userId(true);    
+        $table->relation('currency_id',$currencyTableName); 
         $table->string('external_id')->nullable(true);
         $table->string('api_driver')->nullable(true);
         $table->string('external_client')->nullable(true); 
