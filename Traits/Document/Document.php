@@ -82,7 +82,7 @@ trait Document
      *
      * @return float
      */
-    public function getTotal(): float
+    public function getSubTotal(): float
     {
         $items = $this->items()->get();
         $total = 0.00;
@@ -92,6 +92,46 @@ trait Document
         }
 
         return $total; 
+    }
+
+    /**
+     * Get total document fees
+     *
+     * @return float
+     */
+    public function getTotal(): float
+    {
+        return $this->getSubTotal() - $this->getTotalFees();
+    }
+
+    /**
+     * Get total document fees
+     *
+     * @return float
+     */
+    public function getTotalFees(): float
+    {
+        return 0.00;
+    }
+
+    /**
+     * sub_total attribute
+     *
+     * @return float
+     */
+    public function getSubTotalAttribute()
+    {
+        return $this->getSubTotal();
+    }
+
+    /**
+     * total_fees attribute
+     *
+     * @return float
+     */
+    public function getTotalFeesAttribute()
+    {
+        return $this->getTotalFees();
     }
 
     /**

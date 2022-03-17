@@ -61,12 +61,25 @@ trait PriceRelation
      * @return Collection
      */
     public function getPriceListAttribute()
-    {
-        $options = $this->price()->get()->keyBy('key')->map(function ($item, $key) {
-            return $item['price'];
+    {       
+        return $this->getPriceList();
+    }
+
+    /**
+     * Get price list
+     *
+     * @param integer|null $currencyId
+     * @return Collection
+     */
+    public function getPriceList(?int $currencyId = null) {
+
+        $query = (empty($currencyId) == false) ? $this->price()->where('currency_id','=',$currencyId) : $this->price();
+
+        $items = $query->get(['key','price','currency_id'])->keyBy('key')->map(function ($item, $key) {
+            return $item;
         });
 
-        return $options;
+        return $items;
     }
 
     /**

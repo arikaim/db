@@ -11,5 +11,7 @@
 #### Installation
 
 ```sh
+
 composer require arikaim/db
+
 ```
