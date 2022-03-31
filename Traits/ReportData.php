@@ -19,6 +19,27 @@ use Arikaim\Core\Utils\TimePeriod;
 trait ReportData
 {    
     /**
+     * Get report data filter
+     *
+     * @return array|null
+     */
+    public function getReportDataFilter(): ?array
+    {
+        return $this->reportDataFilter ?? null;
+    } 
+
+    /**
+     * Set report data filter
+     *
+     * @param array $filter
+     * @return void
+     */
+    public function setReportDataFilter(array $filter): void
+    {
+        $this->reportDataFilter = $filter;
+    } 
+
+    /**
      * Data scope per period
      *
      * @param Builder $query    
@@ -50,6 +71,14 @@ trait ReportData
                 break;           
         }
 
+        $filter = $this->getReportDataFilter();
+
+        if (\is_array($filter) == true) {
+            foreach ($filter as $key => $value) {
+                $query->where($key,'=',$value);
+            }
+        }
+        
         return $query                   
             ->where('date_created','>=',$period['start'])
             ->where('date_created','<=',$period['end']);

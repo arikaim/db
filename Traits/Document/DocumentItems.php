@@ -33,7 +33,7 @@ trait DocumentItems
     }
 
     /**
-     * Get documetn total
+     * Get document total
      *
      * @param Closure|null $itemCalc
      * @return float
@@ -41,7 +41,6 @@ trait DocumentItems
     public function getItemTotal(?Closure $itemCalc = null): float
     {
         $itemCalc = $itemCalc ?? $this->getItemCalc();
-
         $result = $itemCalc($this);    
         
         return (\is_numeric($result) == false) ? 0.00 : (float)$result;
@@ -123,7 +122,7 @@ trait DocumentItems
      * @param integer|null $documentId
      * @return Builder
      */
-    public function scopeItemsQuery($query, ?int $documentId, ?int $productId)
+    public function scopeItemsQuery($query, ?int $documentId, ?int $productId = null)
     {
         if (empty($documentId) == false) {
             $query = $query->where('document_id','=',$documentId);
