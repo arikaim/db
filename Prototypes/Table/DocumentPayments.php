@@ -31,11 +31,15 @@ class DocumentPayments implements BlueprintPrototypeInterface
         // columns
         $table->id();
         $table->prototype('uuid');    
-        $table->relation('document_id',$documentTableName);      
+        $table->relation('document_id',$documentTableName);  
+        $table->string('transaction_id')->nullable(true);    
         $table->price(0.00,'amount');  
         $table->dateCreated();
         $table->dateUpdated();
 
+        // index
+        $table->unique('transaction_id');
+        
         if (\is_callable($callback) == true) {         
             $call = function() use($callback,$table) {
                 $callback($table);                                 

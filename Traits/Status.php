@@ -47,6 +47,11 @@ trait Status
     static $SUSPENDED = 5;
 
     /**
+     *  Cancelled
+     */
+    static $CANCELLED = 6;
+
+    /**
      * Return active value
      *
      * @return integer
@@ -94,6 +99,16 @@ trait Status
     public function SUSPENDED(): int
     {
         return Self::$SUSPENDED;
+    }
+
+    /**
+     * Cancelled
+     *
+     * @return integer
+     */
+    public function CANCELLED(): int
+    {
+        return Self::$CANCELLED;
     }
 
     /**

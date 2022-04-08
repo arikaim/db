@@ -106,9 +106,9 @@ trait DocumentNumber
     public function getDocumentNumber(string $prefix = ''): ?string
     {
         $columnName = $this->getDocumentNumberColumn();      
-        $documentNumber = $this->attributes[$columnName] ?? null;
+        $documentNumber = (int)$this->attributes[$columnName] ?? null;
      
-        return (empty($documentNumber) == false) ? $this->filterColumnValue($documentNumber,$prefix) : null;       
+        return (empty($documentNumber) == false) ? $this->printDocumentNumber($documentNumber,$prefix) : null;       
     }   
 
     /**

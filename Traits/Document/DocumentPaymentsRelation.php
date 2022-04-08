@@ -46,7 +46,7 @@ trait DocumentPaymentsRelation
      */
     public function getTotalPaid(): float
     {
-        $result = $this->payments()->where('document_id','=',$this->document_id)->sum('amount');
+        $result = $this->payments->where('document_id','=',$this->id)->sum('amount');
 
         return (empty($result) == true) ? 0.00 : (float)$result;
     }
@@ -68,7 +68,9 @@ trait DocumentPaymentsRelation
      */
     public function getPaymentsDue(): float
     {
-        return ($this->getTotal() - $this->getTotalPaid());
+        $due = $this->getTotal() - $this->getTotalPaid();
+
+        return ($due < 0) ? 0.00 : $due;
     }
 
     /**
