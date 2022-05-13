@@ -122,7 +122,8 @@ trait Status
         'completed',
         'published',
         'pending',
-        'suspended'
+        'suspended',
+        'cancelled'
     ];
 
     /**

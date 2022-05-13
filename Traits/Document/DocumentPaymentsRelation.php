@@ -14,6 +14,50 @@ namespace Arikaim\Core\Db\Traits\Document;
 */
 trait DocumentPaymentsRelation 
 { 
+    static $NOT_PAID = 0;
+    static $PARTIAL_PAID = 1;
+    static $PAID = 2;
+
+    /**
+     * Not paid status trait constant
+     *
+     * @return integer 0
+     */
+    public function NOT_PAID(): int
+    {
+        return Self::$NOT_PAID;
+    }
+
+    /**
+     * Partial paid status trait constant
+     *
+     * @return integer 1
+     */
+    public function PARTIAL_PAID(): int
+    {
+        return Self::$PARTIAL_PAID;
+    }
+
+    /**
+     * Full paid status trait constant
+     *
+     * @return integer 2
+     */
+    public static function PAID(): int
+    {
+        return Self::$PAID;
+    }
+
+    /**
+     * Get payment status column name
+     *
+     * @return string
+     */
+    public function getPaymentStatusColumn(): string
+    {
+        return $this->statusColumn ?? 'payment_status';
+    }
+
     /**
      * Get document payments model class
      *
@@ -22,6 +66,23 @@ trait DocumentPaymentsRelation
     public function getDocumentPaymentsClass(): ?string
     {
         return $this->documentPaymentsModel ?? null;
+    }
+
+    /**
+     * Set payment status
+     *
+     * @param integer $status
+     * @return boolean
+     */
+    public function setPaymentStatus(int $status): bool
+    {
+        $columnName = $this->getPaymentStatusColumn();
+
+        $result = $this->update([
+            $columnName => $status
+        ]);
+
+        return ($result !== false);
     }
 
     /**

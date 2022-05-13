@@ -37,7 +37,8 @@ class Document implements BlueprintPrototypeInterface
         $table->string('external_id')->nullable(true);
         $table->string('api_driver')->nullable(true);
         $table->string('external_client')->nullable(true); 
-        $table->integer('document_number')->nullable(true);        
+        $table->integer('document_number')->nullable(true);   
+       
         $table->dateCreated();
         $table->dateUpdated();
         $table->dateDeleted();
