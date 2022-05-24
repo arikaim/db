@@ -101,7 +101,7 @@ trait Document
      */
     public function getTotal(): float
     {
-        return $this->getSubTotal() - $this->getTotalFees();
+        return $this->getSubTotal() + $this->getTotalFees();
     }
 
     /**
