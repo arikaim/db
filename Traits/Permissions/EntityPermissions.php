@@ -66,7 +66,7 @@ trait EntityPermissions
      * @param integer $userId
      * @return boolean
      */
-    public function deleteUserPermission($entityId, $userId): bool
+    public function deleteUserPermission(int $entityId, int $userId): bool
     {
         $model = $this->getPermission($entityId,$userId,'user');
 
@@ -80,7 +80,7 @@ trait EntityPermissions
      * @param integer $groupId
      * @return boolean
      */
-    public function deleteGroupPermission($entityId, $groupId): bool
+    public function deleteGroupPermission(int $entityId, int $groupId): bool
     {
         $model = $this->getPermission($entityId,$groupId,'group');
 
@@ -92,11 +92,11 @@ trait EntityPermissions
      *
      * @param integer $entityId
      * @param integer $userId
-     * @param array $permissions
+     * @param array|string $permissions
      * @param integer|null $permissionId
      * @return Model|false
      */
-    public function addUserPermission($entityId, $userId, $permissions, $permissionId = null)
+    public function addUserPermission(int $entityId, int $userId, $permissions, ?int $permissionId = null)
     {
         return $this->addPermission($entityId, $userId, $permissions,'user',$permissionId);
     }
@@ -106,11 +106,11 @@ trait EntityPermissions
      *
      * @param integer $entityId
      * @param integer $groupId
-     * @param array $permissions
+     * @param array|string $permissions
      * @param integer|null $permissionId
      * @return Model|false
      */
-    public function addGroupPermission($entityId, $groupId, $permissions, $permissionId = null)
+    public function addGroupPermission(int $entityId, int $groupId, $permissions, ?int $permissionId = null)
     {
         return $this->addPermission($entityId,$groupId,$permissions,'group',$permissionId);
     }
@@ -119,22 +119,22 @@ trait EntityPermissions
      * Add permission
      *
      * @param integer $entityId
-     * @param integer $userId
-     * @param array $permissions
+     * @param integer $id
+     * @param array|string $permissions
      * @param string $type  (user or gorup)
      * @param integer|null $permissionId
      * @return Model|false
      */
-    public function addPermission($entityId, $userId, $permissions, $type = 'user', $permissionId = null)
+    public function addPermission(int $entityId, int $id, $permissions, string $type = 'user', ?int $permissionId = null)
     {
         $permissions = $this->resolvePermissions($permissions);
-        $model = $this->getPermission($entityId,$userId,$type);
+        $model = $this->getPermission($entityId,$id,$type);
         if (\is_object($model) == true) {
             return false;
         }
 
         $permissions['entity_id'] = $entityId;
-        $permissions['relation_id'] = $userId;
+        $permissions['relation_id'] = $id;
         $permissions['relation_type'] = $type;
         $permissions['permission_id'] = $permissionId;
         
@@ -145,10 +145,10 @@ trait EntityPermissions
      * Add public permission
      *
      * @param integer $entityId
-     * @param array $permissions
+     * @param array|string $permissions
      * @return Model
      */
-    public function addPublicPermission($entityId, $permissions)
+    public function addPublicPermission(int $entityId, $permissions)
     { 
         $model = $this->getPublicPermission($entityId);
         if (\is_object($model) == true) {
@@ -168,14 +168,12 @@ trait EntityPermissions
      * @param integer $entityId
      * @return Model|null
      */
-    public function getPublicPermission($entityId)
+    public function getPublicPermission(int $entityId)
     {
-        $model = $this
+        return $this
             ->where('entity_id','=',$entityId)
             ->whereNull('relation_id')
-            ->where('relation_type','=','user')->first();
-        
-        return $model;
+            ->where('relation_type','=','user')->first();       
     }
     
     /**
@@ -184,7 +182,7 @@ trait EntityPermissions
      * @param integer $entityId
      * @return boolean
      */
-    public function deletePublicPermission($entityId): bool
+    public function deletePublicPermission(int $entityId): bool
     {
         $model = $this->getPublicPermission($entityId);
 
@@ -199,14 +197,12 @@ trait EntityPermissions
      * @param string $type
      * @return Model|null
      */
-    public function getPermission($entityId, $id, $type = 'user')
+    public function getPermission(int $entityId, int $id, string $type = 'user')
     {
-        $model = $this
+        return $this
             ->where('entity_id','=',$entityId)
             ->where('relation_id','=',$id)
-            ->where('relation_type','=',$type)->first();
-        
-        return $model;
+            ->where('relation_type','=',$type)->first();       
     }
 
     /**
@@ -216,11 +212,11 @@ trait EntityPermissions
      * @param string|null $type
      * @return Builder
      */
-    public function getPermissionsQuery($entityId, $type = null)
+    public function getPermissionsQuery(int $entityId, ?string $type = null)
     {
         $query = $this->where('entity_id','=',$entityId);
         if (empty($type) == false) {
-            $query = $query->where('relation_type','=',$type);
+            $query->where('relation_type','=',$type);
         }
 
         return $query->whereNotNull('relation_id');      
@@ -233,7 +229,7 @@ trait EntityPermissions
      * @param int $userId
      * @return Builder
      */
-    public function scopePermissionsForUser($query, $userId)
+    public function scopePermissionsForUser($query, int $userId)
     {
         $groups = new UserGroupMembers();
         $groups = $groups->userGroups($userId)->pluck('group_id')->toArray();
