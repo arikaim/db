@@ -223,6 +223,32 @@ trait EntityPermissions
     }
 
     /**
+     * Permissions scope query
+     *
+     * @param [type]       $query
+     * @param integer|null $entityId
+     * @param string|null  $type
+     * @param integer|null $typeId
+     * @return Builder
+     */
+    public function scopePermissionsQuery($query, ?int $entityId = null, ?string $type = null, ?int $typeId = null)
+    {
+        if (empty($entityId) == false) {
+            $query->where('entity_id','=',$entityId);
+        }
+
+        if (empty($type) == false) {
+            $query->where('relation_type','=',$type);
+        }
+
+        if (empty($typeId) == false) {
+            $query->where('relation_id','=',$typeId);
+        }
+
+        return $query;
+    }
+
+    /**
      * Query for all permissions for user
      *
      * @param Builder $query
