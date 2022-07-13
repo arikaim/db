@@ -39,9 +39,11 @@ trait EntityPermissionsRelation
      *
      * @param integer $userId
      * @param string|array $access
+     * @param string|null $type
+     * @param int|null $typeId
      * @return boolean
      */
-    public function hasAccess($userId, $access): bool
+    public function hasAccess($userId, $access, ?string $type = 'user', ?int $typeId = null): bool
     {
         if ($this->isPublic() == true) {
             return true;
@@ -54,10 +56,16 @@ trait EntityPermissionsRelation
 
         $permissions = $this->resolvePermissions($access);   
         
-        $model = $this->permissions()->permissionsForUser($userId)->get();
+        if ($type == 'user' || $type == 'group') {
+            $model = $this->permissions()->permissionsForUser($userId)->get();
+        } else {
+            $model = $this->permissions()->permissionsQuery(null,$type,$typeId)->get();
+        }
+       
         if (\is_object($model) == false) {
             return false;
         }
+
         foreach ($model as $item) {           
             $success = $item->verifyPermissions($permissions);
             if ($success == true) {
