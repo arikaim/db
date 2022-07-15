@@ -78,7 +78,7 @@ trait DateSearch
      * @param Builder $query
      * @param integer $date
      * @param string|null $columnName
-     * @return Builder|null
+     * @return Builder
      */
     public function scopeDayFromDate($query, int $date, ?string $columnName = null)
     {
@@ -94,7 +94,7 @@ trait DateSearch
      * @param Builder $query
      * @param integer $date
      * @param string|null $columnName
-     * @return Builder|null
+     * @return Builder
      */
     public function scopeMonthFromDate($query, int $date, ?string $columnName = null)
     {
@@ -110,7 +110,7 @@ trait DateSearch
      * @param Builder $query
      * @param integer $date
      * @param string|null $columnName
-     * @return Builder|null
+     * @return Builder
      */
     public function scopeYearFromDate($query, int $date, ?string $columnName = null)
     {

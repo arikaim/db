@@ -103,7 +103,7 @@ trait DocumentItems
             'price'       => $price
         ];
 
-        if (\is_object($item) == false) {
+        if ($item == null) {
             return $this->create($data);
         }
         // add to existing 

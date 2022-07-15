@@ -25,10 +25,10 @@ trait IncrementValue
     public function incrementValue($uuid, string $fieldName, int $increment = 1)
     {        
         $model = (\is_string($uuid) == true) ? parent::where('uuid','=',$uuid)->first() : parent::where('id','=',$uuid)->first();
-          
-        if (\is_object($model) == false) {
+        if ($model == null) {
             return false;
         }
+        
         $value = $model->getAttribute($fieldName);
         $value += $increment;
 

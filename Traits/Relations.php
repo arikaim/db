@@ -42,10 +42,9 @@ trait Relations
      */
     public function relation($id)
     {
-        $targetColumn= $this->getRelationsTargetAttributeName();
-        $model = $this->getQuery()->where($targetColumn,'=',$id)->first();  
+        $model = $this->getQuery()->where($this->getRelationsTargetAttributeName(),'=',$id)->first();  
 
-        return (\is_object($model) == false) ? false : $model;
+        return ($model == null) ? false : $model;
     }
 
     /**
@@ -93,7 +92,7 @@ trait Relations
      */
     public function hasRelation($targetId): bool
     {
-        return \is_object($this->relation($targetId));
+        return ($this->relation($targetId) !== false);
     }
 
     /**

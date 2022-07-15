@@ -21,7 +21,7 @@ trait FileTypeTrait
      *
      * @param Builder $query
      * @param string $type
-     * @return Builder|false
+     * @return Builder
      */
     public function scopeFileTypeQuery($query, string $type)
     {

@@ -92,6 +92,6 @@ trait DefaultTrait
      */
     public function hasDefault(?int $userId = null): bool
     {
-        return \is_object($this->getDefault($userId));
+        return ($this->getDefault($userId) != null);
     }
 }

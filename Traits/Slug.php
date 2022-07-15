@@ -154,6 +154,6 @@ trait Slug
         $slugColumn = $this->getSlugColumn();
         $model = $this->where($slugColumn,'=',$slug)->orWhere($slugColumn,'=',$this->createSlug($slug))->first();
       
-        return (\is_object($model) == true) ? $model : false;
+        return ($model != null) ? $model : false;
     }
 }

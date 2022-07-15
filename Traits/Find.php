@@ -18,11 +18,13 @@ trait Find
      * Find model by id or uuid
      *
      * @param integer|string $id
-     * @return Model|false
+     * @return Model|null
      */
     public function findById($id)
     {        
-        return $this->findByColumn($id);
+        $column = (\is_numeric($id) == true) ? (string)$this->getKeyName() : 'uuid';
+        
+        return parent::where($column,'=',$id)->first();
     }
     
     /**
@@ -56,7 +58,7 @@ trait Find
     {
         $model = $this->getLastRow();
 
-        return (\is_object($model) == true) ? $model->id : null;
+        return ($model != null) ? $model->id : null;
     }
 
     /**
@@ -79,7 +81,7 @@ trait Find
      *
      * @param mixed $value
      * @param string|null|array $column
-     * @return object|null
+     * @return Builder|null
      */
     public function findQuery($value, $column = null)
     {      

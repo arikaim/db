@@ -197,13 +197,12 @@ trait PolymorphicRelations
      */
     public function hasRelation(?int $id, ?string $type, ?int $relationId): bool
     {
-        $relationField = $this->getRelationAttributeName();
         $model = $this
-            ->where($relationField,'=',$id)
+            ->where($this->getRelationAttributeName(),'=',$id)
             ->where('relation_type','=',$type)
             ->where('relation_id','=',$relationId)->first();
         
-        return \is_object($model);
+        return ($model != null);
     }
 
     /**
@@ -216,13 +215,12 @@ trait PolymorphicRelations
      */
     public function getRelationModel(?int $id, ?string $type, ?int $relationId)
     {
-        $relationField = $this->getRelationAttributeName();
         $model = $this
-            ->where($relationField,'=',$id)
+            ->where($this->getRelationAttributeName(),'=',$id)
             ->where('relation_type','=',$type)
             ->where('relation_id','=',$relationId)->first();
         
-        return (\is_object($model) == true) ? $model : false;
+        return ($model != null) ? $model : false;
     }
 
     /**
