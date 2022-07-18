@@ -147,13 +147,11 @@ trait Slug
      * Find model by slug
      *
      * @param string $slug
-     * @return Model|false
+     * @return Model|null
      */
     public function findBySlug(string $slug)
     {
         $slugColumn = $this->getSlugColumn();
-        $model = $this->where($slugColumn,'=',$slug)->orWhere($slugColumn,'=',$this->createSlug($slug))->first();
-      
-        return ($model != null) ? $model : false;
+        return $this->where($slugColumn,'=',$slug)->orWhere($slugColumn,'=',$this->createSlug($slug))->first();       
     }
 }

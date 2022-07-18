@@ -66,14 +66,11 @@ trait Find
      *
      * @param mixed $value
      * @param string|null|array $column
-     * @return Model|false
+     * @return Model|null
      */
     public function findByColumn($value, $column = null)
     {
-        $query = $this->findQuery($value,$column);
-        $model = (\is_object($query) == true) ? $query->first() : null;
-
-        return (empty($model) == false) ? $model : false;
+        return $this->findQuery($value,$column)->first(); 
     }
 
     /**
@@ -81,7 +78,7 @@ trait Find
      *
      * @param mixed $value
      * @param string|null|array $column
-     * @return Builder|null
+     * @return Builder
      */
     public function findQuery($value, $column = null)
     {      
@@ -101,7 +98,7 @@ trait Find
             return $model;
         }
 
-        return null;
+        return $this->findByIdQuery($value);
     }
 
     /**

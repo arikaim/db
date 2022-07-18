@@ -26,7 +26,7 @@ trait ToggleValue
         $id = $id ?? $this->id;
     
         $model = $this->findById($id);
-        if (\is_object($model) == false) {
+        if ($model == null) {
             return false;
         }
         $value = $model->getAttribute($fieldName);

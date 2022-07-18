@@ -97,7 +97,7 @@ trait Permissions
     public function addPermisionType(string $permissionType, $id = null): bool
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
-        if (\is_object($model) == false) {
+        if ($model == null) {
             return false;
         }
         $result = $model->update([
@@ -117,7 +117,7 @@ trait Permissions
     public function removePermisionType(string $permissionType, $id = null): bool
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
-        if (\is_object($model) == false) {
+        if ($model == null) {
             return false;
         }
         $result = $model->update([
