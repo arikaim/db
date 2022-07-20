@@ -20,7 +20,7 @@ trait Find
      * @param integer|string $id
      * @return Model|null
      */
-    public function findById($id)
+    public function findById($id): ?object
     {        
         $column = (\is_numeric($id) == true) ? (string)$this->getKeyName() : 'uuid';
         
@@ -33,7 +33,7 @@ trait Find
      * @param array $idList
      * @return Builder
      */
-    public function findMultiple(array $idList)
+    public function findMultiple(array $idList): object
     {
         return $this->whereIn('uuid',$idList)->orWhereIn('id',$idList);
     }
@@ -44,7 +44,7 @@ trait Find
      * @param string $field
      * @return Model|null
      */
-    public function getLastRow(string $field = 'id')
+    public function getLastRow(string $field = 'id'): ?object
     {
         return $this->latest($field)->first();
     }
@@ -68,7 +68,7 @@ trait Find
      * @param string|null|array $column
      * @return Model|null
      */
-    public function findByColumn($value, $column = null)
+    public function findByColumn($value, $column = null): ?object
     {
         return $this->findQuery($value,$column)->first(); 
     }
@@ -80,7 +80,7 @@ trait Find
      * @param string|null|array $column
      * @return Builder
      */
-    public function findQuery($value, $column = null)
+    public function findQuery($value, $column = null): object
     {      
         if ($column == null) {
             return $this->findByIdQuery($value);
@@ -107,7 +107,7 @@ trait Find
      * @param integer|string $id
      * @return Builder
      */
-    public function findByIdQuery($id)
+    public function findByIdQuery($id): object
     {       
         return parent::where($this->getIdAttributeName($id),'=',$id);
     }
@@ -144,7 +144,7 @@ trait Find
      * @param string $operator
      * @return Builder
      */
-    public function whereIgnoreCase(string $attribute, $value, string $operator = '=')
+    public function whereIgnoreCase(string $attribute, $value, string $operator = '='): object
     {
         $value = \strtolower($value);
         
