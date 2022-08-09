@@ -10,8 +10,6 @@
 namespace Arikaim\Core\Db;
 
 use Arikaim\Core\Utils\Factory;
-use Arikaim\Core\Db\Seed;
-use Arikaim\Core\Db\Schema;
 use Exception;
 use Closure;
 
@@ -28,28 +26,6 @@ class Model
     private static $instances = [];
 
     /**
-     * Db seed
-     *
-     * @param string $className
-     * @param string|null $extensionName
-     * @param Closure|null $callback
-     * @return mixed
-     */
-    public static function seed(string $className, ?string $extensionName, $callback = null)
-    {
-        $model = Self::create($className,$extensionName);
-        if (\is_object($model) == false) {
-            return null;
-        }
-        if (Schema::hasTable($model) == false) {
-            return null;
-        }
-        $seed = new Seed($model->getTable());
-
-        return (\is_callable($callback) == true) ? $callback($seed) : $seed;
-    } 
-
-    /**
      * Create db model instance
      *
      * @param string $className Base model class name
@@ -59,7 +35,7 @@ class Model
      * @throws Exception
      * @return object|null
      */ 
-    public static function create(string $className, ?string $extensionName = null, $callback = null, bool $showError = true) 
+    public static function create(string $className, ?string $extensionName = null, $callback = null, bool $showError = true)
     {         
         $fullClass = (\class_exists($className) == false) ? Factory::getModelClass($className,$extensionName) : $className; 
         
@@ -71,10 +47,10 @@ class Model
         }
 
         if (\is_callable($callback) == true) {
-            return (\is_object($instance) == true) ? $callback($instance) : null;
+            return ($instance != null) ? $callback($instance) : null;
         }
-        if (\is_object($instance) == false && $showError == true) {
-            throw new Exception('Not valid db model class: ' . $fullClass, 1);
+        if ($instance == null && $showError == true) {
+            throw new Exception('Not valid db model class: ' . $fullClass,1);
         }
         
         return $instance;
@@ -115,9 +91,7 @@ class Model
      */
     public static function getConstant(string $className, string $constantName, ?string $extensionName = null)
     {
-        $className = Self::getFullClassName($className,$extensionName);
-
-        return Factory::getConstant($className,$constantName);
+        return Factory::getConstant(Self::getFullClassName($className,$extensionName),$constantName);
     }
 
     /**

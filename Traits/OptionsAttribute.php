@@ -31,8 +31,7 @@ trait OptionsAttribute
      */
     public function getOptionsAttribute()
     {
-        $column = $this->getOptionsColumnName();
-        $options = $this->attributes[$column] ?? null;
+        $options = $this->attributes[$this->getOptionsColumnName()] ?? null;
 
         return (empty($options) == true) ? [] : \json_decode($options,true);
     }
@@ -60,10 +59,9 @@ trait OptionsAttribute
     {
         $options = $this->getOptionsAttribute();
         $options[$key] = $value;
-        $column = $this->getOptionsColumnName();
-
+      
         $result = $this->update([
-            $column => \json_encode($options)
+            $this->getOptionsColumnName() => \json_encode($options)
         ]);
 
         return ($result !== false);
@@ -77,9 +75,8 @@ trait OptionsAttribute
      */
     public function saveOptions(array $options): bool
     {
-        $column = $this->getOptionsColumnName();
         $result = $this->update([
-            $column => \json_encode($options)
+            $this->getOptionsColumnName() => \json_encode($options)
         ]);
 
         return ($result !== false);

@@ -83,13 +83,12 @@ trait Tree
      * Childs list query
      *
      * @param Builder $query
-     * @param string|integer $id
+     * @param integer $id
      * @return Builder
      */
-    public function scopeChildListQuery($query, $id)
-    {
-        $columnName = $this->getParentColumn();
-        return $query->where($columnName,'=',$id);
+    public function scopeChildListQuery($query, int $id): object
+    {      
+        return $query->where($this->getParentColumn(),'=',$id);
     }
 
     /**

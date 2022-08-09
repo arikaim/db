@@ -11,6 +11,10 @@ namespace Arikaim\Core\Db;
 
 use Illuminate\Database\Capsule\Manager;
 
+use Arikaim\Core\Db\Model;
+use Arikaim\Core\Db\Schema;
+use Closure;
+
 /**
  * Seed query
 */
@@ -31,6 +35,28 @@ class Seed
     public function __construct(?string $tableName) 
     {             
         $this->tableName = $tableName;
+    }
+
+    /**
+     * Seed with model
+     *
+     * @param string        $className
+     * @param string|null   $extensionName
+     * @param Closure|null  $callback
+     * @return mixed
+     */
+    public static function withModel(string $className, ?string $extensionName, ?Closure $callback = null)
+    {
+        $model = Model::create($className,$extensionName);
+        if (\is_object($model) == false) {
+            return null;
+        }
+        if (Schema::hasTable($model) == false) {
+            return null;
+        }
+        $seed = new Self($model->getTable());
+
+        return (\is_callable($callback) == true) ? $callback($seed) : $seed;
     }
 
     /**
