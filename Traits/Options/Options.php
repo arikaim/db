@@ -81,15 +81,13 @@ trait Options
             return false;
         }
 
-        $item = [
+        return $this->create([
             'reference_id' => $referenceId,
             'uuid'         => Uuid::create(),
             'type_id'      => $optionType->id,
             'key'          => $optionType->key,
             'value'        => ($value == null) ? $optionType->default : $value,        
-        ];
-
-        return $this->create($item);      
+        ]);      
     }
 
     /**
