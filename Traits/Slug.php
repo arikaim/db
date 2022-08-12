@@ -105,7 +105,7 @@ trait Slug
         $slugSourceColumn = $model->getSlugSourceColumn();
         $separator = $model->getSlugSeparator(); 
 
-        if (\is_null($model->$slugSourceColumn) == false) {                   
+        if ($model->$slugSourceColumn !== null) {                   
             $model->$slugColumn = Utils::slug($model->$slugSourceColumn,$separator);
         }              
        
