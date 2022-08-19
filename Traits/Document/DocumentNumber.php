@@ -94,7 +94,7 @@ trait DocumentNumber
 
         $model = $this->where($columnName,'=',$columnValue)->where($indexColumn,'=',$filterColumnValue)->first();
         
-        return (\is_object($model) == false);
+        return ($model !== null);
     } 
 
     /**

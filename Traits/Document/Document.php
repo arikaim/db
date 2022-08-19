@@ -31,7 +31,7 @@ trait Document
      * @param string $driverName
      * @return Model|null
      */
-    public function getExternal(string $externalId, string $driverName)
+    public function getExternal(string $externalId, string $driverName): ?object
     {
         return $this->where('external_id','=',$externalId)->where('api_driver','=',$driverName)->first();
     }
@@ -45,9 +45,7 @@ trait Document
      */
     public function hasExternal(string $externalId, string $driverName): bool
     {
-        $model = $this->getExternal($externalId,$driverName);
-
-        return \is_object($model);
+        return ($this->getExternal($externalId,$driverName) !== null);       
     }
     
     /**

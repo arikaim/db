@@ -9,8 +9,6 @@
 */
 namespace Arikaim\Core\Db\Traits\Permissions;
 
-use Arikaim\Core\Collection\Arrays;
-
 /**
  * Permissions
 */
@@ -75,8 +73,8 @@ trait Permissions
     public function resolvePermissions($access): array 
     {
         if (\is_string($access) == true) {
-            $access = \strtolower($access);
-            $access = ($access == 'full') ? ['read','write','delete','execute'] : Arrays::toArray($access,',');
+            $access = \strtolower(\trim($access));
+            $access = ($access == 'full') ? ['read','write','delete','execute'] : \explode(',',$access);
         }
 
         return [

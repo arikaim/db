@@ -65,9 +65,7 @@ trait DocumentItems
      */
     public function hasItem(int $documentId, int $productId): bool
     {
-        $model = $this->itemsQuery($documentId,$productId)->frist();
-
-        return \is_object($model);
+        return ($this->itemsQuery($documentId,$productId)->frist() !== null);        
     }
 
     /**

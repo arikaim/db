@@ -32,21 +32,24 @@ trait DocumentPayments
      *
      * @param integer $documentId
      * @param float   $amount
+     * @param string|null $transactionId
      * @return bool
      */
     public function savePayment(int $documentId, float $amount, ?string $transactionId): bool
     {
-        if ($this->hasPayment($transactionId) == true) {
-            return true;
+        if (empty($transactionId) == false) {
+            if ($this->hasPayment($transactionId) == true) {
+                return true;
+            }
         }
-        
+       
         $model = $this->create([
             'document_id'    => $documentId,
             'amount'         => $amount,
             'transaction_id' => $transactionId
         ]); 
         
-        return (\is_object($model) == true);
+        return ($model !== null);
     }
 
     /**
@@ -59,7 +62,7 @@ trait DocumentPayments
     {
         $model = $this->where('transaction_id','=',$transactionId)->first();
 
-        return \is_object($model);
+        return ($model !== null);
     }
     
     /**
