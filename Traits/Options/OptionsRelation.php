@@ -50,7 +50,7 @@ trait OptionsRelation
         $typeName = (empty($typeName) == true) ? $this->getOptionsType() : $typeName;
         $key = $this->getOptionsPrimarykey();
 
-        if (\is_object($options) == true && empty($typeName) == false) {
+        if ($options !== null && empty($typeName) == false) {
             return $options->createOptions($this->{$key},$typeName);
         }
 

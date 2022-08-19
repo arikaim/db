@@ -36,13 +36,13 @@ trait PriceList
     public function getCurrency(?string $code = null): ?int
     {
         $currency = Model::create($this->getCurrencyClass());
-        if (\is_object($currency) == false) {
-            return false;
+        if ($currency == null) {
+            return null;
         }
         $model = (empty($code) == false) ? $currency->findByColumn('code',$code) : $currency->getDefault();
         $model = $model->first();
 
-        return (empty($model) == false) ? $model->id : null;       
+        return ($model !== null) ? $model->id : null;       
     }
 
     /**
@@ -101,18 +101,16 @@ trait PriceList
      * @param mixed $price
      * @return Model|false
      */
-    public function createPrice($productId, $key, ?string $currencyCode = null, $price = null)
+    public function createPrice(int $productId, $key, ?string $currencyCode = null, $price = null)
     {
         $price = $price ?? 0;
-
         if ($this->hasPrice($key,$productId) == true) {     
             return false;
         }
-        $currencyId = $this->getCurrency($currencyCode);
-
+       
         return $this->create([
             'product_id'  => $productId,
-            'currency_id' => $currencyId,
+            'currency_id' => $this->getCurrency($currencyCode),
             'uuid'        => Uuid::create(),          
             'key'         => $key,
             'price'       => $price     
@@ -124,20 +122,20 @@ trait PriceList
      *
      * @param integer $productId
      * @param string|null $typeName
-     * @param string $currency
+     * @param string|null $currencyCode
      * @return boolean
      */
-    public function createPiceList($productId, $typeName, $currency = null)
+    public function createPiceList(int $productId, ?string $typeName, ?string $currencyCode = null): bool
     {
         $optionsList = Model::create($this->getPriceListDefinitionClass());
-        if (\is_object($optionsList) == false) {
+        if ($optionsList == null) {
             return false;
         }
       
         $list = $optionsList->getItems($typeName,'price');
       
         foreach ($list as $item) {                  
-            $this->createPrice($productId,$item->key,$currency);          
+            $this->createPrice($productId,$item->key,$currencyCode);          
         }
 
         return true;
@@ -150,11 +148,9 @@ trait PriceList
      * @param string $key
      * @return Model|null
      */
-    public function getPrice(string $key, $productId) 
+    public function getPrice(string $key, int $productId): ?object
     {      
-        $model = $this->where('product_id','=',$productId)->where('key','=',$key);
-  
-        return $model->first();                    
+        return $this->where('product_id','=',$productId)->where('key','=',$key)->first();                          
     }
 
     /**
@@ -172,7 +168,7 @@ trait PriceList
      * Get price list
      *
      * @param integer $productId
-     * @return Model|null
+     * @return object|null
      */
     public function getPriceList($productId)
     {
@@ -186,23 +182,21 @@ trait PriceList
      * @param string $key
      * @return boolean
      */
-    public function hasPrice(string $key, $productId): bool
+    public function hasPrice(string $key, int $productId): bool
     {
-        $model = $this->getPrice($key,$productId);
-
-        return \is_object($model);
+        return ($this->getPrice($key,$productId) !== null);       
     }
 
     /**
      * Save price
      *
-     * @param integer $referenceId
+     * @param integer $productId
      * @param string $key
      * @param float $price
      * @param string|null $currency
      * @return boolean
      */
-    public function savePrice($productId, $key, $price, $currency) 
+    public function savePrice(int $productId, string $key, $price, ?string $currency) 
     {
         $price = (empty($price) == true) ? 0 : $price;
 

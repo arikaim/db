@@ -129,7 +129,7 @@ trait EntityPermissions
     {
         $permissions = $this->resolvePermissions($permissions);
         $model = $this->getPermission($entityId,$id,$type);
-        if (\is_object($model) == true) {
+        if ($model !== null) {
             return false;
         }
 
@@ -197,7 +197,7 @@ trait EntityPermissions
      * @param string $type
      * @return Model|null
      */
-    public function getPermission(int $entityId, int $id, string $type = 'user')
+    public function getPermission(int $entityId, int $id, string $type = 'user'): ?object
     {
         return $this
             ->where('entity_id','=',$entityId)

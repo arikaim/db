@@ -104,7 +104,7 @@ trait EntityPermissionsRelation
                 ->where('relation_type','=','user')
                 ->where('entity_id','=',$entityId)->first();
         
-        return (\is_object($model) == true) ? $model : false;
+        return ($model !== null) ? $model : false;
     } 
 
     /**

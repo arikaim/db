@@ -68,17 +68,17 @@ trait Options
      * @param integer|null $referenceId
      * @param string|integer $key Option type key or id
      * @param mixed $value
-     * @return Model|false
+     * @return Model|null
      */
-    public function createOption($referenceId, $key, $value = null)
+    public function createOption($referenceId, $key, $value = null): ?object
     {
         if ($this->hasOption($key,$referenceId) == true) {     
-            return false;
+            return null;
         }
 
         $optionType = $this->getOptionType($key);
-        if (\is_object($optionType) == false) {           
-            return false;
+        if ($optionType == null) {           
+            return null;
         }
 
         return $this->create([
@@ -101,7 +101,7 @@ trait Options
     public function createOptions($referenceId, $typeName, ?string $branch = null): bool
     {
         $optionsList = Model::create($this->getOptionsDefinitionClass());
-        if (\is_object($optionsList) == false) {
+        if ($optionsList == null) {
             return false;
         }
 
@@ -117,23 +117,16 @@ trait Options
      * Get option type
      *
      * @param string|integer $key Type key or id
-     * @return Model|false
+     * @return Model|null
      */
-    public function getOptionType($key)
+    public function getOptionType($key): ?object
     {
-        $optionTypeClass = $this->getOptionTypeClass();
-        if (empty($optionTypeClass) == true) {
-            return false;
+        $optionType = Model::create($this->getOptionTypeClass());
+        if ($optionType == null) {           
+            return null;
         }
 
-        $optionType = Model::create($optionTypeClass);
-        if (\is_object($optionType) == false) {           
-            return false;
-        }
-
-        $optionType = (\is_numeric($key) == false) ? $optionType->where('key','=',$key) : $optionType->where('id','=',$key);
-
-        return $optionType->first();
+        return (\is_numeric($key) == false) ? $optionType->where('key','=',$key)->first() : $optionType->where('id','=',$key)->first();
     }
 
     /**
@@ -142,21 +135,18 @@ trait Options
      * @param string $key
      * @param integer|null $referenceId
      * @param string|integer $key Option typekey or id     
-     * @return Model|false
+     * @return Model|null
      */
-    public function getOption($key, $referenceId = null) 
+    public function getOption($key, $referenceId = null): ?object
     {
-        $optionType = $this->getOptionType($key);
-        if (\is_object($optionType) == false) {
-            return false;
+        if ($this->getOptionType($key) == null) {
+            return null;
         }
       
         $referenceId = (empty($referenceId) == true) ? $this->reference_id : $referenceId;
         $model = $this->where('reference_id','=',$referenceId);
 
-        $model = (\is_numeric($key) == true) ? $model->where('type_id','=',$key) : $model->where('key','=',$key);
-        
-        return $model->first();                    
+        return (\is_numeric($key) == true) ? $model->where('type_id','=',$key)->first() : $model->where('key','=',$key)->first();                             
     }
 
     /**
@@ -171,7 +161,7 @@ trait Options
     {
         $model = $this->getOption($key,$referenceId);
 
-        return (\is_object($model) == true) ? $model->value : $default; 
+        return ($model == null) ? $default : $model->value; 
     }
 
     /**
@@ -208,10 +198,8 @@ trait Options
      * @return boolean
      */
     public function hasOption($key, $referenceId = null): bool
-    {
-        $model = $this->getOption($key,$referenceId);
-
-        return \is_object($model);
+    {      
+        return ($this->getOption($key,$referenceId) !== null);
     }
 
     /**
@@ -229,12 +217,14 @@ trait Options
         }
 
         $optionType = $this->getOptionType($key);
-        if (\is_object($optionType) == false) {
+        if ($optionType == null) {
             return false;
         }
-        $model = $this->where('reference_id','=',$referenceId)->where('type_id','=',$optionType->id);
 
-        return $model->update(['value' => $value]);  
+        return $this
+            ->where('reference_id','=',$referenceId)
+            ->where('type_id','=',$optionType->id)
+            ->update(['value' => $value]);       
     }
 
     /**
