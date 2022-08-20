@@ -57,7 +57,7 @@ trait DocumentItems
     }
 
     /**
-     * Return treu if item exist
+     * Return true if item exist
      *
      * @param integer $documentId
      * @param integer $productId
@@ -65,7 +65,7 @@ trait DocumentItems
      */
     public function hasItem(int $documentId, int $productId): bool
     {
-        return ($this->itemsQuery($documentId,$productId)->frist() !== null);        
+        return ($this->itemsQuery($documentId,$productId)->first() !== null);        
     }
 
     /**

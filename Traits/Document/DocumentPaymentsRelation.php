@@ -76,10 +76,8 @@ trait DocumentPaymentsRelation
      */
     public function setPaymentStatus(int $status): bool
     {
-        $columnName = $this->getPaymentStatusColumn();
-
         $result = $this->update([
-            $columnName => $status
+            $this->getPaymentStatusColumn() => $status
         ]);
 
         return ($result !== false);
@@ -92,12 +90,7 @@ trait DocumentPaymentsRelation
      */
     public function payments()
     {
-        $class = $this->getDocumentPaymentsClass();
-        if (empty($class) == true) {
-            return null;
-        }
-
-        return $this->hasMany($class,'document_id');
+        return $this->hasMany($this->getDocumentPaymentsClass(),'document_id');
     }
 
     /**
