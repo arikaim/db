@@ -32,7 +32,7 @@ trait Tree
         while ($model != false) {
             $parentId = $model->attributes[$this->getParentColumn()];
             $model = parent::where('id','=',$parentId)->first();
-            if (\is_object($model) == true) {
+            if ($model !== null) {
                 \array_unshift($result,$model->toArray());
             }
         }
@@ -68,15 +68,9 @@ trait Tree
      */
     public function hasChild($id = null): bool
     {
-        $id = $id ?? $this->id;
-        $columnName = $this->getParentColumn();
+        $model = $this->findByColumn($id ?? $this->id,$this->getParentColumn());
 
-        $model = $this->findByColumn($this->id,$columnName);
-        if (\is_object($model) == true) {
-            return ($model->count() > 0);
-        }
-
-        return false;
+        return ($model !== null) ? ($model->count() > 0) : false;          
     }
 
     /**
@@ -102,7 +96,7 @@ trait Tree
     {
         if ($this->hasChild($id) == false) {
             $model = $this->findById($id);
-            if (\is_object($model) == true) {
+            if ($model !== null) {
                 if (is_callable($callback) == true) {
                     $callback($model->id);
                 }

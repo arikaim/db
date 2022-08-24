@@ -35,7 +35,7 @@ trait PackageRegistry
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());  
         
-        return (\is_object($model) == true) ? $model->toArray() : false;
+        return ($model !== null) ? $model->toArray() : false;
     }
 
     /**
@@ -46,9 +46,7 @@ trait PackageRegistry
      */
     public function hasPackage(string $name): bool
     {
-        $model = $this->where($this->getPackageNameColumn(),'=',$name)->first();     
-          
-        return \is_object($model);
+        return ($this->where($this->getPackageNameColumn(),'=',$name)->first() !== null);     
     }
 
     /**
@@ -62,7 +60,7 @@ trait PackageRegistry
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());  
 
-        return (\is_object($model) == true) ? (bool)$model->setStatus($status) : false;     
+        return ($model !== null) ? (bool)$model->setStatus($status) : false;     
     }
 
     /**
@@ -75,7 +73,7 @@ trait PackageRegistry
     {
         $model = $this->where($this->getPackageNameColumn(),'=',$name)->first();       
 
-        return (\is_object($model) == false) ? null : $model->status;            
+        return ($model == null) ? null : $model->status;            
     }
 
     /**
@@ -139,7 +137,7 @@ trait PackageRegistry
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());
         
-        return (\is_object($model) == false) ? false : (bool)$model->setDefault();                    
+        return ($model == null) ? false : (bool)$model->setDefault();                    
     }
 
     /**
@@ -152,6 +150,6 @@ trait PackageRegistry
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn());
 
-        return (\is_object($model) == false) ? null : ($model->primary == 1);                
+        return ($model == null) ? null : ($model->primary == 1);                
     }
 }

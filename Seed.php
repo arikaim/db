@@ -48,7 +48,7 @@ class Seed
     public static function withModel(string $className, ?string $extensionName, ?Closure $callback = null)
     {
         $model = Model::create($className,$extensionName);
-        if (\is_object($model) == false) {
+        if ($model == null) {
             return null;
         }
         if (Schema::hasTable($model) == false) {
