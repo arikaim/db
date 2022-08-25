@@ -9,7 +9,6 @@
 */
 namespace Arikaim\Core\Db\Traits\Options;
 
-
 /**
  * Options relation table trait
 */

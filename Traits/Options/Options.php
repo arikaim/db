@@ -9,7 +9,6 @@
 */
 namespace Arikaim\Core\Db\Traits\Options;
 
-use Arikaim\Core\Db\Model;
 use Arikaim\Core\Utils\Uuid;
 
 /**
@@ -100,7 +99,9 @@ trait Options
      */
     public function createOptions($referenceId, $typeName, ?string $branch = null): bool
     {
-        $optionsList = Model::create($this->getOptionsDefinitionClass());
+        $class = $this->getOptionsDefinitionClass();
+        $optionsList = new $class();
+
         if ($optionsList == null) {
             return false;
         }
@@ -121,7 +122,9 @@ trait Options
      */
     public function getOptionType($key): ?object
     {
-        $optionType = Model::create($this->getOptionTypeClass());
+        $class = $this->getOptionTypeClass();
+        $optionType = new $class();
+
         if ($optionType == null) {           
             return null;
         }

@@ -9,8 +9,6 @@
 */
 namespace Arikaim\Core\Db\Traits\Price;
 
-use Arikaim\Core\Db\Model;
-
 /**
  * Price relation table trait
 */
@@ -35,7 +33,9 @@ trait PriceRelation
     */
     public function createPriceList()
     {
-        $priceList = Model::create($this->getPriceListClass());
+        $class = $this->getPriceListClass();
+        $priceList = new $class();
+
         $typeName = $this->getOptionsType();
         
         if ($priceList !== null && empty($typeName) == false) {               

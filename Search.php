@@ -11,7 +11,6 @@ namespace Arikaim\Core\Db;
 
 use Arikaim\Core\Utils\Utils;
 use Arikaim\Core\Db\SearchCondition;
-use Arikaim\Core\Db\Model;
 use Arikaim\Core\Http\Session;
 
 /**

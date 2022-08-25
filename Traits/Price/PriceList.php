@@ -9,7 +9,6 @@
 */
 namespace Arikaim\Core\Db\Traits\Price;
 
-use Arikaim\Core\Db\Model;
 use Arikaim\Core\Utils\Uuid;
 
 /**
@@ -35,7 +34,9 @@ trait PriceList
      */
     public function getCurrency(?string $code = null): ?int
     {
-        $currency = Model::create($this->getCurrencyClass());
+        $class = $this->getCurrencyClass();
+        $currency = new $class();
+
         if ($currency == null) {
             return null;
         }
@@ -83,7 +84,9 @@ trait PriceList
      */
     public function getType(?string $key = null)
     {       
-        $priceType = Model::create($this->getPriceTypeClass());
+        $class = $this->getPriceTypeClass();
+        $priceType = new $class();
+
         if (empty($priceType) == true) {
             return false;
         }
@@ -127,7 +130,9 @@ trait PriceList
      */
     public function createPiceList(int $productId, ?string $typeName, ?string $currencyCode = null): bool
     {
-        $optionsList = Model::create($this->getPriceListDefinitionClass());
+        $class = $this->getPriceListDefinitionClass();
+        $optionsList = new $class();
+
         if ($optionsList == null) {
             return false;
         }
