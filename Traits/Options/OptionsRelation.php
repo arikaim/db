@@ -9,7 +9,6 @@
 */
 namespace Arikaim\Core\Db\Traits\Options;
 
-use Arikaim\Core\Db\Model;
 
 /**
  * Options relation table trait
@@ -46,7 +45,9 @@ trait OptionsRelation
      */
     public function createOptions(?string $typeName = null)
     {
-        $options = Model::create($this->getOptionsClass());
+        $optionsClass = $this->getOptionsClass();
+
+        $options = new $optionsClass();
         $typeName = (empty($typeName) == true) ? $this->getOptionsType() : $typeName;
         $key = $this->getOptionsPrimarykey();
 
