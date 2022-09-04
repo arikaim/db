@@ -188,8 +188,15 @@ class Db
     {   
         try {          
             $connection = $this->capsule->getConnection('schema');
-            $connection = $connection ?? $this->initSchemaConnection();
+        }
+        catch(PDOException $e) {
+            $connection = $this->initSchemaConnection();          
+        }
+        catch(Exception $e) {
+            $connection = $this->initSchemaConnection();            
+        }
 
+        try {          
             $sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$databaseName'";
             $result = $connection->select($sql);            
         } 
@@ -203,6 +210,50 @@ class Db
         $dbName = $result[0]->SCHEMA_NAME ?? '';
     
         return (\trim($dbName) == \trim($databaseName));      
+    }
+
+    /**
+     * Get constraint references for column
+     *
+     * @param string|null $tableName
+     * @param string|null $columnName
+     * @return mixed|false
+     */
+    public function getConstraints(?string $tableName, ?string $columnName = null)
+    {
+        $sql = "SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME
+                FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+                WHERE REFERENCED_TABLE_SCHEMA = '" . $this->config['database'] . "' ";
+        
+        if (empty($tableName) == false) {
+            $sql .= " AND REFERENCED_TABLE_NAME = '" . $tableName . "' ";
+        }
+
+        if (empty($columnName) == false) {
+            $sql .= " AND REFERENCED_COLUMN_NAME = '" . $columnName . "' ";
+        }
+                  
+        try {          
+            $connection = $this->capsule->getConnection('schema');
+        }
+        catch(PDOException $e) {
+            $connection = $this->initSchemaConnection();          
+        }
+        catch(Exception $e) {
+            $connection = $this->initSchemaConnection();            
+        }
+    
+        try {  
+            $result = $connection->select($sql);
+        }
+        catch(PDOException $e) {
+            return false;
+        }
+        catch(Exception $e) {
+            return false;
+        }
+
+        return $result;
     }
 
     /**
@@ -293,9 +344,16 @@ class Db
             return true;
         }
 
-        $connection = $this->capsule->getConnection('schema');
-        $connection = $connection ?? $this->initSchemaConnection();
-       
+        try {          
+            $connection = $this->capsule->getConnection('schema');
+        }
+        catch(PDOException $e) {
+            $connection = $this->initSchemaConnection();          
+        }
+        catch(Exception $e) {
+            $connection = $this->initSchemaConnection();            
+        }
+
         try {
             $charset = ($charset != null) ? 'CHARACTER SET ' . $charset : '';
             $collation = ($charset != null) ? 'COLLATE ' . $collation : '';
@@ -381,6 +439,7 @@ class Db
     public function getInfo(): array 
     {        
         $pdo = $this->capsule->connection()->getPdo();
+
         return [
             'driver'      => \is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) : '',
             'server_info' => \is_object($pdo) ? $pdo->getAttribute(\PDO::ATTR_SERVER_INFO) : '',

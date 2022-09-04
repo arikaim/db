@@ -39,6 +39,52 @@ class TableBlueprint extends Blueprint
     }
 
     /**
+     * Add a new command to the blueprint.
+     *
+     * @param  string $name
+     * @param  array  $parameters
+     * @return \Illuminate\Support\Fluent
+     */
+    public function addCommand($name, array $parameters = [])
+    {
+        $this->commands[] = $command = $this->createCommand($name, $parameters);
+
+        return $command;
+    }
+
+    /**
+     * Add a new foregn command to the blueprint.
+     *
+     * @param  \Illuminate\Support\Fluent  $foreign
+     * @return \Illuminate\Support\Fluent
+    */
+    public function addForeign($foreign)
+    {
+        $this->commands[count($this->commands) - 1] = $foreign;
+
+        return $foreign;
+    }
+
+    /**
+     * Add a new index command to the blueprint.
+     *
+     * @param  string  $type
+     * @param  string|array  $columns
+     * @param  string  $index
+     * @param  string|null  $algorithm
+     * @return \Illuminate\Support\Fluent
+     */
+    public function indexCommand($type, $columns, $index, $algorithm = null)
+    {
+        $columns = (array) $columns;
+        $index = $index ?: $this->createIndexName($type, $columns);
+
+        return $this->addCommand(
+            $type, compact('index', 'columns', 'algorithm')
+        );
+    }
+
+    /**
      * Build column blueprint prototype
      *
      * @param string $name

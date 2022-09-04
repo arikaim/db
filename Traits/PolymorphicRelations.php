@@ -66,14 +66,9 @@ trait PolymorphicRelations
      */
     public function getItemsQuery(?int $id, ?string $type = null) 
     {
-        $relationField = $this->getRelationAttributeName();
-        $query = (empty($id) == false) ? $this->where($relationField,'=',$id) : $this;
+        $query = (empty($id) == false) ? $this->where($this->getRelationAttributeName(),'=',$id) : $this;
 
-        if (empty($type) == false) {
-            $query = $query->where('relation_type','=',$type);
-        }
-
-        return $query;
+        return (empty($type) == false) ? $query->where('relation_type','=',$type) : $query;
     }
 
     /**
@@ -115,11 +110,8 @@ trait PolymorphicRelations
     public function getRelationsQuery(?int $relationId, ?string $type = null) 
     {      
         $query = $this->where('relation_id','=',$relationId);
-        if (empty($type) == false) {
-            $query = $query->where('relation_type','=',$type);
-        }
-
-        return $query;
+        
+        return (empty($type) == false) ? $query->where('relation_type','=',$type) : $query;
     }
 
     /**

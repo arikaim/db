@@ -9,6 +9,7 @@
 */
 namespace Arikaim\Core\Db\Prototypes\Column;
 
+use Illuminate\Database\Schema\ForeignKeyDefinition;
 use Arikaim\Core\Db\Interfaces\BlueprintPrototypeInterface;
 
 /**
@@ -26,9 +27,24 @@ class Relation implements BlueprintPrototypeInterface
     public function build($table,...$options)
     {       
         $nullable = $options[2] ?? false;
+        $onDelete = $options[3] ?? null;
+        $onUpdate = $options[4] ?? null;
 
+        // addCommand 
         $table->bigInteger($options[0])->unsigned()->nullable($nullable);
-        $table->foreign($options[0])->references('id')->on($options[1]);   
+
+        $index = $table->indexCommand('foreign',$options[0],null)->getAttributes();
+        $foreign = new ForeignKeyDefinition($index);
+        $foreign->references('id')->on($options[1]);   
+      
+        if (empty($onDelete) == false) {
+            $foreign->onDelete($onDelete);
+        }
+        if (empty($onUpdate) == false) {
+            $foreign->onUpdate($onUpdate);        
+        }
+
+        $table->addForeign($foreign); 
         $table->index($options[0]);
     }
 }
