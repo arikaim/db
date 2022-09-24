@@ -138,9 +138,7 @@ trait Slug
      */
     public function createSlug(string $text, ?string $separator = null): string
     {
-        $separator = $separator ?? $this->getSlugSeparator();
-
-        return Utils::slug($text,$separator);
+        return Utils::slug($text,$separator ?? $this->getSlugSeparator());
     }
 
     /**
@@ -149,9 +147,10 @@ trait Slug
      * @param string $slug
      * @return Model|null
      */
-    public function findBySlug(string $slug)
+    public function findBySlug(string $slug): ?object
     {
         $slugColumn = $this->getSlugColumn();
+        
         return $this->where($slugColumn,'=',$slug)->orWhere($slugColumn,'=',$this->createSlug($slug))->first();       
     }
 }

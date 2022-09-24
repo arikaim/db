@@ -22,6 +22,9 @@ trait Find
      */
     public function findById($id): ?object
     {        
+        if (empty($id) == true) {
+            return null;
+        }
         $column = (\is_numeric($id) == true) ? (string)$this->getKeyName() : 'uuid';
         
         return parent::where($column,'=',$id)->first();

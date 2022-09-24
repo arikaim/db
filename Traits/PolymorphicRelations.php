@@ -156,18 +156,18 @@ trait PolymorphicRelations
      * @param integer|null $id
      * @param string|null  $type
      * @param integer|null $relationId
-     * @return Model|boolean
+     * @return Model|false
      */
     public function saveRelation(?int $id, ?string $type, ?int $relationId)
     {
         if (empty($relationId) == true || empty($id) == true) {
             return false;
         }
-        $relationField = $this->getRelationAttributeName();
+      
         $data = [           
-            $relationField  => $id,
-            'relation_id'   => $relationId,
-            'relation_type' => $type,
+            $this->getRelationAttributeName()  => $id,
+            'relation_id'                      => $relationId,
+            'relation_type'                    => $type,
         ];    
     
         $model = $this->getRelationModel($id,$type,$relationId);
@@ -176,7 +176,9 @@ trait PolymorphicRelations
             return $this->create($data);
         }
 
-        return $model->update($data);
+        $result = $model->update($data);
+
+        return ($result === false) ? false : $model;
     }
 
     /**
