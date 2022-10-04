@@ -26,6 +26,7 @@ trait Slug
         static::saving(function($model) {   
             $model = Self::saveSlug($model);
         });     
+
         static::creating(function($model) { 
             $model = Self::saveSlug($model);
         });
@@ -38,7 +39,7 @@ trait Slug
      */
     public function getSlugPrefix(): string
     {
-        return (isset($this->slugPrefix) == true) ? \trim($this->slugPrefix) : '';
+        return $this->slugPrefix ?? '';
     }
 
     /**
@@ -48,7 +49,7 @@ trait Slug
     */
     public function getSlugSuffix(): string
     {
-        return (isset($this->slugSuffix) == true) ? \trim($this->slugSuffix) : '';
+        return $this->slugSuffix ?? '';
     }
 
     /**
@@ -58,7 +59,7 @@ trait Slug
      */
     public function getSlugColumn(): string
     {
-        return  $this->slugColumn ?? 'slug';
+        return $this->slugColumn ?? 'slug';
     }
 
     /**
@@ -103,10 +104,9 @@ trait Slug
     {
         $slugColumn = $model->getSlugColumn();
         $slugSourceColumn = $model->getSlugSourceColumn();
-        $separator = $model->getSlugSeparator(); 
 
         if ($model->$slugSourceColumn !== null) {                   
-            $model->$slugColumn = Utils::slug($model->$slugSourceColumn,$separator);
+            $model->$slugColumn = Utils::slug($model->$slugSourceColumn,$model->getSlugSeparator());
         }              
        
         return $model;
@@ -122,11 +122,9 @@ trait Slug
     {
         $slugColumn = $this->getSlugColumn();
         $slugSourceColumn = $this->getSlugSourceColumn();
-        $separator = $this->getSlugSeparator();
-
         $text = (empty($text) == true) ? $this->$slugSourceColumn : $text;
 
-        $this->$slugColumn = Utils::slug($text,$separator);
+        $this->$slugColumn = Utils::slug($text,$this->getSlugSeparator());
     }
 
     /**
@@ -139,6 +137,21 @@ trait Slug
     public function createSlug(string $text, ?string $separator = null): string
     {
         return Utils::slug($text,$separator ?? $this->getSlugSeparator());
+    }
+
+    /**
+     * Find by slug scope
+     *
+     * @param Builder      $query
+     * @param string       $slug
+     * @param integer|null $userId
+     * @return Builder
+     */
+    public function scopeSlugQuery($query, string $slug, ?int $userId = null)
+    {
+        $query->where($this->getSlugColumn(),'=',$slug);
+
+        return (empty($userId) == false) ? $query->where('user_id','=',$userId) : $query;        
     }
 
     /**
