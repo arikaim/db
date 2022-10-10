@@ -105,7 +105,7 @@ trait DocumentItems
             return $this->create($data);
         }
         // add to existing 
-        $data['qty'] += $item['qty'] + $qty;
+        $data['qty'] = $item['qty'] + $qty;
         $data['price'] = (empty($price) == true) ? $item['price'] : $price;
 
         $item->update($data);
