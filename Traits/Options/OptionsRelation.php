@@ -107,7 +107,7 @@ trait OptionsRelation
      * @param string $key
      * @return array|null
      */
-    public function getOption($key)
+    public function getOption($key): ?array
     {
         if (\is_object($this->options) == false) {
             return null;

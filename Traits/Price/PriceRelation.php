@@ -124,7 +124,7 @@ trait PriceRelation
      * @param string $key
      * @return object|null
      */
-    public function getPrice($key) 
+    public function getPrice($key): ?object 
     {                 
         if (\is_object($this->price) == false) {
             return null;
@@ -140,10 +140,10 @@ trait PriceRelation
      * @param string $key
      * @return float|null
      */
-    public function getPriceValue($key) 
+    public function getPriceValue($key): ?float 
     {
         $model = $this->getPrice($key);
 
-        return (\is_object($model) == true) ? $model->price : null;
+        return ($model != null) ? (float)$model->price : null;
     }
 }

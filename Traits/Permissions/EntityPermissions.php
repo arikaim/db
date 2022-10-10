@@ -70,7 +70,7 @@ trait EntityPermissions
     {
         $model = $this->getPermission($entityId,$userId,'user');
 
-        return (\is_object($model) == true) ? (bool)$model->delete() : true;
+        return ($model != null) ? (bool)$model->delete() : true;
     }
     
     /**
@@ -84,7 +84,7 @@ trait EntityPermissions
     {
         $model = $this->getPermission($entityId,$groupId,'group');
 
-        return (\is_object($model) == true) ? (bool)$model->delete() : true;
+        return ($model != null) ? (bool)$model->delete() : true;
     }
 
     /**
@@ -151,7 +151,7 @@ trait EntityPermissions
     public function addPublicPermission(int $entityId, $permissions)
     { 
         $model = $this->getPublicPermission($entityId);
-        if (\is_object($model) == true) {
+        if ($model != null) {
             return false;
         }
         $permissions = $this->resolvePermissions($permissions);
@@ -168,7 +168,7 @@ trait EntityPermissions
      * @param integer $entityId
      * @return Model|null
      */
-    public function getPublicPermission(int $entityId)
+    public function getPublicPermission(int $entityId): ?object
     {
         return $this
             ->where('entity_id','=',$entityId)
@@ -186,7 +186,7 @@ trait EntityPermissions
     {
         $model = $this->getPublicPermission($entityId);
 
-        return (\is_object($model) == true) ? (bool)$model->delete() : true;
+        return ($model != null) ? (bool)$model->delete() : true;
     }
 
     /**

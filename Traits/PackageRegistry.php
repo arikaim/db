@@ -86,7 +86,7 @@ trait PackageRegistry
     public function addPackage(string $name, array $data): bool
     {
         $model = $this->findByColumn($name,$this->getPackageNameColumn()); 
-        if (\is_object($model) == true) {
+        if ($model != null) {
             $result = $model->update($data);
             return ($result !== false);
         }
