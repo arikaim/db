@@ -31,9 +31,7 @@ trait DefaultTrait
      */
     public function getDefaultAttribute()
     {       
-        $column = $this->getDefaultColumnName();
-
-        return ($this->attributes[$column] == 1);
+        return ($this->attributes[$this->getDefaultColumnName()] == 1);
     }
 
     /**
@@ -63,7 +61,7 @@ trait DefaultTrait
      * @param integer|null $userId
      * @return Model|null
      */
-    public function getDefault(?int $userId = null)
+    public function getDefault(?int $userId = null): ?object
     {      
         return $this->defaultQuery($userId)->first();
     }
@@ -77,11 +75,9 @@ trait DefaultTrait
      */
     public function scopeDefaultQuery($query, ?int $userId = null)
     {
-        $column = $this->getDefaultColumnName();
-        $query = (empty($userId) == false) ? $query->where('user_id','=',$userId) : $query;
-        $query = $query->where($column,'=','1');
+        $query->where($this->getDefaultColumnName(),'=','1');
 
-        return $query;
+        return (empty($userId) == false) ? $query->where('user_id','=',$userId) : $query;
     }
 
     /**

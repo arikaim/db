@@ -86,11 +86,11 @@ trait DocumentItems
      * @param integer $documentId
      * @param integer $productId
      * @param int  $qty
-     * @param float   $price
+     * @param float|null   $price
      * @param string|null $productName
      * @return Model
      */
-    public function saveItem(int $documentId, int $productId, $qty, float $price, ?string $productName = null)
+    public function saveItem(int $documentId, int $productId, $qty, ?float $price, ?string $productName = null): ?object
     {
         $item = $this->getItem($documentId,$productId);
         $data = [
@@ -98,15 +98,15 @@ trait DocumentItems
             'product_id'  => $productId,
             'title'       => $productName,
             'qty'         => $qty,
-            'price'       => $price
+            'price'       => $price ?? 0.00
         ];
 
         if ($item == null) {
             return $this->create($data);
         }
         // add to existing 
-        $data['qty'] += $qty;
-        $data['price'] = $price;
+        $data['qty'] += $item['qty'] + $qty;
+        $data['price'] = (empty($price) == true) ? $item['price'] : $price;
 
         $item->update($data);
 
