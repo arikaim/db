@@ -56,11 +56,8 @@ trait Document
     public function items()
     {
         $class = $this->getDocumentItemsClass();
-        if (empty($class) == true) {
-            return null;
-        }
-
-        return $this->hasMany($class,'document_id');
+      
+        return (empty($class) == true) ? null : $this->hasMany($class,'document_id');
     }
 
     /**

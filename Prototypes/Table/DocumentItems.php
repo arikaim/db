@@ -44,7 +44,7 @@ class DocumentItems implements BlueprintPrototypeInterface
         } 
         $table->string('title')->nullable(true);
         $table->integer('qty')->nullable(false)->default(1);  
-
+        $table->total();
         $table->dateCreated();
         $table->dateUpdated();
 

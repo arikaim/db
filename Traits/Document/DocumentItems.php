@@ -17,17 +17,39 @@ use Closure;
 trait DocumentItems 
 { 
     /**
+     * Get item total attribute
+     *
+     * @return string
+     */
+    public function getItemTotalAttributeName(): string
+    {
+        return $this->itemTotalColumn ?? 'total';
+    }
+    
+    /**
+     * Set model events
+     *
+     * @return void
+     */
+    public static function bootDocumentItems()
+    {
+        static::updating(function($model) {      
+            $model->attributes[$model->getItemTotalAttributeName()] = $model->getItemTotal();             
+        });
+
+        static::creating(function($model) {  
+            $model->attributes[$model->getItemTotalAttributeName()] = $model->getItemTotal();    
+        });
+    }
+
+    /**
      * Get item calc closure
      *
      * @return Closure
      */
     public function getItemCalc()
     {
-        if (empty($this->calcItemTotal) == false) {
-            return $this->calcItemTotal;
-        }
-
-        return function($item) {
+        return (\is_callable($this->calcItemTotal) == true) ? $this->calcItemTotal : function($item) {
             return (float)($item->price * $item->qty);
         };
     }
@@ -35,15 +57,11 @@ trait DocumentItems
     /**
      * Get document total
      *
-     * @param Closure|null $itemCalc
      * @return float
      */
-    public function getItemTotal(?Closure $itemCalc = null): float
+    public function getItemTotal(): float
     {
-        $itemCalc = $itemCalc ?? $this->getItemCalc();
-        $result = $itemCalc($this);    
-        
-        return (\is_numeric($result) == false) ? 0.00 : (float)$result;
+        return (float)$this->getItemCalc()($this);    
     }
 
     /**
@@ -75,7 +93,7 @@ trait DocumentItems
      * @param integer $productId
      * @return Model|null
      */
-    public function getItem(int $documentId, int $productId)
+    public function getItem(int $documentId, int $productId): ?object
     {
         return $this->itemsQuery($documentId,$productId)->first();
     } 
