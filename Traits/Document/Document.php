@@ -25,6 +25,21 @@ trait Document
     }
 
     /**
+     * Delete document item
+     *
+     * @param  string|int $id
+     * @return boolean
+     */
+    public function deleteItem($id): bool 
+    {
+        $model = $this->whereHas('items',function ($query) use($id) {
+            $query->where('uuid','=',$id)->orWhere('id','=',$id);
+        })->first();
+          
+        return ($model == null) ? true : (bool)$model->delete();
+    }
+
+    /**
      * Get external document 
      *
      * @param string $externalId
@@ -57,7 +72,7 @@ trait Document
     {
         $class = $this->getDocumentItemsClass();
       
-        return (empty($class) == true) ? null : $this->hasMany($class,'document_id');
+        return (empty($class) == true) ? null : $this->hasMany($class,'document_id')->without('document');
     }
 
     /**
@@ -71,6 +86,19 @@ trait Document
 
         return (empty($items) == true) ? [] : $items->get()->toArray();
     } 
+
+    /**
+     * Update document total
+     *
+     * @return boolean
+     */
+    public function updateTotals(): bool
+    {
+        return (bool)$this->update([
+            'total'     => $this->getTotal(),
+            'sub_total' => $this->getSubTotal()
+        ]);
+    }
 
     /**
      * Get document total
@@ -89,6 +117,7 @@ trait Document
         return $total; 
     }
 
+   
     /**
      * Get total document fees
      *

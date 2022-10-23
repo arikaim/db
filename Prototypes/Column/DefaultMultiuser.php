@@ -26,8 +26,13 @@ class DefaultMultiuser implements BlueprintPrototypeInterface
     public function build($table,...$options)
     {
         $name = $options[0] ?? 'default';
-        
+        $keyColumn = $options[1] ?? null;
+
         $table->integer($name)->nullable(true)->default(null); 
-        $table->unique([$name,'user_id']);   
+        if (empty($keyColumn) == false) {
+            $table->unique([$name,$keyColumn]);   
+        } else {
+            $table->unique([$name]);   
+        }
     }
 }

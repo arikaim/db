@@ -17,6 +17,18 @@ use Closure;
 trait DocumentItems 
 { 
     /**
+     * Document relation
+     *
+     * @return Relation|null
+     */
+    public function document()
+    {
+        $class = $this->documentClass ?? null;
+      
+        return (empty($class) == true) ? null : $this->belongsTo($class,'document_id')->without('items');
+    }
+
+    /**
      * Get item total attribute
      *
      * @return string
@@ -34,12 +46,37 @@ trait DocumentItems
     public static function bootDocumentItems()
     {
         static::updating(function($model) {      
-            $model->attributes[$model->getItemTotalAttributeName()] = $model->getItemTotal();             
+            $model->attributes[$model->getItemTotalAttributeName()] = $model->getItemTotal();              
+        });
+
+        self::updated(function($model) {
+            $model->updateDocumentTotals();  
         });
 
         static::creating(function($model) {  
-            $model->attributes[$model->getItemTotalAttributeName()] = $model->getItemTotal();    
+            $model->attributes[$model->getItemTotalAttributeName()] = $model->getItemTotal();          
         });
+
+        self::created(function($model) {
+            $model->updateDocumentTotals();    
+        });
+
+        self::deleted(function($model) {
+            $model->updateDocumentTotals();
+        });
+    }
+
+    /**
+     * Updaet document totals
+     *
+     * @return boolean
+     */
+    public function updateDocumentTotals(): bool
+    {
+        // update document
+        $document = $this->document()->first();
+
+        return ($document == null) ? false : $document->updateTotals();
     }
 
     /**

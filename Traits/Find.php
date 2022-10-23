@@ -153,4 +153,15 @@ trait Find
         
         return $this->whereRaw('LOWER(' . $attribute .') ' . $operator . ' ?',[$value]);
     }
+
+    /**
+     * Return true if atr exist
+     *
+     * @param string $attr
+     * @return boolean
+     */
+    public function hasAttribute(string $attr): bool
+    {
+        return \array_key_exists($attr,$this->attributes);
+    }
 }

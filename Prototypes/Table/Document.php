@@ -38,7 +38,10 @@ class Document implements BlueprintPrototypeInterface
         $table->string('api_driver')->nullable(true);
         $table->string('external_client')->nullable(true); 
         $table->integer('document_number')->nullable(true);   
-       
+        // added totals
+        $table->total();
+        $table->total('sub_total');
+
         $table->dateCreated();
         $table->dateUpdated();
         $table->dateDeleted();
