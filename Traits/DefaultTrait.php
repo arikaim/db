@@ -57,14 +57,15 @@ trait DefaultTrait
         $keyColumn = $this->defaultKeyColumnName ?? 'user_id';
 
         $id = $id ?? $this->id;
+        $idColumn = (\is_numeric($id) == true) ? 'id' : 'uuid';
 
-        $models = (empty($userId) == false) ? $this->where($keyColumn,'=',$keyValue) : $this->where('id','<>',$id);
+        $models = (empty($keyValue) == false) ? $this->where($keyColumn,'=',$keyValue) : $this->where($idColumn,'<>',$id);
         $models->update([$column => null]);
               
         $model = $this->findById($id);      
         $model->$column = 1;
-       
-        return (bool)$model->save();               
+
+        return (bool)$model->save();           
     }
 
     /**
