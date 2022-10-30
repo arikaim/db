@@ -25,6 +25,28 @@ trait Document
     }
 
     /**
+     * Get document items count
+     *
+     * @return integer
+     */
+    public function getItemsCount(): int
+    {
+        $count = $this->items->count();
+        
+        return (empty($count) == true) ? 0 : $count;
+    }
+
+    /**
+     * Return true if document is empty
+     *
+     * @return boolean
+     */
+    public function isEmpty(): bool
+    {
+        return ($this->getItemsCount() == 0);
+    }
+
+    /**
      * Delete document item
      *
      * @param  string|int $id
