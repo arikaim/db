@@ -54,11 +54,16 @@ trait Document
      */
     public function deleteItem($id): bool 
     {
-        $model = $this->whereHas('items',function ($query) use($id) {
-            $query->where('uuid','=',$id)->orWhere('id','=',$id);
-        })->first();
-          
-        return ($model == null) ? true : (bool)$model->delete();
+        $items = $this->items();
+        if ($items == null) {
+            return true;
+        }
+
+        $item = $items->where(function ($query) use($id) {
+            return $query->where('uuid','=',$id);          
+        });
+
+        return (bool)$item->delete();
     }
 
     /**
