@@ -55,7 +55,7 @@ trait OptionType
      * @param int|null $type
      * @return string|false
      */
-    public function getTypeText($type = null)
+    public function getTypeText(?int $type = null)
     {
         $type = $type ?? $this->type;
 
