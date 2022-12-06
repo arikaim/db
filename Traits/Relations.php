@@ -58,7 +58,7 @@ trait Relations
     {        
         $model = $this->relation($targetId);
 
-        if (\is_object($model) == false) {
+        if ($model === false) {
             $targetColumn = $this->getRelationsTargetAttributeName();
             $sourceColumn = $this->getRelationsSourceAttributeName();
 
@@ -105,7 +105,7 @@ trait Relations
     {        
         $model = $this->relation($id);
         
-        return (\is_object($model) == true) ? (bool)$model->delete() : false;
+        return ($model !== false) ? (bool)$model->delete() : false;
     }
 
     /**

@@ -90,9 +90,8 @@ trait PackageRegistry
             $result = $model->update($data);
             return ($result !== false);
         }
-        $model = $this->create($data);
-
-        return \is_object($model);
+        
+        return ($this->create($data) != null);
     }
 
     /**

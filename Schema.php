@@ -83,7 +83,7 @@ abstract class Schema
     {
         $instance = Factory::createSchema($class);
 
-        return (\is_object($instance) == false) ? false : $instance->getTableName();         
+        return ($instance == null) ? false : $instance->getTableName();         
     }
 
     /**
@@ -330,35 +330,36 @@ abstract class Schema
     public static function install(string $class, ?string $extension = null, bool $showErorr = false): bool 
     {                   
         $instance = Factory::createSchema($class,$extension);
-        
-        if (\is_object($instance) == true) {
-            try {
-                if ($instance->tableExists() == false) {                 
-                    $instance->createTable();
-                } else {                   
-                    $instance->updateTable();
-                }
-              
-                $instance->runSeeds();
-                
-                return $instance->tableExists();              
-            } 
-            catch(PDOException $e) {
-                if ($showErorr == true) {
-                    echo $e->getMessage();
-                }
-               
-                return false;
-            }
-            catch(Exception $e) {  
-                if ($showErorr == true) {
-                    echo $e->getMessage();
-                }
-               
-                return false;                         
-            }
+        if ($instance == null) {
+            return false;
         }
-      
+
+        try {
+            if ($instance->tableExists() == false) {                 
+                $instance->createTable();
+            } else {                   
+                $instance->updateTable();
+            }
+            
+            $instance->runSeeds();
+            
+            return $instance->tableExists();              
+        } 
+        catch(PDOException $e) {
+            if ($showErorr == true) {
+                echo $e->getMessage();
+            }
+            
+            return false;
+        }
+        catch(Exception $e) {  
+            if ($showErorr == true) {
+                echo $e->getMessage();
+            }
+            
+            return false;                         
+        }
+       
         return false;
     }
 
@@ -373,16 +374,18 @@ abstract class Schema
     public static function unInstall(string $class, ?string $extension = null, bool $force = false): bool 
     {                   
         $instance = Factory::createSchema($class,$extension);
-        if (\is_object($instance) == true) {
-            try {
-                return $instance->dropTable(!$force);
-            } 
-            catch(PDOException $e) {
-                return false;
-            }
-            catch(Exception $e) {
-                return false;
-            }
+        if ($instance == null) {
+            return false;
+        }
+
+        try {
+            return $instance->dropTable(!$force);
+        } 
+        catch(PDOException $e) {
+            return false;
+        }
+        catch(Exception $e) {
+            return false;
         }
         
         return false;
