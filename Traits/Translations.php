@@ -223,7 +223,7 @@ trait Translations
         $language = $language ?? $this->getCurrentLanguage();
         $class = $this->getTranslationModelClass();
         $model = new $class(); 
-        $model = $model->where('language','=',$language)->where($attributeName,'=',\trim($value));
+        $model = $model->where('language','=',$language)->where($attributeName,'=',\trim($value ?? ''));
 
         return $model->first();
     }

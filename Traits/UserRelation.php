@@ -79,4 +79,21 @@ trait UserRelation
 
         return (empty($userId) == false) ? $query->where($column,'=',$userId) : $query;         
     }
+
+    /**
+     * Filter rows by user + null (public)
+     *
+     * @param Builder      $query
+     * @param integer|null $userId
+     * @return Builder
+     */
+    public function scopeUserQueryWithPublic($query, ?int $userId)
+    {
+        $column = $this->getUserIdAttributeName();
+        if (empty($userId) == true) {
+            return $query->whereNull($column);
+        }
+
+        return $query->where($column,'=',$userId)->orWhereNull($column);
+    }
 }
