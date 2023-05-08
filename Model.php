@@ -37,7 +37,7 @@ class Model
      */ 
     public static function create(string $className, ?string $extensionName = null, $callback = null, bool $showError = true)
     {         
-        $fullClass = Factory::getModelClass($className,$extensionName);
+        $fullClass = ($extensionName == '*') ? $className : Factory::getModelClass($className,$extensionName);
     
         // check in pool
         $instance = Self::$instances[$fullClass] ?? null;
