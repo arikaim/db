@@ -134,6 +134,6 @@ trait DocumentPaymentsRelation
      */
     public function isPaid(): bool
     {
-       return ($this->getPaymentsDue() <= 0);
+       return (($this->getPaymentsDue() <= 0) && ($this->getTotal() > 0) );
     }
 }
