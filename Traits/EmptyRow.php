@@ -14,7 +14,6 @@ namespace Arikaim\Core\Db\Traits;
 */
 trait EmptyRow 
 {    
-
     /**
      * Check if table how columns are empty
      *
@@ -25,13 +24,14 @@ trait EmptyRow
     {
         foreach ($this->getFillable() as $column) {
 
-            if (\array_key_exists($column,$skipColumns) == true) {
+            if (\in_array($column,$skipColumns) == true) {
                 continue;
             }
 
             if (empty($this->attributes[$column] ?? null) == false) {
                 return false;
             }
+
         }
 
         return true;
