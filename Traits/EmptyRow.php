@@ -20,7 +20,7 @@ trait EmptyRow
      * @param array $skipColumns
      * @return boolean
      */
-    public function isRowEmpty(array $skipColumns): bool
+    public function isRowEmpty(array $skipColumns = []): bool
     {
         foreach ($this->getFillable() as $column) {
 
