@@ -241,6 +241,4 @@ trait Translations
 
         return $model->first();
     }
-
-   
 }
