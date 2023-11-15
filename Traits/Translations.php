@@ -242,25 +242,5 @@ trait Translations
         return $model->first();
     }
 
-    /**
-     * Get meta tags values
-     *
-     * @param string|null $language
-     * @param array|null $default
-     * @return array
-     */
-    public function getMetaTags(?string $language = null, ?array $default = []): array
-    {
-        $translation = $this->translation($language);
-        
-        $title = ($translation !== false) ? $translation->meta_title : null;
-        $description = ($translation !== false) ? $translation->meta_description : null;
-        $keywords = ($translation !== false) ? $translation->meta_keywords : null;
-
-        return [
-            'title'       => (empty($title) == true) ? $default['title'] ?? '' : $title,
-            'description' => (empty($description) == true) ? $default['description'] ?? '' : $description,
-            'keywords'    => (empty($keywords) == true) ? $default['keywords'] ?? '' : $keywords,
-        ];  
-    }
+   
 }
