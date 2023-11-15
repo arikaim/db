@@ -47,6 +47,20 @@ trait Translations
     }
 
     /**
+     * Set language
+     *
+     * @param string|null $language
+     * @return void
+     */
+    public function setLanguage(?string $language): void
+    {
+        $this->currentLanguage = $language ?? 'en';
+        
+        // update translated attributes
+        $this->translateAttributes($language);       
+    }
+
+    /**
      * Return translated value
      *
      * @param string $attribute
