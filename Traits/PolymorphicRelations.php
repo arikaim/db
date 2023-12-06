@@ -64,7 +64,7 @@ trait PolymorphicRelations
      * @param string|null $type
      * @return Builder
      */
-    public function getItemsQuery(?int $id, ?string $type = null) 
+    public function getItemsQuery(?int $id, ?string $type = null): object 
     {
         $query = (empty($id) == false) ? $this->where($this->getRelationAttributeName(),'=',$id) : $this;
 
@@ -80,9 +80,7 @@ trait PolymorphicRelations
      */
     public function hasRelatedItems(?int $id, ?string $type = null): bool
     {
-        $query = $this->getItemsQuery($id,$type);
-
-        return ($query->count() > 0);
+        return ($this->getItemsQuery($id,$type)->count() > 0);
     }
 
     /**
@@ -95,9 +93,11 @@ trait PolymorphicRelations
     public function getRelatedItems(?int $relationId, ?string $type = null)
     {
         $relationField = $this->getRelationAttributeName();
-        $query = $this->getRelationsQuery($relationId,$type);
-        
-        return $query->get($relationField)->pluck($relationField);
+     
+        return $this
+            ->getRelationsQuery($relationId,$type)
+            ->get($relationField)
+            ->pluck($relationField);
     }
 
     /**
@@ -107,7 +107,7 @@ trait PolymorphicRelations
      * @param string|null $type
      * @return Builder
      */
-    public function getRelationsQuery(?int $relationId, ?string $type = null) 
+    public function getRelationsQuery(?int $relationId, ?string $type = null): object 
     {      
         $query = $this->where('relation_id','=',$relationId);
         

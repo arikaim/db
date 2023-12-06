@@ -19,6 +19,16 @@ use Closure;
 trait Tree 
 {       
     /**
+     * Get parent id attribute name default: parent_id
+     *
+     * @return string
+     */
+    public function getParentColumn(): string
+    {
+        return $this->parentColumn ?? 'parent_id';
+    }
+
+    /**
      * Get model tree
      *
      * @param Moldel $model
@@ -41,13 +51,14 @@ trait Tree
     }
 
     /**
-     * Get parent id attribute name default: parent_id
+     * Query for root items
      *
-     * @return string
+     * @param Builder $query
+     * @return object
      */
-    public function getParentColumn(): string
-    {
-        return $this->parentColumn ?? 'parent_id';
+    public function scopeRootQuery($query): object
+    {      
+        return $query->whereNull($this->getParentColumn());
     }
 
     /**
