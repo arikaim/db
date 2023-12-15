@@ -15,49 +15,6 @@ namespace Arikaim\Core\Db\Traits\Options;
 trait OptionsRelation 
 {   
     /**
-     * Boot trait
-     *
-     * @return void
-     */
-    public static function bootOptionsRelation()
-    {
-        static::created(function($model) {      
-            $model->createOptions(); 
-        });
-    }
-
-    /**
-     * Get options type name
-     *
-     * @return string|null
-     */
-    public function getOptionsType()
-    {
-        return null;
-    }
-
-    /**
-     * Create options
-     *
-     * @param string $typeName
-     * @return boolean
-     */
-    public function createOptions(?string $typeName = null)
-    {
-        $optionsClass = $this->getOptionsClass();
-
-        $options = new $optionsClass();
-        $typeName = (empty($typeName) == true) ? $this->getOptionsType() : $typeName;
-        $key = $this->getOptionsPrimarykey();
-
-        if ($options !== null && empty($typeName) == false) {
-            return $options->createOptions($this->{$key},$typeName);
-        }
-
-        return false;
-    } 
-
-    /**
      * Get option model class
      *
      * @return string|null
@@ -68,23 +25,13 @@ trait OptionsRelation
     }
 
     /**
-     * Get options primary key
-     *
-     * @return string
-     */
-    public function getOptionsPrimarykey(): string
-    {
-        return $this->optionsPrimaryKey ?? 'id';
-    }
-
-    /**
      * Options relation
      *
      * @return mixed
      */
     public function options()
     {
-        return $this->hasMany($this->getOptionsClass(),'reference_id',$this->getOptionsPrimarykey());       
+        return $this->hasMany($this->getOptionsClass(),'reference_id');       
     }
 
     /**
@@ -105,21 +52,15 @@ trait OptionsRelation
      * Get option
      *
      * @param string $key
-     * @return array|null
+     * @return object|null
      */
-    public function getOption($key): ?array
+    public function getOption(string $key): ?object
     {
         if (\is_object($this->options) == false) {
             return null;
         }        
-        $items = $this->options->keyBy('key');
-
-        if (\is_object($items) == true) {
-            $item = $items->get($key);
-            return (\is_object($item) == true) ? $item->toArray() : null;
-        }   
-
-        return null;
+        
+        return $this->options->where('key','=',$key)->first();
     }
 
     /**
@@ -129,10 +70,10 @@ trait OptionsRelation
      * @param mixed $default
      * @return mixed
      */
-    public function getOptionValue($key, $default = null)
+    public function getOptionValue(string $key, $default = null)
     {
         $option = $this->getOption($key);
 
-        return (empty($option) == false) ? $option['value'] : $default;
+        return ($option == null) ? $default : $option->value;
     }
 }

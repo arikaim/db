@@ -35,10 +35,10 @@ class Options implements BlueprintPrototypeInterface
         $table->string('key')->nullable(false);
 
         if (empty($optionTypeTable) == true) {
-            $table->bigInteger('type_id')->unsigned()->nullable(false);  
+            $table->bigInteger('type_id')->unsigned()->nullable(true);  
             $table->index(['type_id']);
         } else {
-            $table->relation('type_id',$optionTypeTable);
+            $table->relation('type_id',$optionTypeTable,true);
         }
 
         if (empty($referenceTable) == true) {
@@ -51,7 +51,6 @@ class Options implements BlueprintPrototypeInterface
         $table->text('value')->nullable(true);
      
         // index
-        $table->unique(['reference_id','type_id']);
         $table->unique(['reference_id','key']);
 
         if (\is_callable($callback) == true) {         

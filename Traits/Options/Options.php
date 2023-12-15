@@ -27,16 +27,6 @@ trait Options
     }
     
     /**
-     * Get optins definition model class
-     *
-     * @return string|null
-     */
-    public function getOptionsDefinitionClass(): ?string
-    {
-        return $this->optionsDefinitionClass ?? null;
-    }
-
-    /**
      * Mutator (get) for value attribute.
      *
      * @return mixed
@@ -53,12 +43,7 @@ trait Options
      */
     public function type()
     {
-        $optionTypeClass = $this->getOptionTypeClass();
-        if (empty($optionTypeClass) == true) {
-            return false;
-        }
-
-        return $this->belongsTo($optionTypeClass,'type_id');
+        return $this->belongsTo($this->getOptionTypeClass(),'type_id');
     }
 
     /**
@@ -69,49 +54,21 @@ trait Options
      * @param mixed $value
      * @return Model|null
      */
-    public function createOption($referenceId, $key, $value = null): ?object
+    public function createOption(?int $referenceId, $key, $value = null): ?object
     {
         if ($this->hasOption($key,$referenceId) == true) {     
             return null;
         }
 
         $optionType = $this->getOptionType($key);
-        if ($optionType == null) {           
-            return null;
-        }
-
+        
         return $this->create([
             'reference_id' => $referenceId,
             'uuid'         => Uuid::create(),
-            'type_id'      => $optionType->id,
+            'type_id'      => ($optionType == null) ? null : $optionType->id,
             'key'          => $optionType->key,
             'value'        => ($value == null) ? $optionType->default : $value,        
         ]);      
-    }
-
-    /**
-     * Create options
-     *
-     * @param integer $referenceId
-     * @param string $typeName
-     * @param string|null $branch
-     * @return boolean
-     */
-    public function createOptions($referenceId, $typeName, ?string $branch = null): bool
-    {
-        $class = $this->getOptionsDefinitionClass();
-        $optionsList = new $class();
-
-        if ($optionsList == null) {
-            return false;
-        }
-
-        $list = $optionsList->getItems($typeName,$branch);
-        foreach ($list as $item) {                  
-            $this->createOption($referenceId,$item->key);          
-        }
-
-        return true;
     }
 
     /**
@@ -140,27 +97,24 @@ trait Options
      * @param string|integer $key Option typekey or id     
      * @return Model|null
      */
-    public function getOption($key, $referenceId = null): ?object
+    public function getOption(string $key, ?int $referenceId = null): ?object
     {
-        if ($this->getOptionType($key) == null) {
-            return null;
-        }
-      
         $referenceId = (empty($referenceId) == true) ? $this->reference_id : $referenceId;
-        $model = $this->where('reference_id','=',$referenceId);
-
-        return (\is_numeric($key) == true) ? $model->where('type_id','=',$key)->first() : $model->where('key','=',$key)->first();                             
+       
+        return $this
+                    ->where('reference_id','=',$referenceId)
+                    ->where('key','=',$key)->first();                    
     }
 
     /**
      * Get option value
      *
      * @param string  $key
-     * @param mixed $referenceId
+     * @param int|null $referenceId
      * @param mixed $default
      * @return mixed
      */
-    public function getOptionValue($key, $referenceId = null, $default = null) 
+    public function getOptionValue($key, ?int $referenceId = null, $default = null) 
     {
         $model = $this->getOption($key,$referenceId);
 
@@ -170,27 +124,27 @@ trait Options
     /**
      * Get options query
      *
-     * @param integer $referenceId
-     * @param array|null $onlyTypes
+     * @param integer|null $referenceId
+     * @param array|null $keys
      * @return QueryBuilder
      */
-    public function getOptionsQuery($referenceId, array $onlyKeys = null)
+    public function getOptionsQuery(?int $referenceId, array $keys = null)
     {
         $query = $this->where('reference_id','=',$referenceId);
         
-        return (empty($onlyKeys) == false) ? $query->whereIn('key',$onlyKeys) : $query;          
+        return (empty($keys) == false) ? $query->whereIn('key',$keys) : $query;          
     }
 
     /**
      * Get options list
      *
-     * @param integer $referenceId
-     * @param array|null $onlyTypes
+     * @param integer|null $referenceId
+     * @param array|null $keys
      * @return Model|null
      */
-    public function getOptions($referenceId, ?array $onlyKeys = null)
+    public function getOptions(?int $referenceId, ?array $keys = null)
     {
-        return $this->getOptionsQuery($referenceId,$onlyKeys)->get();
+        return $this->getOptionsQuery($referenceId,$keys)->get();
     }
 
     /**
@@ -200,7 +154,7 @@ trait Options
      * @param string $key
      * @return boolean
      */
-    public function hasOption($key, $referenceId = null): bool
+    public function hasOption(string $key, ?int $referenceId = null): bool
     {      
         return ($this->getOption($key,$referenceId) !== null);
     }
@@ -219,15 +173,12 @@ trait Options
             return $this->createOption($referenceId,$key,$value);
         }
 
-        $optionType = $this->getOptionType($key);
-        if ($optionType == null) {
-            return false;
-        }
-
         return $this
             ->where('reference_id','=',$referenceId)
-            ->where('type_id','=',$optionType->id)
-            ->update(['value' => $value]);       
+            ->where('key','=',$key)
+            ->update([
+                'value' => $value
+            ]);       
     }
 
     /**
@@ -237,7 +188,7 @@ trait Options
      * @param array $data
      * @return boolean
      */
-    public function saveOptions($referenceId, array $data)
+    public function saveOptions(int $referenceId, array $data)
     {
         $errors = 0;
         foreach ($data as $key => $value) {
