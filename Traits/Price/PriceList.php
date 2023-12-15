@@ -27,7 +27,7 @@ trait PriceList
      */
     public function createPrice(int $productId, $key, float $price, ?string $currency = null)
     {
-        if ($this->hasPrice($key,$productId) == true) {     
+        if ($this->hasPrice($productId,$key) == true) {     
             return false;
         }
         
@@ -92,7 +92,7 @@ trait PriceList
      * @param string|null $key
      * @param float $price
      * @param string|null $currency
-     * @return boolean
+     * @return mixed
      */
     public function savePrice(int $productId, float $price, ?string $key = null, ?string $currency) 
     {
