@@ -9,7 +9,6 @@
 */
 namespace Arikaim\Core\Db;
 
-use Arikaim\Core\Db\Interfaces\OptionTypeInterface;
 use Arikaim\Core\Db\Traits\Options\OptionType as OptionTypeTrait;
 
 /**

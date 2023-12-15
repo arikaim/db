@@ -17,103 +17,25 @@ use Arikaim\Core\Utils\Uuid;
 trait PriceList 
 {  
     /**
-     * Currency relation
-     *
-     * @return Relatioin|null
-     */
-    public function currency()
-    {
-        return $this->belongsTo($this->getCurrencyClass(),'currency_id');
-    } 
-
-    /**
-     * Get currency id
-     *
-     * @param string|null $code
-     * @return integer|null
-     */
-    public function getCurrency(?string $code = null): ?int
-    {
-        $class = $this->getCurrencyClass();
-        $currency = new $class();
-
-        if ($currency == null) {
-            return null;
-        }
-        $model = (empty($code) == false) ? $currency->findByColumn('code',$code) : $currency->getDefault();
-        $model = $model->first();
-
-        return ($model !== null) ? $model->id : null;       
-    }
-
-    /**
-     * Get currency model class
-     *
-     * @return string|null
-     */
-    public function getCurrencyClass(): ?string
-    {
-        return $this->currencyClass ?? null;
-    }
-
-    /**
-     * Get price type model class
-     *
-     * @return string|null
-     */
-    public function getPriceTypeClass(): ?string
-    {
-        return $this->priceTypeClass ?? null;
-    }
-    
-    /**
-     * Get price list definition model class
-     *
-     * @return string|null
-     */
-    public function getPriceListDefinitionClass(): ?string
-    {
-        return $this->priceListDefinitionClass ?? null;
-    }
-
-    /**
-     * Get price type
-     *
-     * @param string|null $key
-     * @return Model|null
-     */
-    public function getType(?string $key = null)
-    {       
-        $class = $this->getPriceTypeClass();
-        $priceType = new $class();
-
-        if (empty($priceType) == true) {
-            return false;
-        }
-        $key = $key ?? $this->key;
-
-        return $priceType->where('key','=',$key)->first();
-    }
-
-    /**
      * Create price
      *
      * @param integer $productId
      * @param string $key
-     * @param string|null $currencyCode
-     * @param mixed $price
+     * @param string|null|int $currency
+     * @param float $price
      * @return Model|false
      */
-    public function createPrice(int $productId, $key, ?string $currencyCode = null, $price = null)
+    public function createPrice(int $productId, $key, float $price, ?string $currency = null)
     {
-        $price = $price ?? 0;
         if ($this->hasPrice($key,$productId) == true) {     
             return false;
         }
-       
+        
+        $curencyId = $this->findCurrency($currency)->id;
+
         return $this->create([
             'product_id'  => $productId,
-            'currency_id' => $this->getCurrency($currencyCode),
+            'currency_id' => $curencyId,
             'uuid'        => Uuid::create(),          
             'key'         => $key,
             'price'       => $price     
@@ -121,115 +43,65 @@ trait PriceList
     }
 
     /**
-     * Create price list
-     *
-     * @param integer $productId
-     * @param string|null $typeName
-     * @param string|null $currencyCode
-     * @return boolean
-     */
-    public function createPiceList(int $productId, ?string $typeName, ?string $currencyCode = null): bool
-    {
-        $class = $this->getPriceListDefinitionClass();
-        $optionsList = new $class();
-
-        if ($optionsList == null) {
-            return false;
-        }
-      
-        $list = $optionsList->getItems($typeName,'price');
-      
-        foreach ($list as $item) {                  
-            $this->createPrice($productId,$item->key,$currencyCode);          
-        }
-
-        return true;
-    }
-
-    /**
      * Get price
      *
      * @param integer $productId
      * @param string $key
+     * @param string|int|null $currency
      * @return Model|null
      */
-    public function getPrice(string $key, int $productId): ?object
+    public function getPrice(int $productId, ?string $key = null, ?string $currency = null): ?object
     {      
-        return $this->where('product_id','=',$productId)->where('key','=',$key)->first();                          
+        return $this->priceQuery($productId,$key,$currency)->first();                          
     }
 
     /**
      * Get price list query
      *
      * @param integer $productId
-     * @return QueryBuilder
+     * @return Builder
      */
-    public function getPriceListQuery($productId)
+    public function scopePriceQuery($query, int $productId, ?string $key = null, ?string $currency = null)
     {
-        return $this->where('product_id','=',$productId);
-    }
+        $curencyId = $this->findCurrency($currency)->id;
 
-    /**
-     * Get price list
-     *
-     * @param integer $productId
-     * @return object|null
-     */
-    public function getPriceList($productId)
-    {
-        return $this->getPriceListQuery($productId)->get();
+        $query = $query
+            ->where('product_id','=',$productId)
+            ->where('currency_id','=',$curencyId);
+
+        return (empty($key) == true) ? $query : $query->where('key','=',$key);
     }
 
     /**
      * Return true if price exist
      *
      * @param integer $productId
-     * @param string $key
+     * @param string|null $key
+     * @param string|int|null $currency
      * @return boolean
      */
-    public function hasPrice(string $key, int $productId): bool
+    public function hasPrice(int $productId, ?string $key = null, ?string $currency = null): bool
     {
-        return ($this->getPrice($key,$productId) !== null);       
+        return ($this->getPrice($productId,$key,$currency) !== null);       
     }
 
     /**
      * Save price
      *
      * @param integer $productId
-     * @param string $key
+     * @param string|null $key
      * @param float $price
      * @param string|null $currency
      * @return boolean
      */
-    public function savePrice(int $productId, string $key, $price, ?string $currency) 
+    public function savePrice(int $productId, float $price, ?string $key = null, ?string $currency) 
     {
-        $price = (empty($price) == true) ? 0 : $price;
-
-        if ($this->hasPrice($key,$productId) == false) {          
-            return $this->createPrice($productId,$key,$currency,$price);
+        if ($this->hasPrice($productId,$key,$currency) == false) {          
+            return $this->createPrice($productId,$key,$price,$currency);
         }
-        $model = $this->where('product_id','=',$productId)->where('key','=',$key);
-
-        return $model->update(['price' => $price]);  
-    }
-
-    /**
-     * Save price list
-     *
-     * @param integer $productId
-     * @param string|null $currency
-     * @param array $data
-     * @return boolean
-     */
-    public function savePriceList($productId, array $data, $currency = null)
-    {
-        $errors = 0;
-
-        foreach ($data as $key => $price) {
-            $result = $this->savePrice($productId,$key,$price,$currency);
-            $errors += ($result !== false) ? 0 : 1; 
-        }      
-        
-        return ($errors == 0);
+      
+        return $this->scopePriceQuery($productId,$key,$currency)->update([
+            'price' => $price
+        ]);  
     }
 }

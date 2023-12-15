@@ -32,7 +32,7 @@ class PriceList implements BlueprintPrototypeInterface
         // columns
         $table->id();
         $table->prototype('uuid');              
-        $table->string('key')->nullable(false);
+        $table->string('key')->nullable(true);
         $table->integer('primary')->nullable(true)->default(null);
 
         if (empty($productsTable) == true) {
@@ -52,8 +52,8 @@ class PriceList implements BlueprintPrototypeInterface
         $table->price();
 
         // index     
-        $table->unique(['product_id','key']);
-        $table->unique(['product_id','primary']);
+        $table->unique(['product_id','key','currency_id']);
+        $table->unique(['product_id','primary','currency_id']);
 
         if (\is_callable($callback) == true) {         
             $call = function() use($callback,$table) {

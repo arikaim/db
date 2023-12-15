@@ -9,33 +9,13 @@
 */
 namespace Arikaim\Core\Db\Traits\Options;
 
-use Arikaim\Core\Db\Interfaces\OptionTypeInterface;
+use Arikaim\Core\Collection\Property;
 
 /**
  * Option type table trait
 */
 trait OptionType 
 {    
-    /**
-     *  Option type text
-     */
-    static $TYPES_LIST = [
-        'text',
-        'checkbox',
-        'dropdown',
-        'textarea',
-        'relation',
-        'number',
-        'image',
-        'price',
-        'file',
-        'markdown',
-        'date',
-        'time-interval',
-        'user-group',
-        'permission'
-    ];
-
     /**
      * Get option type id
      *
@@ -44,7 +24,7 @@ trait OptionType
      */
     public static function getOptionTypeId($type)
     {
-        $result = \array_search($type,Self::$TYPES_LIST);
+        $result = \array_search($type,Property::TYPES);
 
         return ($result == false) ? 0 : $result;
     }
@@ -59,7 +39,7 @@ trait OptionType
     {
         $type = $type ?? $this->type;
 
-        return (isset(Self::$TYPES_LIST[$type]) == true) ? Self::$TYPES_LIST[$type] : false;
+        return Property::TYPES[$type] ?? false;
     }
 
     /**
@@ -96,9 +76,9 @@ trait OptionType
      *
      * @return integer
      */
-    public function TIME_INTERVAL()
+    public function TIME_INTERVAL(): int
     {
-        return OptionTypeInterface::TIME_INTERVAL;
+        return Property::getTypeIndex('time-interval');
     }
 
     /**
@@ -106,29 +86,9 @@ trait OptionType
      *
      * @return integer
      */
-    public function DATE()
+    public function DATE(): int
     {
-        return OptionTypeInterface::DATE;
-    }
-
-    /**
-     * User group option type
-     *
-     * @return integer
-     */
-    public function USERGROUP()
-    {
-        return OptionTypeInterface::USER_GROUP;
-    }
-
-    /**
-     * Permission option type
-     *
-     * @return integer
-    */
-    public function PERMISSION()
-    {
-        return OptionTypeInterface::PERMISSION;
+        return Property::getTypeIndex('date');
     }
 
     /**
@@ -136,29 +96,9 @@ trait OptionType
      *
      * @return integer
      */
-    public function TEXT()
+    public function TEXT(): int
     {
-        return OptionTypeInterface::TEXT;
-    }
-
-    /**
-     * Checkbox type option
-     *
-     * @return integer
-     */
-    public function CHECKBOX()
-    {
-        return OptionTypeInterface::CHECKBOX;
-    }
-
-    /**
-     * Dropdown type option
-     *
-     * @return integer
-     */
-    public function DROPDOWN()
-    {
-        return OptionTypeInterface::DROPDOWN;
+        return Property::getTypeIndex('text');
     }
 
     /**
@@ -168,17 +108,7 @@ trait OptionType
      */
     public function TEXTAREA()
     {
-        return OptionTypeInterface::TEXT_AREA;
-    }
-
-    /**
-     * Relation type option
-     *
-     * @return integer
-     */
-    public function RELATION()
-    {
-        return OptionTypeInterface::RELATION;
+        return Property::getTypeIndex('text-area');
     }
 
     /**
@@ -188,7 +118,7 @@ trait OptionType
      */
     public function NUMBER()
     {
-        return OptionTypeInterface::NUMBER;
+        return Property::getTypeIndex('number');
     }
 
     /**
@@ -198,7 +128,7 @@ trait OptionType
      */
     public function PRICE()
     {
-        return OptionTypeInterface::PRICE;
+        return Property::getTypeIndex('price');
     }
     
     /**
@@ -229,7 +159,7 @@ trait OptionType
      * @param string $key
      * @return mixed
      */
-    public function getByKey($key)
+    public function getByKey(string $key)
     {
         return $this->findByColumn($key,'key');
     }

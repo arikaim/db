@@ -15,37 +15,6 @@ namespace Arikaim\Core\Db\Traits\Price;
 trait PriceRelation 
 {  
     /**
-     * Boot trait
-     *
-     * @return void
-     */
-    public static function bootPriceRelation()
-    {
-        static::created(function($model) {          
-            $model->createPriceList();
-        });
-    }
-
-    /**
-    * Price list
-    *
-    * @return boolean
-    */
-    public function createPriceList()
-    {
-        $class = $this->getPriceListClass();
-        $priceList = new $class();
-
-        $typeName = $this->getOptionsType();
-        
-        if ($priceList !== null && empty($typeName) == false) {               
-            return $priceList->createPiceList($this->id,$typeName);
-        }
-
-        return false;
-    }
-
-    /**
      * Get price list class
      *
      * @return string|null
@@ -55,32 +24,6 @@ trait PriceRelation
         return $this->priceListClass ?? null;
     }
     
-    /**
-     * Create price_list attribute used for better collection serialization key => value 
-     *
-     * @return Collection
-     */
-    public function getPriceListAttribute()
-    {       
-        return $this->getPriceList();
-    }
-
-    /**
-     * Get price list
-     *
-     * @param integer|null $currencyId
-     * @return Collection
-     */
-    public function getPriceList(?int $currencyId = null) 
-    {
-        $query = (empty($currencyId) == false) ? $this->price()->where('currency_id','=',$currencyId) : $this->price();
-        $items = $query->get(['key','price','currency_id'])->keyBy('key')->map(function ($item, $key) {
-            return $item;
-        });
-
-        return $items;
-    }
-
     /**
      * Return true if item is free
      *
@@ -120,28 +63,35 @@ trait PriceRelation
     /**
      * Get price
      *   
-     * @param string $key
+     * @param string|null $key
+     * @param string|null $currency
+     * 
      * @return object|null
      */
-    public function getPrice($key): ?object 
+    public function getPrice(?string $key = null, ?string $currency = null): ?object 
     {                 
         if (\is_object($this->price) == false) {
             return null;
         }
-        $items = $this->price->keyBy('key');
+        $curencyId = $this->findCurrency($currency)->id;
 
-        return (\is_object($items) == true) ? $items->get($key) : null;
+        $query = (empty($key) == false) ? $this->price()->where('key','=',$key) : $this->price()->whereNull('key');
+        $query = $query->where('currency_id','=',$curencyId);
+
+        return $query->frist();
     }
 
     /**
      * Get price value
      *
-     * @param string $key
+     * @param string|null $key
+     * @param string|null $currency
+     * 
      * @return float|null
      */
-    public function getPriceValue($key): ?float 
+    public function getPriceValue(?string $key = null, ?string $currency = null): ?float 
     {
-        $model = $this->getPrice($key);
+        $model = $this->getPrice($key,$currency);
 
         return ($model != null) ? (float)$model->price : null;
     }
