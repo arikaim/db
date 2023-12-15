@@ -41,8 +41,8 @@ trait PriceRelation
      */
     public function isFree(): bool
     {
-        foreach ($this->price as $item) {
-            if ($item->price > 0) {
+        foreach ($this->prices as $item) {
+            if ($item->prices > 0) {
                 return false;
             }
          }
@@ -55,10 +55,20 @@ trait PriceRelation
      *
      * @return Relation|null
      */
-    public function price()
+    public function prices()
     {
         return $this->hasMany($this->getPriceListClass(),'product_id');
     }
+
+    /**
+     * Get main price
+     *
+     * @return Model|nulll
+     */
+    public function mainPrice()
+    {
+        return $this->prices()->whereNull('key')->orWhere('key','=','price')->first();
+    } 
 
     /**
      * Get price
@@ -70,15 +80,12 @@ trait PriceRelation
      */
     public function getPrice(?string $key = null, ?string $currency = null): ?object 
     {                 
-        if (\is_object($this->price) == false) {
-            return null;
-        }
-        $curencyId = $this->findCurrency($currency)->id;
+        $curencyId = $this->mainPrice()->findCurrency($currency)->id;
 
-        $query = (empty($key) == false) ? $this->price()->where('key','=',$key) : $this->price()->whereNull('key');
+        $query = (empty($key) == false) ? $this->prices()->where('key','=',$key) : $this->prices()->whereNull('key');
         $query = $query->where('currency_id','=',$curencyId);
 
-        return $query->frist();
+        return $query->first();
     }
 
     /**

@@ -100,7 +100,7 @@ trait PriceList
             return $this->createPrice($productId,$key,$price,$currency);
         }
       
-        return $this->scopePriceQuery($productId,$key,$currency)->update([
+        return $this->priceQuery($productId,$key,$currency)->update([
             'price' => $price
         ]);  
     }
