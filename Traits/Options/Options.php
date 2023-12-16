@@ -39,7 +39,7 @@ trait Options
     /**
      * Option type relation
      *
-     * @return mixed
+     * @return Relation|null
      */
     public function type()
     {
@@ -50,11 +50,11 @@ trait Options
      * Create option
      *
      * @param integer|null $referenceId
-     * @param string|integer $key Option type key or id
+     * @param string $key Option type key
      * @param mixed $value
      * @return Model|null
      */
-    public function createOption(?int $referenceId, $key, $value = null): ?object
+    public function createOption(?int $referenceId, string $key, $value = null): ?object
     {
         if ($this->hasOption($key,$referenceId) == true) {     
             return null;
@@ -66,27 +66,20 @@ trait Options
             'reference_id' => $referenceId,
             'uuid'         => Uuid::create(),
             'type_id'      => ($optionType == null) ? null : $optionType->id,
-            'key'          => $optionType->key,
-            'value'        => ($value == null) ? $optionType->default : $value,        
+            'key'          => $key,
+            'value'        => ($value == null && $optionType != null) ? $optionType->default : $value,        
         ]);      
     }
 
     /**
      * Get option type
      *
-     * @param string|integer $key Type key or id
+     * @param string $key Type key
      * @return Model|null
      */
-    public function getOptionType($key): ?object
+    public function getOptionType(string $key): ?object
     {
-        $class = $this->getOptionTypeClass();
-        $optionType = new $class();
-
-        if ($optionType == null) {           
-            return null;
-        }
-
-        return (\is_numeric($key) == false) ? $optionType->where('key','=',$key)->first() : $optionType->where('id','=',$key)->first();
+        return $this->type()->where('key','=',$key)->first();
     }
 
     /**
@@ -94,7 +87,7 @@ trait Options
      *
      * @param string $key
      * @param integer|null $referenceId
-     * @param string|integer $key Option typekey or id     
+     * @param string $key Option type key
      * @return Model|null
      */
     public function getOption(string $key, ?int $referenceId = null): ?object
@@ -167,7 +160,7 @@ trait Options
      * @param mixed $value
      * @return boolean
      */
-    public function saveOption($referenceId, $key, $value) 
+    public function saveOption(int $referenceId, string $key, $value) 
     {
         if ($this->hasOption($key,$referenceId) == false) {          
             return $this->createOption($referenceId,$key,$value);

@@ -79,8 +79,13 @@ trait PriceRelation
      * @return object|null
      */
     public function getPrice(?string $key = null, ?string $currency = null): ?object 
-    {                 
-        $curencyId = $this->mainPrice()->findCurrency($currency)->id;
+    {                
+        $mainPrice = $this->mainPrice();
+        if ($mainPrice == null) {
+            return null;
+        }
+
+        $curencyId = $mainPrice->findCurrency($currency)->id;
 
         $query = (empty($key) == false) ? $this->prices()->where('key','=',$key) : $this->prices()->whereNull('key');
         $query = $query->where('currency_id','=',$curencyId);
