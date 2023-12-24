@@ -149,9 +149,20 @@ trait Find
      */
     public function whereIgnoreCase(string $attribute, $value, string $operator = '='): object
     {
-        $value = \strtolower($value);
-        
-        return $this->whereRaw('LOWER(' . $attribute .') ' . $operator . ' ?',[$value]);
+        return $this->whereRaw('LOWER(' . $attribute .') ' . $operator . ' ?',[\strtolower($value)]);
+    }
+
+    /**
+     * Case insensitive search
+     *
+     * @param Builder     $query
+     * @param string      $column
+     * @param string|null $value
+     * @return Builder
+     */
+    public function scopeSearchIgnoreCase($query, string $column, ?string $value)
+    {
+        return $query->whereRaw('LOWER(' . $column .') LIKE ' . ' ?',['%' . \strtolower($value ?? '') . '%']);
     }
 
     /**

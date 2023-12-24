@@ -114,6 +114,14 @@ class Db
             $this->capsule->setEventDispatcher(new \Illuminate\Events\Dispatcher());
             $this->capsule->addConnection($config);
             $this->capsule->setAsGlobal();
+            
+            // add additional connections            
+            if (($config['connections'] ?? null) !== null) {
+                foreach ($config['connections'] as $name => $connection) {
+                    $this->capsule->addConnection($connection,$name);
+                }
+            }
+
             $this->capsule->bootEloquent();
         }  
         catch(PDOException $e) {
@@ -397,7 +405,7 @@ class Db
      * @param array $config
      * @return bool
      */
-    public function testConnection(array $config)
+    public function testConnection(array $config): bool
     {                
         try {
             $connection = $this->initSchemaConnection($config);     
