@@ -66,13 +66,17 @@ trait DocumentNumber
      * @return integer
      */
     public function getNextDocumentNumber($filterColumnValue = null): int
-    {
-        $columnName = $this->getDocumentNumberColumn();
+    {       
         $indexColumn = $this->getDocumentNumberUniqueIndex();
-        $filterColumnValue = (empty($filterColumnValue) == true) ? $this->{$indexColumn} : $filterColumnValue;
-      
-        $model = (empty($indexColumn) == false) ? $this->where($indexColumn,'=',$filterColumnValue) : $this;     
-        $max = $model->max($columnName);
+             
+        if (empty($indexColumn) == false) {
+            $filterColumnValue = (empty($filterColumnValue) == true) ? $this->{$indexColumn} : $filterColumnValue;
+            $model = $this->where($indexColumn,'=',$filterColumnValue);
+        } else {
+            $model = $this;     
+        }
+     
+        $max = $model->max($this->getDocumentNumberColumn());
 
         return (empty($max) == true) ? 1 : ($max + 1); 
     }
@@ -104,9 +108,8 @@ trait DocumentNumber
      * @return string|null
      */
     public function getDocumentNumber(string $prefix = ''): ?string
-    {
-        $columnName = $this->getDocumentNumberColumn();      
-        $documentNumber = (int)$this->attributes[$columnName] ?? null;
+    {       
+        $documentNumber = (int)$this->attributes[$this->getDocumentNumberColumn()] ?? null;
      
         return (empty($documentNumber) == false) ? $this->printDocumentNumber($documentNumber,$prefix) : null;       
     }   
@@ -120,8 +123,17 @@ trait DocumentNumber
      */
     public function printDocumentNumber(int $number, string $prefix = ''): string
     {
-        $label = $this->getDocumentNumberLabel();
-
-        return \sprintf($label . '%012d' . $prefix,$number);
+        return \sprintf($this->getDocumentNumberLabel() . '%012d' . $prefix,$number);
     }
+
+    /**
+     * Print next document number
+     *
+     * @param string $prefix
+     * @return string
+     */
+    public function printNextDocumentNumber(string $prefix = ''): string
+    {
+        return $this->printDocumentNumber($this->getNextDocumentNumber(),$prefix);
+    } 
 }

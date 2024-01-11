@@ -47,6 +47,25 @@ trait Document
     }
 
     /**
+     * Save document item
+     *
+     * @param integer $productId
+     * @param array   $data
+     * @return object|null
+     */
+    public function saveItem(int $productId, array $data): ?object
+    {
+        $item = $this->items->where('product_id','=',$productId)->first();
+        if ($item == null) {
+            return $this->create($data);
+        }
+    
+        $item->update($data);
+
+        return $item;
+    }
+
+    /**
      * Delete document item
      *
      * @param  string|int $id
@@ -75,7 +94,9 @@ trait Document
      */
     public function getExternal(string $externalId, string $driverName): ?object
     {
-        return $this->where('external_id','=',$externalId)->where('api_driver','=',$driverName)->first();
+        return $this
+            ->where('external_id','=',$externalId)
+            ->where('api_driver','=',$driverName)->first();
     }
 
     /**
