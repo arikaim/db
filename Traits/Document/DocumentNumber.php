@@ -11,9 +11,22 @@ namespace Arikaim\Core\Db\Traits\Document;
 
 /**
  * Document number table trait
+ * 
+ *  Change document number column
+ *      protected $documentNumberColumn = 'column name'
+ * 
+ *  Change document number label
+ *      protected $documentNumberLabel = ' label '
 */
 trait DocumentNumber 
 { 
+    /**
+     * Default document number column
+     *
+     * @var string
+     */
+    protected static $DEFAULT_DOCUMENT_NUMBER_COLUMN = 'document_number';
+
     /**
      * Boot trait
      *
@@ -22,22 +35,12 @@ trait DocumentNumber
     public static function bootDocumentNumber()
     {
         static::creating(function($model) {          
-            $columnName = $model->getDocumentNumberColumn();
+            $columnName = $model->documentNumberColumn ?? static::$DEFAULT_DOCUMENT_NUMBER_COLUMN;
             if (empty($model->$columnName) == true) {  
                 $model->attributes[$columnName] = $model->getNextDocumentNumber();
             }           
         });
     }
-
-    /**
-     * Get document number column
-     *
-     * @return string
-     */
-    public function getDocumentNumberColumn(): string
-    {
-        return $this->documentNumberColumn ?? 'document_number';
-    } 
 
     /**
      * Get document number unique index columns
@@ -47,16 +50,6 @@ trait DocumentNumber
     public function getDocumentNumberUniqueIndex(): ?string
     {
         return $this->documentNumberUniqueIndex ?? null;
-    } 
-
-    /**
-     * Get label
-     *
-     * @return string
-     */
-    public function getDocumentNumberLabel(): string
-    {
-        return $this->documentNumberLabel ?? '';
     } 
 
     /**
@@ -76,7 +69,7 @@ trait DocumentNumber
             $model = $this;     
         }
      
-        $max = $model->max($this->getDocumentNumberColumn());
+        $max = $model->max($this->documentNumberColumn ?? static::$DEFAULT_DOCUMENT_NUMBER_COLUMN);
 
         return (empty($max) == true) ? 1 : ($max + 1); 
     }
@@ -90,7 +83,7 @@ trait DocumentNumber
      */
     public function isValidDocumentNumber(?int $documentNumber = null, $filterColumnValue = null): bool
     {
-        $columnName = $this->getDocumentNumberColumn();
+        $columnName = $this->documentNumberColumn ?? static::$DEFAULT_DOCUMENT_NUMBER_COLUMN;
         $columnValue = (isset($this->attributes[$columnName]) == true) ? $this->attributes[$columnName] : $documentNumber;
 
         $indexColumn = $this->getDocumentNumberUniqueIndex();
@@ -109,7 +102,7 @@ trait DocumentNumber
      */
     public function getDocumentNumber(string $prefix = ''): ?string
     {       
-        $documentNumber = (int)$this->attributes[$this->getDocumentNumberColumn()] ?? null;
+        $documentNumber = (int)$this->attributes[$this->documentNumberColumn ?? static::$DEFAULT_DOCUMENT_NUMBER_COLUMN] ?? null;
      
         return (empty($documentNumber) == false) ? $this->printDocumentNumber($documentNumber,$prefix) : null;       
     }   
@@ -117,13 +110,14 @@ trait DocumentNumber
     /**
      * Print doc number
      *
-     * @param integer $number
+     * @param integer|null $number
      * @param string $prefix
      * @return string
      */
-    public function printDocumentNumber(int $number, string $prefix = ''): string
+    public function printDocumentNumber(?int $number = null, string $prefix = ''): string
     {
-        return \sprintf($this->getDocumentNumberLabel() . '%012d' . $prefix,$number);
+        $number = $number ?? $this->{$this->documentNumberColumn ?? static::$DEFAULT_DOCUMENT_NUMBER_COLUMN};
+        return \sprintf(($this->documentNumberLabel ?? '') . '%012d' . $prefix,$number);
     }
 
     /**

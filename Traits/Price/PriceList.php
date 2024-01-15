@@ -94,7 +94,7 @@ trait PriceList
      * @param string|null $currency
      * @return mixed
      */
-    public function savePrice(int $productId, float $price, ?string $key = null, ?string $currency) 
+    public function savePrice(int $productId, float $price, ?string $key = null, ?string $currency = null) 
     {
         if ($this->hasPrice($productId,$key,$currency) == false) {          
             return $this->createPrice($productId,$key,$price,$currency);
