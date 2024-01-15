@@ -14,9 +14,19 @@ use Arikaim\Core\Models\Users;
 /**
  * User Relation trait
  *      
+ * Define custom user column
+ * 
+ *  protected $userColumnName = 'column name';
 */
 trait UserRelation 
 {    
+    /**
+     * Default user column name
+     *
+     * @var string
+     */
+    protected static $DEFAULT_USER_COLUMN = 'user_id';
+
     /**
      * Init model events.
      *
@@ -25,10 +35,11 @@ trait UserRelation
     public static function bootUserRelation()
     {
         static::creating(function($model) {
-            $userId = $model->getUserIdAttributeName();   
-            if (empty($model->attributes[$userId]) == true) {  
+            $columnName = $model->userColumnName ?? static::$DEFAULT_USER_COLUMN;
+
+            if (empty($model->attributes[$columnName]) == true) {  
                 $authId = $model->getAuthId();               
-                $model->attributes[$userId] = (empty($authId) == true) ? null : $authId;
+                $model->attributes[$columnName] = (empty($authId) == true) ? null : $authId;
             }
         });
     }
@@ -44,23 +55,13 @@ trait UserRelation
     }
 
     /**
-     * Get user id attribute name
-     *
-     * @return string
-     */
-    public function getUserIdAttributeName(): string
-    {
-        return $this->userIdColumn ?? 'user_id';
-    }
-
-    /**
      * Get user relation
      *
      * @return Relation|null
      */
     public function user()
     {      
-        return $this->belongsTo(Users::class,$this->getUserIdAttributeName());
+        return $this->belongsTo(Users::class,$this->userColumnName ?? static::$DEFAULT_USER_COLUMN);
     }
 
     /**
@@ -72,12 +73,11 @@ trait UserRelation
      */
     public function scopeUserQuery($query, ?int $userId)
     {
-        $column = $this->getUserIdAttributeName();
         if ($userId === null) {
-            return $query->whereNull($column);
+            return $query->whereNull($this->userColumnName ?? static::$DEFAULT_USER_COLUMN);
         }
 
-        return (empty($userId) == false) ? $query->where($column,'=',$userId) : $query;         
+        return (empty($userId) == false) ? $query->where($this->userColumnName ?? static::$DEFAULT_USER_COLUMN,'=',$userId) : $query;         
     }
 
     /**
@@ -89,11 +89,9 @@ trait UserRelation
      */
     public function scopeUserQueryWithPublic($query, ?int $userId)
     {
-        $column = $this->getUserIdAttributeName();
-        if (empty($userId) == true) {
-            return $query->whereNull($column);
-        }
-
-        return $query->where($column,'=',$userId)->orWhereNull($column);
+        return (empty($userId) == true) ? $query->whereNull($this->userColumnName ?? static::$DEFAULT_USER_COLUMN) :
+            $query
+                ->where($this->userColumnName ?? static::$DEFAULT_USER_COLUMN,'=',$userId)
+                ->orWhereNull($this->userColumnName ?? static::$DEFAULT_USER_COLUMN);
     }
 }

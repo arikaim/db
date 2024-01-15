@@ -13,10 +13,19 @@ use Arikaim\Core\Utils\DateTime;
 
 /**
  * Soft delete trait
- *      
+ *     
+ * Custom soft delete column name
+ *  protected $softDeleteColumnName = ' column name '
 */
 trait SoftDelete 
 {    
+    /**
+     * Default soft delete column mame
+     *
+     * @var string
+     */
+    protected static $DEFAULT_SOFT_DELETE_COLUMN = 'date_deleted';
+    
     /**
      * Return true if model is deleted
      *
@@ -24,7 +33,7 @@ trait SoftDelete
      */
     public function isDeleted(): bool
     {
-        return (($this->{$this->getDeletedColumn()}) !== null);
+        return ($this->{$this->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN} !== null);
     }
 
     /**
@@ -34,9 +43,7 @@ trait SoftDelete
      */
     public function getDeletedCount(): int
     {
-        $query = $this->softDeletedQuery();
-        
-        return $query->count();
+        return $this->softDeletedQuery()->count();      
     }
 
     /**
@@ -48,10 +55,9 @@ trait SoftDelete
     public function softDelete($id = null): bool
     {
         $model = (empty($id) == true) ? $this : $this->findById($id);
-        $columnName = $model->getDeletedColumn();
-
+      
         return (bool)$model->update([
-            $columnName => DateTime::getTimestamp()
+            $model->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN => DateTime::getTimestamp()
         ]);
     }
 
@@ -63,9 +69,8 @@ trait SoftDelete
      */
     public function restore($id = null): bool
     {
-        $model = (empty($id) == true) ? $this : $this->findById($id);
-        $columnName = $model->getDeletedColumn();
-        $model->{$columnName} = null;
+        $model = (empty($id) == true) ? $this : $this->findById($id);      
+        $model->{$model->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN} = null;
         
         return (bool)$model->save();
     }
@@ -76,12 +81,11 @@ trait SoftDelete
      * @return boolean
      */
     public function restoreAll(): bool
-    {
-        $columName = $this->getDeletedColumn();
+    {       
         $query = $this->softDeletedQuery();
         
         return (bool)$query->update([
-            $columName => null
+            $this->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN => null
         ]);
     }
 
@@ -90,9 +94,9 @@ trait SoftDelete
      *
      * @return QueryBuilder
      */
-    public function softDeletedQuery()
+    public function softDeletedQuery(): object
     {
-        return $this->whereNotNull($this->getDeletedColumn());
+        return $this->whereNotNull($this->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN);
     }
 
     /**
@@ -110,9 +114,9 @@ trait SoftDelete
      *
      * @return QueryBuilder
      */
-    public function getNotDeletedQuery()
+    public function getNotDeletedQuery(): object
     {
-        return $this->whereNull($this->getDeletedColumn());
+        return $this->whereNull($this->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN);
     }
 
     /**
@@ -123,7 +127,7 @@ trait SoftDelete
      */
     public function scopeGetNotDeleted($query)
     {
-        return $query->whereNull($this->getDeletedColumn());
+        return $query->whereNull($this->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN);
     }
 
     /**
@@ -134,16 +138,6 @@ trait SoftDelete
      */
     public function scopeGetDeleted($query)
     {
-        return $query->whereNotNull($this->getDeletedColumn());
+        return $query->whereNotNull($this->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN);
     }
-
-    /**
-     * Get uuid attribute name
-     *
-     * @return string
-     */
-    public function getDeletedColumn(): string
-    {
-        return $this->softDeleteColumn ?? 'date_deleted';
-    } 
 }

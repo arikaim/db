@@ -53,6 +53,8 @@ trait DateUpdated
         $dateTime = $dateTime ?? DateTime::getCurrentTimestamp();
         $fieldNname = $this->getDateUpdatedAttributeName();  
 
-        return (bool)$this->update([$fieldNname => $dateTime]);
+        return (bool)$this->update([
+            $fieldNname => $dateTime
+        ]);
     }
 }

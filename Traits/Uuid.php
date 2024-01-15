@@ -12,11 +12,26 @@ namespace Arikaim\Core\Db\Traits;
 use Arikaim\Core\Utils\Uuid as UuidFactory;
 
 /**
+ * 
  * Update UUID field
- *      
+ *     
 */
 trait Uuid 
 {    
+    /**
+     * Default uuid column name
+     *
+     * @var string
+     */
+    protected static $DEFAULT_UUID_COLUMN = 'uuid';
+
+    /**
+     * uuid clolumn name
+     *
+     * @var string
+     */
+    protected $uuidColumnName = 'uuid';
+
     /**
      * Init model events.
      *
@@ -24,34 +39,16 @@ trait Uuid
      */
     public static function bootUuid()
     {
+        static::retrieved(function($model) {
+            if (isset($model->fillable[$model->uuidColumnName ?? static::$DEFAULT_UUID_COLUMN]) == false) {               
+                $model->fillable[] = $model->uuidColumnName ?? static::$DEFAULT_UUID_COLUMN;
+            }             
+        });
+
         static::creating(function($model) {   
-            $columnName = $model->getUuidAttributeName();
-            if (empty($model->$columnName) == true) {                
-                $model->attributes[$columnName] = UuidFactory::create();
+            if (empty($model->{$model->uuidColumnName ?? static::$DEFAULT_UUID_COLUMN}) == true) {        
+                $model->attributes[$model->uuidColumnName ?? static::$DEFAULT_UUID_COLUMN] = UuidFactory::create();
             }
         });
-    }
-
-    /**
-     * Get uuid attribute name
-     *
-     * @return string
-     */
-    public function getUuidAttributeName(): string
-    {
-        return $this->uuidColumn ?? 'uuid';
-    }
-
-    /**
-     * Init empty uuid column
-     *
-     * @return void
-     */
-    public function initUuid(): void
-    {
-        $columnName = $this->getUuidAttributeName();
-        if (empty($this->$columnName) == true) { 
-            $this->$columnName = UuidFactory::create();
-        }
     }
 }

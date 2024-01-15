@@ -21,13 +21,8 @@ trait Find
      * @return Model|null
      */
     public function findById($id): ?object
-    {        
-        if (empty($id) == true) {
-            return null;
-        }
-        $column = (\is_numeric($id) == true) ? (string)$this->getKeyName() : 'uuid';
-        
-        return parent::where($column,'=',$id)->first();
+    {         
+        return (empty($id) == true) ? null : $this->findByIdQuery($id)->first();
     }
     
     /**
@@ -38,7 +33,9 @@ trait Find
      */
     public function findMultiple(array $idList): object
     {
-        return $this->whereIn('uuid',$idList)->orWhereIn('id',$idList);
+        return $this
+            ->whereIn((string)$this->uuidColumnName ?? 'uuid',$idList)
+            ->orWhereIn((string)$this->getKeyName(),$idList);
     }
 
     /**
@@ -112,7 +109,7 @@ trait Find
      */
     public function findByIdQuery($id): object
     {       
-        return parent::where($this->getIdAttributeName($id),'=',$id);
+        return $this->where($this->getIdAttributeName($id),'=',$id);
     }
 
     /**
@@ -123,9 +120,7 @@ trait Find
      */
     public function getIdAttributeName($id): string
     {
-        $uuidAttribute = (\method_exists($this,'getUuidAttributeName') == true) ? $this->getUuidAttributeName() : 'uuid';
-
-        return (\is_numeric($id) == true) ? (string)$this->getKeyName() : $uuidAttribute;
+        return (\is_numeric($id) == true) ? (string)$this->getKeyName() : (string)$this->uuidColumnName ?? 'uuid';
     }
 
     /**
@@ -136,7 +131,7 @@ trait Find
      */
     public function findItems(?array $items) 
     {
-        return (empty($items) == true) ? false : parent::whereIn($this->getIdAttributeName($items[0]),$items);      
+        return (empty($items) == true) ? false : $this->whereIn($this->getIdAttributeName($items[0]),$items);      
     }
 
     /**

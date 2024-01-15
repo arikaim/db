@@ -13,9 +13,42 @@ use Arikaim\Core\Utils\Utils;
 
 /**
  * Create slug
+ * 
+ * Custom slug source column 
+ * 
+ *  protected $slugSourceColumn = 'column name';
+ * 
+ * Custom slug column name
+ *  
+ *  protected $slugColumnName = 'column name';
+ * 
+ * Custom slug separator
+ *  
+ *  protected $slugSeparator = 'separtor';
 */
 trait Slug 
 {    
+    /**
+     * Default slug source column
+     *
+     * @var string
+     */
+    protected static $DEFAUL_SLUG_SOURCE_COLUMN = 'title';
+    
+    /**
+     * Default slug column name
+     *
+     * @var string
+     */
+    protected static $DEFAUL_SLUG_COLUMN = 'slug';
+
+    /**
+     * Default slug column name
+     *
+     * @var string
+     */
+    protected static $DEFAUL_SLUG_SEPARATOR = '-';
+
     /**
      * Set model event on saving
      *
@@ -33,65 +66,13 @@ trait Slug
     }
 
     /**
-     * Get slug prefix
-     *
-     * @return string
-     */
-    public function getSlugPrefix(): string
-    {
-        return $this->slugPrefix ?? '';
-    }
-
-    /**
-     * Get slug suffix
-     *
-     * @return string
-    */
-    public function getSlugSuffix(): string
-    {
-        return $this->slugSuffix ?? '';
-    }
-
-    /**
-     * Get slug attribute name
-     *
-     * @return string
-     */
-    public function getSlugColumn(): string
-    {
-        return $this->slugColumn ?? 'slug';
-    }
-
-    /**
-     * Get slug source attribute name
-     *
-     * @return string
-     */
-    public function getSlugSourceColumn(): string
-    {
-        return $this->slugSourceColumn ?? 'title';
-    }
-
-    /**
-     * Get slug separator
-     *
-     * @return string
-     */
-    public function getSlugSeparator(): string
-    {
-        return $this->slugSeparator ?? '-';
-    }
-
-    /**
      * Get slug value
      *
      * @return string
      */
     public function getSlug(): string
     {
-        $slugColumn = $this->getSlugColumn();
-
-        return $this->getSlugPrefix() . $this->attributes[$slugColumn] . $this->getSlugSuffix();
+        return $this->slugPrefix ?? '' . $this->attributes[$this->slugColumnName ?? static::$DEFAUL_SLUG_COLUMN] . $this->slugSuffix ?? '';
     }
 
     /**
@@ -100,13 +81,12 @@ trait Slug
      * @param Model $model   
      * @return Model
      */
-    public static function saveSlug($model)
-    {
-        $slugColumn = $model->getSlugColumn();
-        $slugSourceColumn = $model->getSlugSourceColumn();
-
-        if ($model->$slugSourceColumn !== null) {                   
-            $model->$slugColumn = Utils::slug($model->$slugSourceColumn,$model->getSlugSeparator());
+    public static function saveSlug($model): object
+    {        
+        if ($model->{$model->slugSourceColumn ?? static::$DEFAUL_SLUG_SOURCE_COLUMN} !== null) {                   
+            $model->{$model->slugColumnName ?? static::$DEFAUL_SLUG_COLUMN} = $model->createSlug(
+                $model->{$model->slugSourceColumn ?? static::$DEFAUL_SLUG_SOURCE_COLUMN}           
+            );
         }              
        
         return $model;
@@ -120,11 +100,9 @@ trait Slug
      */
     public function setSlug(?string $text = null): void
     {
-        $slugColumn = $this->getSlugColumn();
-        $slugSourceColumn = $this->getSlugSourceColumn();
-        $text = (empty($text) == true) ? $this->$slugSourceColumn : $text;
+        $text = (empty($text) == true) ? $this->{$this->slugSourceColumn ?? static::$DEFAUL_SLUG_SOURCE_COLUMN} : $text;
 
-        $this->$slugColumn = Utils::slug($text,$this->getSlugSeparator());
+        $this->{$this->slugColumnName ?? static::$DEFAUL_SLUG_COLUMN} = $this->createSlug($text);
     }
 
     /**
@@ -135,8 +113,8 @@ trait Slug
      * @return string
      */
     public function createSlug(string $text, ?string $separator = null): string
-    {
-        return Utils::slug($text,$separator ?? $this->getSlugSeparator());
+    {       
+        return Utils::slug($text,$separator ?? $this->slugSeparator ?? static::$DEFAUL_SLUG_SEPARATOR);
     }
 
     /**
@@ -149,7 +127,7 @@ trait Slug
      */
     public function scopeSlugQuery($query, string $slug, ?int $userId = null)
     {
-        $query->where($this->getSlugColumn(),'=',$slug);
+        $query->where($this->slugColumnName ?? static::$DEFAUL_SLUG_COLUMN,'=',$slug);
 
         return (empty($userId) == false) ? $query->where('user_id','=',$userId) : $query;        
     }
@@ -161,9 +139,10 @@ trait Slug
      * @return Model|null
      */
     public function findBySlug(string $slug): ?object
-    {
-        $slugColumn = $this->getSlugColumn();
-        
-        return $this->where($slugColumn,'=',$slug)->orWhere($slugColumn,'=',$this->createSlug($slug))->first();       
+    {  
+        return $this
+            ->where($this->slugColumnName ?? static::$DEFAUL_SLUG_COLUMN,'=',$slug)
+            ->orWhere($this->slugColumnName ?? static::$DEFAUL_SLUG_COLUMN,'=',$this->createSlug($slug))
+            ->first();       
     }
 }

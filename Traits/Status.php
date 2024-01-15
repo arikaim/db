@@ -11,11 +11,19 @@ namespace Arikaim\Core\Db\Traits;
 
 /**
  * Update Status field
- * Change default status column name in model:
+ * 
+ * Default status column name in model:
  *      protected $statusColumn = 'column name';
 */
 trait Status 
 {        
+    /**
+     * Default status column name
+     *
+     * @var string
+     */
+    protected static $DEFAULT_STATUS_COLUMN = 'status';
+
     /**
      * Disabled
      */
@@ -135,22 +143,9 @@ trait Status
      */
     public function scopeStatusQuery($query, $items)
     {
-        $column = $this->getStatusColumn();
-        if (\is_array($items) == true) {       
-            return $query->whereIn($column,$items);
-        }
-
-        return $query->where($column,'=',$items);
-    }
-
-    /**
-     * Get status column name
-     *
-     * @return string
-     */
-    public function getStatusColumn(): string
-    {
-        return $this->statusColumn ?? 'status';
+        return (\is_array($items) == true) ? 
+            $query->whereIn($this->statusColumnName ?? static::$DEFAULT_STATUS_COLUMN,$items) : 
+            $query->where($this->statusColumnName ?? static::$DEFAULT_STATUS_COLUMN,'=',$items);
     }
 
     /**
@@ -161,11 +156,7 @@ trait Status
      */
     public function resolveStatusText($status) 
     {
-        if (\is_numeric($status) == true) {
-            return $status;
-        }
-
-        return \array_search($status,$this->statusText);
+        return (\is_numeric($status) == true) ? $status : \array_search($status,$this->statusText);
     } 
 
     /**
@@ -175,12 +166,9 @@ trait Status
      */
     public function getActive()
     {
-        $model = $this->where($this->getStatusColumn(),'=',Self::$ACTIVE);
-        if (\method_exists($model,'getNotDeletedQuery') == true) {
-            $model = $model->getNotDeletedQuery();
-        }
+        $query = $this->activeQuery();
         
-        return $model;        
+        return (\method_exists($query,'getNotDeletedQuery') == true) ? $query->getNotDeletedQuery() : $query;        
     }
     
     /**
@@ -191,7 +179,7 @@ trait Status
      */
     public function scopeActiveQuery($query)
     {       
-        return $query->where($this->getStatusColumn(),'=',Self::$ACTIVE);
+        return $query->where($this->statusColumnName ?? static::$DEFAULT_STATUS_COLUMN,'=',Self::$ACTIVE);
     }
 
     /**
@@ -201,7 +189,7 @@ trait Status
      */
     public function getDisabled()
     {
-        return $this->where($this->getStatusColumn(),'=',Self::$DISABLED);
+        return $this->where($this->statusColumnName ?? static::$DEFAULT_STATUS_COLUMN,'=',Self::$DISABLED);
     }
 
     /**
@@ -211,9 +199,8 @@ trait Status
      * @return bool
      */
     public function setStatus($status = null): bool
-    {
-        $columnName = $this->getStatusColumn();
-        $this->$columnName = $this->resolveStatusValue($status);
+    {     
+        $this->{$this->statusColumnName ?? static::$DEFAULT_STATUS_COLUMN} = $this->resolveStatusValue($status);
 
         return (bool)$this->save();         
     }
@@ -225,12 +212,11 @@ trait Status
      * @return integer
      */
     public function resolveStatusValue($status = null): int
-    {
-        $columnName = $this->getStatusColumn();
+    {     
         if ($status === 'toggle') {     
-            return ($this->$columnName == 1) ? 0 : 1;
+            return ($this->{$this->statusColumnName ?? static::$DEFAULT_STATUS_COLUMN} == 1) ? 0 : 1;
         }
 
-        return (empty($status) == true) ? 0 : $status;
+        return (empty($status) == true) ? 0 : (int)$status;
     }
 }
