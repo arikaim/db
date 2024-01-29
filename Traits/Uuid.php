@@ -26,13 +26,6 @@ trait Uuid
     protected static $DEFAULT_UUID_COLUMN = 'uuid';
 
     /**
-     * uuid clolumn name
-     *
-     * @var string
-     */
-    protected $uuidColumnName = 'uuid';
-
-    /**
      * Init model events.
      *
      * @return void

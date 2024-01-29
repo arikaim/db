@@ -82,18 +82,19 @@ trait Find
      */
     public function findQuery($value, $column = null): object
     {      
-        if ($column == null) {
+        if (empty($column) == true) {
             return $this->findByIdQuery($value);
         }
 
         if (\is_string($column) == true) {
-            return parent::where($column,'=',$value);
+            return $this->where($column,'=',$value);
         }
 
         if (\is_array($column) == true) {
             $model = $this;
             foreach ($column as $item) {
-               $model = $model->orWhere($item,'=',$value);
+                if (empty($item) == true) continue;
+                $model = $model->orWhere($item,'=',$value);
             }
             return $model;
         }
@@ -120,7 +121,7 @@ trait Find
      */
     public function getIdAttributeName($id): string
     {
-        return (\is_numeric($id) == true) ? (string)$this->getKeyName() : (string)$this->uuidColumnName ?? 'uuid';
+        return (\is_numeric($id) == true) ? (string)$this->getKeyName() : (string)($this->uuidColumnName ?? 'uuid');
     }
 
     /**
