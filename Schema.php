@@ -17,12 +17,17 @@ use Arikaim\Core\Db\Seed;
 use Arikaim\Core\Db\TableBlueprint;
 use PDOException;
 use Exception;
+use Arikaim\Core\Db\TableSchemaDescriptor;
+
+use Arikaim\Core\Collection\Traits\Descriptor;
 
 /**
  * Database schema base class
 */
 abstract class Schema  
 {
+    use Descriptor;
+
     /**
      * Table name
      *
@@ -52,6 +57,14 @@ abstract class Schema
      * @return void
      */
     abstract public function update($table);
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->setDescriptorClass(TableSchemaDescriptor::class);
+    }
 
     /**
      * Insert or update rows in table
@@ -389,5 +402,43 @@ abstract class Schema
         }
         
         return false;
+    }
+
+    /**
+     * Get descriptor
+     *
+     * @return array
+     */
+    public function getDescriptor(): array
+    {
+        $blueprint = new TableBlueprint($this->tableName,null);
+            
+        $create = function() use($blueprint) {
+            $blueprint->create();
+
+            $this->create($blueprint);            
+            $blueprint->engine = $this->storageEngine;               
+        };
+        $create(); 
+
+        $update = function() use($blueprint) {                
+            $this->update($blueprint);
+        };
+        $update(); 
+
+        $descriptor = $this->descriptor();
+
+        $result = [];
+        foreach ($blueprint->getColumns() as $column) {
+            $column = $column->toArray();
+            $property = $descriptor->get($column['name']);
+            if ($property != null) {
+                $column['property'] = $property->toArray();
+            }
+
+            $result[] = $column;
+        }
+
+        return $result;
     }
 }   
