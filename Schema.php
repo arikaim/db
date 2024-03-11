@@ -20,13 +20,16 @@ use Exception;
 use Arikaim\Core\Db\TableSchemaDescriptor;
 
 use Arikaim\Core\Collection\Traits\Descriptor;
+use Arikaim\Core\Db\Traits\Schema\Import;
 
 /**
  * Database schema base class
 */
 abstract class Schema  
 {
-    use Descriptor;
+    use 
+        Descriptor,
+        Import;
 
     /**
      * Table name
