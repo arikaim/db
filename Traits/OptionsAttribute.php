@@ -60,8 +60,16 @@ trait OptionsAttribute
         $options = $this->getOptionsAttribute();
         $options[$key] = $value;
       
+        $encoded = \json_encode(
+            $options,
+            JSON_PRETTY_PRINT | 
+            JSON_UNESCAPED_UNICODE | 
+            JSON_UNESCAPED_SLASHES |
+            JSON_NUMERIC_CHECK 
+        );
+
         $result = $this->update([
-            $this->getOptionsColumnName() => \json_encode($options)
+            $this->getOptionsColumnName() => $encoded
         ]);
 
         return ($result !== false);
