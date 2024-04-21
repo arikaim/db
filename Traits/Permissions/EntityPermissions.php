@@ -225,7 +225,7 @@ trait EntityPermissions
     /**
      * Permissions scope query
      *
-     * @param [type]       $query
+     * @param Builder      $query
      * @param integer|null $entityId
      * @param string|null  $type
      * @param integer|null $typeId

@@ -179,7 +179,7 @@ class Db
     /**
      * Get DatabaseManager
      *
-     * @return @return \Illuminate\Database\DatabaseManager
+     * @return \Illuminate\Database\DatabaseManager
      */
     public function getDatabaseManager()
     {
