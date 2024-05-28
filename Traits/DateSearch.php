@@ -10,6 +10,7 @@
 namespace Arikaim\Core\Db\Traits;
 
 use Arikaim\Core\Utils\TimePeriod;
+use Arikaim\Core\Utils\DateTime;
 
 /**
  * Date search query
