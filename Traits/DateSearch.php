@@ -18,11 +18,30 @@ use Arikaim\Core\Utils\TimePeriod;
 trait DateSearch
 {    
     /**
-     * Column name for date period scopes
+     *  Get date search attribucolumn name
      *
-     * @var string|null
+     * @return string
      */
-    protected $datePeriodColumnName;
+    public function getDatePeriodColumnName(): string
+    {
+        return $this->datePeriodColumnName ?? 'date_created';
+    }
+
+     /**
+     * Date period query
+     *
+     * @param [type]      $query
+     * @param string      $period
+     * @param string|null $columnName
+     * @return void
+     */
+    public function scopeDatePeriodQuery($query, string $period, ?string $columnName = null)
+    {
+        $columnName = $columnName ?? $this->getDatePeriodColumnName();
+        $timeStamp = \strtotime($period,DateTime::getCurrentTimestamp());
+        
+        return $query->where($columnName,'<=',$timeStamp);
+    }
 
     /**
      * Get year query scope
@@ -35,8 +54,11 @@ trait DateSearch
     public function scopeYear($query, string $columnName, ?int $year = null)
     {     
         $period = TimePeriod::getYearPeriod($year);
+        $columnName = $columnName ?? $this->getDatePeriodColumnName();
 
-        return $query->where($columnName,'>',$period['start'])->where($columnName,'<',$period['end']);
+        return $query
+            ->where($columnName,'>',$period['start'])
+            ->where($columnName,'<',$period['end']);
     }
 
     /**
@@ -51,8 +73,11 @@ trait DateSearch
     public function scopeMonth($query, string $columnName, ?int $month = null, ?int $year = null)
     {     
         $period = TimePeriod::getMonthPeriod($month,$year);
-           
-        return $query->where($columnName,'>',$period['start'])->where($columnName,'<',$period['end']);
+        $columnName = $columnName ?? $this->getDatePeriodColumnName();
+
+        return $query
+            ->where($columnName,'>',$period['start'])
+            ->where($columnName,'<',$period['end']);
     }
 
     /**
@@ -68,8 +93,11 @@ trait DateSearch
     public function scopeDay($query, string $columnName, ?int $day = null, ?int $month = null, ?int $year = null)
     {     
         $period = TimePeriod::getDayPeriod($day,$month,$year);
-           
-        return $query->where($columnName,'>',$period['start'])->where($columnName,'<',$period['end']);
+        $columnName = $columnName ?? $this->getDatePeriodColumnName();
+
+        return $query
+            ->where($columnName,'>',$period['start'])
+            ->where($columnName,'<',$period['end']);
     }
 
     /**
@@ -83,9 +111,11 @@ trait DateSearch
     public function scopeDayFromDate($query, int $date, ?string $columnName = null)
     {
         $period = TimePeriod::getDayPeriod(\date('j',$date),\date('m',$date),\date('Y',$date));
-        $columnName = $columnName ?? $this->datePeriodColumnName;
+        $columnName = $columnName ?? $this->getDatePeriodColumnName();
 
-        return $query->where($columnName,'>',$period['start'])->where($columnName,'<',$period['end']);
+        return $query
+            ->where($columnName,'>',$period['start'])
+            ->where($columnName,'<',$period['end']);
     }
 
     /**
@@ -98,10 +128,12 @@ trait DateSearch
      */
     public function scopeMonthFromDate($query, int $date, ?string $columnName = null)
     {
-        $columnName = $columnName ?? $this->datePeriodColumnName;
+        $columnName = $columnName ?? $this->getDatePeriodColumnName();
         $period = TimePeriod::getMonthPeriod(\date('m',$date),\date('Y',$date));
         
-        return $query->where($columnName,'>',$period['start'])->where($columnName,'<',$period['end']);
+        return $query
+            ->where($columnName,'>',$period['start'])
+            ->where($columnName,'<',$period['end']);
     }
 
     /**
@@ -114,9 +146,11 @@ trait DateSearch
      */
     public function scopeYearFromDate($query, int $date, ?string $columnName = null)
     {
-        $columnName = $columnName ?? $this->datePeriodColumnName;
+        $columnName = $columnName ?? $this->getDatePeriodColumnName();
         $period = TimePeriod::getYearPeriod(\date('Y',$date));
         
-        return $query->where($columnName,'>',$period['start'])->where($columnName,'<',$period['end']);
+        return $query
+            ->where($columnName,'>',$period['start'])
+            ->where($columnName,'<',$period['end']);
     }
 }
