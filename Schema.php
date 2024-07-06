@@ -115,8 +115,11 @@ abstract class Schema
             $call = function() use($blueprint) {
                 $blueprint->create();
 
-                $this->create($blueprint);            
-                $blueprint->engine = $this->storageEngine;               
+                $this->create($blueprint);  
+                  
+                if (empty($blueprint->engine) == true) {
+                    $blueprint->engine = $this->storageEngine;               
+                }        
             };
             $call(); 
 
