@@ -25,15 +25,27 @@ trait OptionsAttribute
     }
 
     /**
+     * Get options
+     *
+     * @param string|null $columnName
+     * @return array
+     */
+    public function getOptions(?string $columnName = null): array
+    {
+        $columnName = $columnName ?? $this->getOptionsColumnName();
+        $options = $this->attributes[$columnName] ?? null;
+
+        return (empty($options) == true) ? [] : \json_decode($options,true);
+    }
+
+    /**
      * Mutator (get) for options attribute.
      *
      * @return array
      */
     public function getOptionsAttribute()
     {
-        $options = $this->attributes[$this->getOptionsColumnName()] ?? null;
-
-        return (empty($options) == true) ? [] : \json_decode($options,true);
+        return $this->getOptions();
     }
 
     /**
@@ -41,11 +53,12 @@ trait OptionsAttribute
      *
      * @param string $key
      * @param mixed $default
+     * @param string|null $columnName
      * @return mixed
      */
-    public function getOption(string $key, $default = null)
+    public function getOption(string $key, $default = null, ?string $columnName = null)
     {
-        return $this->options[$key] ?? $default;
+        return $this->getOptions($columnName)[$key] ?? $default;
     }
 
     /**
@@ -53,11 +66,12 @@ trait OptionsAttribute
      *
      * @param string $key
      * @param mixed $value
+     * @param string|null $columnName
      * @return boolean
      */
-    public function saveOption(string $key, $value): bool
+    public function saveOption(string $key, $value, ?string $columnName = null): bool
     {
-        $options = $this->getOptionsAttribute();
+        $options = $this->getOptions($columnName);
         $options[$key] = $value;
       
         $encoded = \json_encode(
@@ -68,8 +82,10 @@ trait OptionsAttribute
             JSON_NUMERIC_CHECK 
         );
 
+        $columnName = $columnName ?? $this->getOptionsColumnName();
+
         $result = $this->update([
-            $this->getOptionsColumnName() => $encoded
+            $$columnName => $encoded
         ]);
 
         return ($result !== false);
@@ -79,12 +95,23 @@ trait OptionsAttribute
      * Save options
      *
      * @param array $options
+     * @param string|null $columnName
      * @return boolean
      */
-    public function saveOptions(array $options): bool
+    public function saveOptions(array $options, ?string $columnName = null): bool
     {
+        $columnName = $columnName ?? $this->getOptionsColumnName();
+
+        $encoded = \json_encode(
+            $options,
+            JSON_PRETTY_PRINT | 
+            JSON_UNESCAPED_UNICODE | 
+            JSON_UNESCAPED_SLASHES |
+            JSON_NUMERIC_CHECK 
+        );
+
         $result = $this->update([
-            $this->getOptionsColumnName() => \json_encode($options)
+            $columnName => $encoded
         ]);
 
         return ($result !== false);
