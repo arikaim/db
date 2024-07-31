@@ -85,7 +85,7 @@ trait OptionsAttribute
         );
 
         $result = $this->update([
-            $$columnName => $encoded
+            $columnName => $encoded
         ]);
 
         return ($result !== false);
