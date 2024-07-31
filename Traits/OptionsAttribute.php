@@ -71,6 +71,8 @@ trait OptionsAttribute
      */
     public function saveOption(string $key, $value, ?string $columnName = null): bool
     {
+        $columnName = $columnName ?? $this->getOptionsColumnName();
+
         $options = $this->getOptions($columnName);
         $options[$key] = $value;
       
@@ -81,8 +83,6 @@ trait OptionsAttribute
             JSON_UNESCAPED_SLASHES |
             JSON_NUMERIC_CHECK 
         );
-
-        $columnName = $columnName ?? $this->getOptionsColumnName();
 
         $result = $this->update([
             $$columnName => $encoded
