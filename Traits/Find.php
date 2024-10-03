@@ -114,6 +114,20 @@ trait Find
     }
 
     /**
+     * Scopen find by id or uuid
+     *
+     * @param Builder $query
+     * @param string|int $id
+     * @return Builder
+     */
+    public function scopeIdQuery($query, $id)
+    {
+        $column = (\is_numeric($id) == true) ? 'id' : 'uuid';
+
+        return $query->where($column,'=',$id);
+    }
+
+    /**
      * Return id column name dependiv of id value type for string return uuid
      *
      * @param integer|string $id
