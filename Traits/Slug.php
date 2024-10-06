@@ -57,12 +57,24 @@ trait Slug
     public static function bootSlug()
     {
         static::saving(function($model) {   
-            $model = Self::saveSlug($model);
+            if ($model->isEditable() == true) {
+                $model = Self::saveSlug($model);
+            }
         });     
 
         static::creating(function($model) { 
             $model = Self::saveSlug($model);
         });
+    }
+
+    /**
+     * Return true if slug is editable
+     *
+     * @return boolean
+     */
+    public function isEditable(): bool
+    {
+        return ($this->slugEditable ?? true);
     }
 
     /**
