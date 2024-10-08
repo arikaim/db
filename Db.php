@@ -49,6 +49,13 @@ class Db
     protected $config;
 
     /**
+     * Morph relations map
+     *
+     * @var array
+     */
+    protected $relations;
+
+    /**
      * Constructor
      *
      * @param array $config
@@ -59,13 +66,8 @@ class Db
         $config['options'] = $config['options'] ?? $this->pdoOptions;
         
         $this->config = $config;
-        $this->capsule = new Manager();
-
-        // options 
-        $this->init($config); 
-
-        // init relations morph map            
-        Relation::morphMap($relations);                                  
+        $this->relations = $relations;
+        $this->capsule = new Manager();                 
     }
 
     /**
@@ -97,7 +99,7 @@ class Db
     public function reboot(?array $config = null): bool
     {
         $this->capsule->getDatabaseManager()->purge();
-        $config = \is_array($config) ? $config : $this->config;
+        $config = $config ?? $this->config;
 
         return $this->init($config);        
     }
@@ -105,13 +107,21 @@ class Db
     /**
      * Create db connection and boot Eloquent
      *
-     * @param array $config
+     * @param array|null $config
      * @return boolean
      */
-    public function init(array $config): bool
+    public function init(?array $config = null): bool
     {
+        $config = $config ?? $this->config;
+
+        // init relations morph map            
+        Relation::morphMap($this->relations);          
+
         try {                      
             $this->capsule->setEventDispatcher(new \Illuminate\Events\Dispatcher());
+            // system connection for core db models
+            $this->capsule->addConnection($config,'system');
+            // default connection 
             $this->capsule->addConnection($config);
             $this->capsule->setAsGlobal();
             
@@ -320,7 +330,7 @@ class Db
      */
     public function isValidPdoConnection(?array $config = null): bool
     {
-        $config = ($config == null) ? $this->config : $config;
+        $config = $config ?? $this->config;
         $dsn = $config['driver'] . ':dbname=' . $config['database'] . ';host=' . $config['host'];
     
         try {
