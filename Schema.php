@@ -15,12 +15,11 @@ use Illuminate\Database\Schema\Builder;
 use Arikaim\Core\Utils\Factory;
 use Arikaim\Core\Db\Seed;
 use Arikaim\Core\Db\TableBlueprint;
-use PDOException;
-use Exception;
 use Arikaim\Core\Db\TableSchemaDescriptor;
-
 use Arikaim\Core\Collection\Traits\Descriptor;
 use Arikaim\Core\Db\Traits\Schema\Import;
+use PDOException;
+use Exception;
 
 /**
  * Database schema base class
@@ -37,6 +36,13 @@ abstract class Schema
      * @var string
      */
     protected $tableName = null;
+
+    /**
+     * Db connection name
+     *
+     * @var string|null
+     */
+    protected $connection = null;
 
     /**
      * Db storage engine
@@ -67,6 +73,17 @@ abstract class Schema
     public function __construct()
     {
         $this->setDescriptorClass(TableSchemaDescriptor::class);
+    }
+
+    /**
+     * Set db connection
+     *
+     * @param string $name
+     * @return void
+     */
+    public function setConnection(string $name): void
+    {
+        $this->connection = $name;
     }
 
     /**
@@ -109,22 +126,24 @@ abstract class Schema
      */
     public function createTable(): void
     {
-        if ($this->tableExists() == false) {                                  
-            $blueprint = new TableBlueprint($this->tableName,null);
-            
-            $call = function() use($blueprint) {
-                $blueprint->create();
+        if ($this->tableExists() == true) {  
+            // skip if table exsit
+            return;
+        }    
 
-                $this->create($blueprint);  
-                  
-                if (empty($blueprint->engine) == true) {
-                    $blueprint->engine = $this->storageEngine;               
-                }        
-            };
-            $call(); 
+        $blueprint = new TableBlueprint($this->tableName,null);
+        $call = function() use($blueprint) {
+            $blueprint->create();
 
-            $this->build($blueprint,Manager::schema());           
-        }
+            $this->create($blueprint);  
+                
+            if (empty($blueprint->engine) == true) {
+                $blueprint->engine = $this->storageEngine;               
+            }        
+        };
+        $call(); 
+
+        $this->build($blueprint,Manager::schema($this->connection));             
     } 
 
     /**
@@ -134,17 +153,19 @@ abstract class Schema
      */
     public function updateTable(): void 
     {
-        if ($this->tableExists() == true) {                           
-            $blueprint = new TableBlueprint($this->tableName,null);
-            
-            $call = function() use($blueprint) {                
-                $this->update($blueprint);
-                $blueprint->engine = $this->storageEngine;     
-            };
-            $call(); 
-            
-            $this->build($blueprint,Manager::schema());               
-        }       
+        if ($this->tableExists() == false) {   
+            // skip if table not exist 
+            return;
+        }
+
+        $blueprint = new TableBlueprint($this->tableName,null);
+        $call = function() use($blueprint) {                
+            $this->update($blueprint);
+            $blueprint->engine = $this->storageEngine;     
+        };
+        $call(); 
+        
+        $this->build($blueprint,Manager::schema($this->connection));                    
     } 
     
     /**
@@ -154,13 +175,13 @@ abstract class Schema
      */
     public function runSeeds()
     {
-        if ($this->tableExists() == true) {  
-            $seed = new Seed($this->tableName);                  
-            $this->seeds($seed);
-            return true;
+        if ($this->tableExists() == false) {  
+            return false;
         }
 
-        return false;
+        $seed = new Seed($this->tableName);                  
+        $this->seeds($seed);
+        return true;
     }
 
     /**
@@ -217,15 +238,16 @@ abstract class Schema
      * Check if database exist.
      *
      * @param  object|string $model Table name or db model object
+     * @param  string|null $connection
      * @return boolean
      */
-    public static function hasTable($model): bool
+    public static function hasTable($model, ?string $connection = null): bool
     {      
         $tableName = (\is_object($model) == true) ? $model->getTable() : $model;
 
         try {      
-            if (\is_object(Manager::connection()) == true) {
-                $schema = Manager::schema();    
+            if (\is_object(Manager::connection($connection)) == true) {
+                $schema = Manager::schema($connection);    
                 return (\is_object($schema) == true) ? $schema->hasTable($tableName) : false;
             }
             return false;
@@ -247,10 +269,10 @@ abstract class Schema
     public function dropTable($emptyOnly = true): bool 
     {
         if ($emptyOnly == true && $this->isEmpty() == true) {                  
-            Manager::schema()->dropIfExists($this->tableName);
+            Manager::schema($this->connection)->dropIfExists($this->tableName);
         } 
         if ($emptyOnly == false) {
-            Manager::schema()->dropIfExists($this->tableName);           
+            Manager::schema($this->connection)->dropIfExists($this->tableName);           
         }
 
         return !$this->tableExists();
@@ -264,7 +286,7 @@ abstract class Schema
      */
     public function getColumnType(string $columnName)
     {
-        return Manager::schema()->getColumnType($this->tableName,$columnName);
+        return Manager::schema($this->connection)->getColumnType($this->tableName,$columnName);
     }
 
     /**
@@ -274,7 +296,7 @@ abstract class Schema
      */
     public function tableExists() 
     {
-        return Manager::schema()->hasTable($this->tableName);
+        return Manager::schema($this->connection)->hasTable($this->tableName);
     }
 
     /**
@@ -285,7 +307,7 @@ abstract class Schema
      */
     public function hasColumn($column) 
     {
-        return Manager::schema()->hasColumn($this->tableName,$column); 
+        return Manager::schema($this->connection)->hasColumn($this->tableName,$column); 
     }
     
     /**
@@ -330,12 +352,13 @@ abstract class Schema
 
     /**
      * Return shema object
-     *
+     * 
+     * @param string|null $connection
      * @return object
      */
-    public static function schema() 
+    public static function schema(?string $connection = null) 
     {
-        return Manager::schema();
+        return Manager::schema($connection);
     }
 
     /**
