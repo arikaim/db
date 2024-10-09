@@ -78,10 +78,10 @@ abstract class Schema
     /**
      * Set db connection
      *
-     * @param string $name
+     * @param string|null $name
      * @return void
      */
-    public function setConnection(string $name): void
+    public function setConnection(?string $name): void
     {
         $this->connection = $name;
     }
@@ -366,14 +366,17 @@ abstract class Schema
      *
      * @param string $class
      * @param string $extension
+     * @param string|null $connection
      * @return bool
      */
-    public static function install(string $class, ?string $extension = null): bool 
+    public static function install(string $class, ?string $extension = null, ?string $connection = null): bool 
     {                   
         $instance = Factory::createSchema($class,$extension);
         if ($instance == null) {
             return false;
         }
+
+        $instance->setConnection($connection);
 
         if ($instance->tableExists() == false) {                 
             $instance->createTable();
