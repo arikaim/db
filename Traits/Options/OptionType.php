@@ -50,6 +50,8 @@ trait OptionType
     public static function bootOptionType()
     {
         $fillable = [
+            'id',
+            'uuid',
             'key',
             'title',
             'description',

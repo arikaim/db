@@ -33,6 +33,7 @@ trait OptionsListDefinition
     public static function bootOptionsList()
     {
         $fillable = [
+            'id',
             'type_name',
             'branch',
             'uuid',
