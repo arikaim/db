@@ -160,7 +160,7 @@ trait PolymorphicRelations
      */
     public function saveRelation(?int $id, ?string $type, ?int $relationId)
     {
-        if (empty($relationId) == true || empty($id) == true) {
+        if (empty($relationId) || empty($id) || empty($type)) {
             return false;
         }
       
@@ -176,9 +176,7 @@ trait PolymorphicRelations
             return $this->create($data);
         }
 
-        $result = $model->update($data);
-
-        return ($result === false) ? false : $model;
+        return ($model->update($data) === false) ? false : $model;
     }
 
     /**

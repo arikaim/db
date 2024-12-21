@@ -20,7 +20,7 @@ trait Paginator
      * Create paginator for current model
      *
      * @param string|null $namespace
-     * @return Builder|Model
+     * @return mixed
      */
     public function createPaginator(?string $namespace = null)
     {

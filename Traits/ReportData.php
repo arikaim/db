@@ -67,13 +67,13 @@ trait ReportData
                 break;
     
             case ReportInterface::CALC_PERIOD_YEARLY:   
-                $period = TimePeriod::getYearPeriod($month,$year);       
+                $period = TimePeriod::getYearPeriod($year);       
                 break;           
         }
 
         $filter = $this->getReportDataFilter();
 
-        if (\is_array($filter) == true) {
+        if ($filter !== null) {
             foreach ($filter as $key => $value) {
                 $query->where($key,'=',$value);
             }
