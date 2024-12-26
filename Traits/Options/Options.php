@@ -26,6 +26,11 @@ trait Options
         return $this->optionTypeClass ?? null;
     }
     
+    public function getReferenceColumn(): ?string
+    {
+        return $this->referenceColumn ?? 'reference_id';
+    }
+    
     /**
      * Mutator (get) for value attribute.
      *
@@ -39,11 +44,12 @@ trait Options
     /**
      * Option type relation
      *
-     * @return Relation|null
+     * @return object|null
      */
     public function type()
     {
-        return $this->belongsTo($this->getOptionTypeClass(),'type_id');
+        $typeClass = $this->getOptionTypeClass();
+        return (empty($typeClass) == true) ? null : $this->belongsTo($typeClass,'type_id');
     }
 
     /**
@@ -52,7 +58,7 @@ trait Options
      * @param integer|null $referenceId
      * @param string $key Option type key
      * @param mixed $value
-     * @return Model|null
+     * @return object|null
      */
     public function createOption(?int $referenceId, string $key, $value = null): ?object
     {
@@ -63,11 +69,11 @@ trait Options
         $optionType = $this->getOptionType($key);
         
         return $this->create([
-            'reference_id' => $referenceId,
-            'uuid'         => Uuid::create(),
-            'type_id'      => ($optionType == null) ? null : $optionType->id,
-            'key'          => $key,
-            'value'        => ($value == null && $optionType != null) ? $optionType->default : $value,        
+            $this->getReferenceColumn() => $referenceId,
+            'uuid'                      => Uuid::create(),
+            'type_id'                   => ($optionType == null) ? null : $optionType->id,
+            'key'                       => $key,
+            'value'                     => ($value == null && $optionType != null) ? $optionType->default : $value,        
         ]);      
     }
 
@@ -75,11 +81,13 @@ trait Options
      * Get option type
      *
      * @param string $key Type key
-     * @return Model|null
+     * @return object|null
      */
     public function getOptionType(string $key): ?object
     {
-        return $this->type()->where('key','=',$key)->first();
+        $type = $this->type();
+
+        return ($type !== null) ? $type->where('key','=',$key)->first() : null;
     }
 
     /**
@@ -88,15 +96,15 @@ trait Options
      * @param string $key
      * @param integer|null $referenceId
      * @param string $key Option type key
-     * @return Model|null
+     * @return object|null
      */
     public function getOption(string $key, ?int $referenceId = null): ?object
     {
-        $referenceId = (empty($referenceId) == true) ? $this->reference_id : $referenceId;
+        $referenceId = (empty($referenceId) == true) ? $this->{$this->getReferenceColumn()} : $referenceId;
        
         return $this
-                    ->where('reference_id','=',$referenceId)
-                    ->where('key','=',$key)->first();                    
+            ->where($this->getReferenceColumn(),'=',$referenceId)
+            ->where('key','=',$key)->first();                    
     }
 
     /**
@@ -119,11 +127,11 @@ trait Options
      *
      * @param integer|null $referenceId
      * @param array|null $keys
-     * @return QueryBuilder
+     * @return object
      */
     public function getOptionsQuery(?int $referenceId, array $keys = null)
     {
-        $query = $this->where('reference_id','=',$referenceId);
+        $query = $this->where($this->getReferenceColumn(),'=',$referenceId);
         
         return (empty($keys) == false) ? $query->whereIn('key',$keys) : $query;          
     }
@@ -133,7 +141,7 @@ trait Options
      *
      * @param integer|null $referenceId
      * @param array|null $keys
-     * @return Model|null
+     * @return mixed
      */
     public function getOptions(?int $referenceId, ?array $keys = null)
     {
@@ -158,7 +166,7 @@ trait Options
      * @param integer $referenceId
      * @param string $key
      * @param mixed $value
-     * @return boolean
+     * @return mixed
      */
     public function saveOption(int $referenceId, string $key, $value) 
     {
@@ -167,7 +175,7 @@ trait Options
         }
 
         return $this
-            ->where('reference_id','=',$referenceId)
+            ->where($this->getReferenceColumn(),'=',$referenceId)
             ->where('key','=',$key)
             ->update([
                 'value' => $value
@@ -181,7 +189,7 @@ trait Options
      * @param array $data
      * @return boolean
      */
-    public function saveOptions(int $referenceId, array $data)
+    public function saveOptions(int $referenceId, array $data): bool
     {
         $errors = 0;
         foreach ($data as $key => $value) {
