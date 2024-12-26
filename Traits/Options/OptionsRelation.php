@@ -15,6 +15,15 @@ namespace Arikaim\Core\Db\Traits\Options;
 trait OptionsRelation 
 {   
     /**
+     * Get reference column name
+     * @return string|null
+     */
+    public function getReferenceColumn(): ?string
+    {
+        return $this->referenceColumn ?? 'reference_id';
+    }
+
+    /**
      * Get option model class
      *
      * @return string|null
@@ -31,21 +40,19 @@ trait OptionsRelation
      */
     public function options()
     {
-        return $this->hasMany($this->getOptionsClass(),'reference_id');       
+        return $this->hasMany($this->getOptionsClass(),$this->getReferenceColumn());       
     }
 
     /**
      * Create options_list attribute used for better collection serialization key => value 
      *
-     * @return Collection
+     * @return mixed
      */
     public function getOptionsListAttribute()
     {
-        $options = $this->options()->get()->keyBy('key')->map(function ($item, $key) {
+        return $this->options()->get()->keyBy('key')->map(function ($item, $key) {
             return $item['value'];
         });
-
-        return $options;
     }
 
     /**
@@ -56,11 +63,7 @@ trait OptionsRelation
      */
     public function getOption(string $key): ?object
     {
-        if (\is_object($this->options) == false) {
-            return null;
-        }        
-        
-        return $this->options->where('key','=',$key)->first();
+        return $this->options()->where('key','=',$key)->first();
     }
 
     /**

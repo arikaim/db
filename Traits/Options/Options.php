@@ -26,6 +26,10 @@ trait Options
         return $this->optionTypeClass ?? null;
     }
     
+    /**
+     * Get reference column name
+     * @return string|null
+     */
     public function getReferenceColumn(): ?string
     {
         return $this->referenceColumn ?? 'reference_id';
