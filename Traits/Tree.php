@@ -27,19 +27,49 @@ trait Tree
     {
         return $this->parentColumn ?? 'parent_id';
     }
+    
+    /**
+     * Parent model relation
+     *
+     * @return mixed
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Self::class,$this->getParentColumn());
+    }
+
+    /**
+     * Get root model
+     * @param object|null $model
+     * @return object|null
+     */
+    public function getRoot(?object $model = null): ?object  
+    {
+        $model = ($model == null) ? $this : $model;
+
+        while ($model != null) {
+            $model = $model->parent;
+            if ($model != null) {
+                return $model;
+            }  
+        }
+
+        return $model;
+    }
 
     /**
      * Get model tree
      *
-     * @param Moldel $model
+     * @param object|null $model
      * @return array
      */
-    public function getModelPath($model): array
+    public function getModelPath(?object $model = null): array
     {
+        $model = ($model == null) ? $this : $model;
         $result = [];
         \array_unshift($result,$model->toArray());
       
-        while ($model != false) {
+        while ($model != null) {
             $parentId = $model->attributes[$this->getParentColumn()];
             $model = parent::where('id','=',$parentId)->first();
             if ($model !== null) {
