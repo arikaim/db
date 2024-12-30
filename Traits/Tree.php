@@ -41,17 +41,14 @@ trait Tree
     /**
      * Get root model
      * @param object|null $model
-     * @return object|null
+     * @return object
      */
-    public function getRoot(?object $model = null): ?object  
+    public function getRoot(?object $model = null): object  
     {
-        $model = ($model == null) ? $this : $model;
+        $model = $model ?? $this;
 
-        while ($model != null) {
+        while ($model->parent != null) {
             $model = $model->parent;
-            if ($model != null) {
-                return $model;
-            }  
         }
 
         return $model;
@@ -65,7 +62,7 @@ trait Tree
      */
     public function getModelPath(?object $model = null): array
     {
-        $model = ($model == null) ? $this : $model;
+        $model = $model ?? $this;
         $result = [];
         \array_unshift($result,$model->toArray());
       
@@ -83,7 +80,7 @@ trait Tree
     /**
      * Query for root items
      *
-     * @param Builder $query
+     * @param object $query
      * @return object
      */
     public function scopeRootQuery($query): object
@@ -117,9 +114,9 @@ trait Tree
     /**
      * Childs list query
      *
-     * @param Builder $query
+     * @param object $query
      * @param integer $id
-     * @return Builder
+     * @return object
      */
     public function scopeChildListQuery($query, int $id): object
     {      
