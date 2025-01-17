@@ -67,6 +67,40 @@ trait OptionsRelation
     }
 
     /**
+     * Retrun true if option exist
+     * @param string $key
+     * @return bool
+     */
+    public function hasOption(string $key): bool
+    {
+        return ($this->getOption($key) != null);
+    }
+
+    /**
+     * Save option
+     * @param string $key
+     * @param mixed $value
+     * @return bool
+     */
+    public function saveOption(string $key, $value): bool
+    {
+        if ($this->hasOption($key) == true) {
+            $result = $this->options()->where('key','=',$key)->update([
+                'value' => $value
+            ]);
+
+            return ($result !== false);
+        }
+
+        $option = $this->options()->create([
+            'key'   => $key,
+            'value' => $value
+        ]);
+        
+        return ($option !== null);
+    }   
+    
+    /**
      * Get option value
      *
      * @param string $key
