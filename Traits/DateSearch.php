@@ -54,6 +54,8 @@ trait DateSearch
      */
     public function scopeYear($query, ?string $columnName, $year = null)
     {     
+        $year = empty($year) ? null : (int)$year;
+
         $period = TimePeriod::getYearPeriod($year);
         $columnName = $columnName ?? $this->getDatePeriodColumnName();
 
@@ -73,6 +75,9 @@ trait DateSearch
      */
     public function scopeMonth($query, ?string $columnName, $month = null, $year = null)
     {     
+        $month = empty($month) ? null : (int)$month;
+        $year = empty($year) ? null : (int)$year;
+
         $period = TimePeriod::getMonthPeriod($month,$year);
         $columnName = $columnName ?? $this->getDatePeriodColumnName();
 
@@ -92,7 +97,11 @@ trait DateSearch
      * @return Builder
      */
     public function scopeDay($query, ?string $columnName, $day = null, $month = null, $year = null)
-    {     
+    {  
+        $day = empty($day) ? null : (int)$day;   
+        $month = empty($month) ? null : (int)$month;
+        $year = empty($year) ? null : (int)$year;
+
         $period = TimePeriod::getDayPeriod($day,$month,$year);
         $columnName = $columnName ?? $this->getDatePeriodColumnName();
 
