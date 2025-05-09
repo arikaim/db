@@ -124,7 +124,7 @@ trait SoftDelete
      * @param mixed $query
      * @param mixed $deleted
      */
-    public function scopeSoftDeteledQuery($query, $deleted)
+    public function scopeSoftDeleted($query, $deleted)
     {
         $column = $this->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN;
 
