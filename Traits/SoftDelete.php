@@ -92,7 +92,7 @@ trait SoftDelete
     /**
      * Get soft deleted query
      *
-     * @return QueryBuilder
+     * @return Builder
      */
     public function softDeletedQuery(): object
     {
@@ -112,11 +112,23 @@ trait SoftDelete
     /**
      * Get not deleted query
      *
-     * @return QueryBuilder
+     * @return Builder
      */
     public function getNotDeletedQuery(): object
     {
         return $this->whereNull($this->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN);
+    }
+
+    /**
+     * Get soft deleted query
+     * @param mixed $query
+     * @param mixed $deleted
+     */
+    public function scopeSoftDeteledQuery($query, $deleted)
+    {
+        $column = $this->softDeleteColumnName ?? static::$DEFAULT_SOFT_DELETE_COLUMN;
+
+        return ((bool)$deleted == false) ? $query->whereNull($column): $query->whereNotNull($column); 
     }
 
     /**
