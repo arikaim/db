@@ -88,14 +88,38 @@ trait Tree
         return $query->whereNull($this->getParentColumn());
     }
 
-    /**
-     * Gte model tree for current model
-     *
+     /**
+     * Get all model items
+     * 
+     * @param mixed $parent
      * @return array
      */
-    public function getTreePath(): array
+    public function getTree(?int $parent = null): array 
+    {
+        $result = [];
+        $query = (empty($parent) == true) ? $this->rootQuery() : $this->childListQuery($parent);
+        $items = $query->get();
+
+        foreach ($items as $item) {
+            $result[$item->uuid] = $item->toArray();
+
+            if ($this->hasChild($item->id) == true) {                  
+                $result[$item->uuid]['items'] = $this->getTree($item->id);
+            }         
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get model tree for current model
+     *
+     * @param object|null $model
+     * @return array
+     */
+    public function getTreePath(?object $model = null): array
     {      
-        return $this->getModelPath($this);
+        return $this->getModelPath($model);
     }
 
     /**
