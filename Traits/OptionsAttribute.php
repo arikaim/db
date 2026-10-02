@@ -9,6 +9,8 @@
 */
 namespace Arikaim\Core\Db\Traits;
 
+use Arikaim\Core\Collection\Arrays;
+
 /**
  * Options attribute trait
 */
@@ -51,31 +53,33 @@ trait OptionsAttribute
     /**
      * Get option from options array
      *
-     * @param string $key
+     * @param string $path - separator /
      * @param mixed $default
      * @param string|null $columnName
      * @return mixed
      */
-    public function getOption(string $key, $default = null, ?string $columnName = null)
+    public function getOption(string $path, $default = null, ?string $columnName = null)
     {
-        return $this->getOptions($columnName)[$key] ?? $default;
+        $options = $this->getOptions($columnName);
+
+        return Arrays::getValue($options,$path) ?? $default;
     }
 
     /**
      * Save option
      *
-     * @param string $key
+     * @param string $path - separator /
      * @param mixed $value
      * @param string|null $columnName
      * @return boolean
      */
-    public function saveOption(string $key, $value, ?string $columnName = null): bool
+    public function saveOption(string $path, $value, ?string $columnName = null): bool
     {
         $columnName = $columnName ?? $this->getOptionsColumnName();
 
         $options = $this->getOptions($columnName);
-        $options[$key] = $value;
-      
+        $options = Arrays::setValue($options,$path,$value);
+       
         $encoded = \json_encode(
             $options,
             JSON_PRETTY_PRINT | 
